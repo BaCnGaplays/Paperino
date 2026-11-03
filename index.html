@@ -379,6 +379,74 @@
   .tool-pop .tp-check { display: flex; align-items: center; gap: 6px; margin-top: 6px; cursor: pointer; }
   .tool-pop .tp-check input { accent-color: #6F003C; }
 
+  /* ---------- Dateimenü ---------- */
+  .file-pop {
+    position: fixed;
+    z-index: 70;
+    width: 262px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .file-pop button.fp-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+  }
+  .file-pop button.fp-item:hover:not(:disabled) { background: #f5e3eb; }
+  .file-pop button.fp-item:disabled { opacity: 0.4; cursor: not-allowed; }
+  .file-pop button.fp-item .fp-key { margin-left: auto; color: var(--muted); font-size: 11px; }
+  .file-pop .fp-sep { border-top: 1px solid var(--line); margin: 5px 4px; }
+
+  /* ---------- Lizenzhinweis ---------- */
+  .license-dlg {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .license-dlg[hidden] { display: none; }
+  .license-card {
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    max-width: 520px;
+    padding: 22px 24px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .license-card h3 { margin: 0 0 10px; font-size: 16px; }
+  .license-card p { margin: 6px 0; }
+  .license-card a { color: #6F003C; }
+  .license-card button {
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    background: #f5e3eb;
+    color: #4A0028;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font: inherit;
+  }
+
   /* ---------- Statusleiste ---------- */
   #statusbar {
     display: flex;
@@ -779,21 +847,21 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.13</span>
+  <span class="version" id="appVersion">Alpha 0.14</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
-    <button id="btnOpen" title="PDF öffnen">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      Öffnen
+    <button id="btnFile" title="Dateimenü: öffnen, speichern, speichern unter, drucken, schließen, Optionen, Lizenz und Urheberrecht">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V9z"/><path d="M14 3v6h6"/></svg>
+      Datei
     </button>
-    <button id="btnUndo" title="Rückgängig – genau ein Schritt (Strg+Z)" disabled>
+    <button id="btnUndo" title="Rückgängig (Strg+Z)" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-4"/></svg>
       Rückgängig
     </button>
-    <button id="btnSave" class="qat-save" title="Speichern (Strg+S)" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
-      Speichern
+    <button id="btnRedo" title="Wiederholen (Strg+Y)" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h4"/></svg>
+      Wiederholen
     </button>
   </div>
 </div>
@@ -935,6 +1003,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>
             <span>Auswahl leeren</span>
           </button>
+          <label class="rb-check" title="Format für Extrahieren und Ausschneiden: PDF-Datei oder Bilddatei (JPEG beziehungsweise PNG, Doppelseiten werden je Seite einzeln gespeichert)">
+            Format
+            <select class="rb-select" id="extractFormat">
+              <option value="pdf" selected>PDF</option>
+              <option value="jpg">JPEG</option>
+              <option value="png">PNG</option>
+            </select>
+          </label>
         </div>
         <div class="group-label">Seiten (Auswahl)</div>
       </div>
@@ -1315,7 +1391,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.13"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.14"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1399,6 +1475,7 @@ const PT_TO_PX = 96 / 72;        // PDF-Punkt in CSS-Pixel
 
 /* Ein-Schritt-Rueckgaengig-Stapel */
 const undoStack = [];
+const redoStack = [];
 
 const $ = (id) => document.getElementById(id);
 
@@ -1501,6 +1578,7 @@ async function openFile(file) {
     pageOrder = Array.from({ length: doc.numPages }, (_, i) => i);
     rotDelta = {};
     undoStack.length = 0;
+    redoStack.length = 0;
     annos = new Map();
     selAnno = null;
     selOrig = -1;
@@ -2655,14 +2733,26 @@ function deleteSelectedAnno() {
 function pushUndo(action) {
   undoStack.push(action);
   if (undoStack.length > 200) undoStack.shift();
+  redoStack.length = 0;
   $("btnUndo").disabled = false;
+  $("btnRedo").disabled = true;
 }
 
-async function undoOne() {
-  const a = undoStack.pop();
-  if (!a) { updateUi(); return; }
-  deselectAnno();
-  closeTextEditor(false);
+/* Spiegelaktion: beschreibt, wie eine rückgängig gemachte Aktion wiederhergestellt wird */
+function mirrorAction(a) {
+  if (a.kind === "order") return { kind: "order", prev: pageOrder.slice() };
+  if (a.kind === "annoAdd") return { kind: "annoRemove", orig: a.orig, anno: a.anno };
+  if (a.kind === "annoRemove") return { kind: "annoAdd", orig: a.orig, anno: a.anno };
+  if (a.kind === "annosAdd") return { kind: "annosRestore", orig: a.orig, annos: a.annos.slice() };
+  if (a.kind === "annosRestore") return { kind: "annosAdd", orig: a.orig, annos: a.annos.slice() };
+  if (a.kind === "annoTransform") return { kind: "annoTransform", orig: a.orig, anno: a.anno, before: snapshotAnno(a.anno) };
+  if (a.kind === "annosClear") return { kind: "annosClear", orig: a.orig, prev: pageAnnos(a.orig).slice() };
+  if (a.kind === "rot") return { kind: "rot", orig: a.orig, prev: rotDelta[a.orig] || 0 };
+  return null;
+}
+
+/* Eine Aktion anwenden (rückgängig wie wiederherstellen nutzen dieselbe Logik) */
+async function applyAction(a) {
   if (a.kind === "order") {
     pageOrder = a.prev;
     currentPage = Math.min(currentPage, pageOrder.length - 1);
@@ -2695,6 +2785,11 @@ async function undoOne() {
     }
     refreshEntryByOrig(a.orig);
     toast("Textanmerkung entfernt.");
+  } else if (a.kind === "annosRestore") {
+    const l = pageAnnos(a.orig);
+    for (const x of a.annos) l.push(x);
+    refreshEntryByOrig(a.orig);
+    toast("Textanmerkung wiederhergestellt.");
   } else if (a.kind === "annosClear") {
     annos.set(a.orig, a.prev.slice());
     refreshEntryByOrig(a.orig);
@@ -2707,6 +2802,27 @@ async function undoOne() {
     rebuildThumbs();
     toast("Drehung zurückgenommen.");
   }
+}
+
+async function undoOne() {
+  const a = undoStack.pop();
+  if (!a) { updateUi(); return; }
+  deselectAnno();
+  closeTextEditor(false);
+  const m = mirrorAction(a);
+  if (m) redoStack.push(m);
+  await applyAction(a);
+  updateUi();
+}
+
+async function redoOne() {
+  const a = redoStack.pop();
+  if (!a) { updateUi(); return; }
+  deselectAnno();
+  closeTextEditor(false);
+  const m = mirrorAction(a);
+  if (m) undoStack.push(m);
+  await applyAction(a);
   updateUi();
 }
 
@@ -2959,13 +3075,40 @@ async function deleteSelected() {
   toast(`${positions.length} Seite(n) gelöscht.`);
 }
 
+async function exportPagesAsImages(indices, ext) {
+  const mime = ext === "png" ? "image/png" : "image/jpeg";
+  for (const orig of indices) {
+    const page = await doc.getPage(orig + 1);
+    const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
+    const viewport = page.getViewport({ scale: 2, rotation: rot });
+    const c = document.createElement("canvas");
+    c.width = Math.ceil(viewport.width);
+    c.height = Math.ceil(viewport.height);
+    const cx = c.getContext("2d");
+    cx.fillStyle = "#ffffff";
+    cx.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: cx, viewport }).promise;
+    const list = (annos.get(orig) || []).filter((a) => a.type !== "comment");
+    for (const a of list) drawAnno(cx, a, viewport);
+    const blob = await new Promise((res) => c.toBlob(res, mime, 0.92));
+    downloadBlob(blob, `${fileName}_seite_${orig + 1}.${ext}`);
+  }
+  toast(`${indices.length} Seite(n) als ${ext === "png" ? "PNG" : "JPEG"} exportiert. ${indices.length > 1 ? "Der Browser fragt gegebenenfalls nach, ob mehrere Downloads erlaubt sind." : "Der Download wurde gestartet."}`);
+}
+
 async function extractSelected(removeAfter) {
   const positions = selectedPositions();
-  if (positions.length === 0 || !requirePdfLib()) return;
+  if (positions.length === 0) return;
+  const fmt = $("extractFormat") ? $("extractFormat").value : "pdf";
+  if (fmt === "pdf" && !requirePdfLib()) return;
   try {
     const indices = positions.map((p) => pageOrder[p]);
-    await buildPdf(indices, `${fileName}_extrahiert.pdf`,
-      `${positions.length} Seite(n) als neue PDF-Datei extrahiert.`);
+    if (fmt === "pdf") {
+      await buildPdf(indices, `${fileName}_extrahiert.pdf`,
+        `${positions.length} Seite(n) als neue PDF-Datei extrahiert.`);
+    } else {
+      await exportPagesAsImages(indices, fmt);
+    }
     if (removeAfter) {
       pushUndo({ kind: "order", prev: pageOrder.slice() });
       pageOrder = pageOrder.filter((orig) => !selected.has(orig));
@@ -2986,7 +3129,7 @@ async function extractSelected(removeAfter) {
 }
 
 async function extractCurrentPage() {
-  if (pageOrder.length === 0 || !requirePdfLib()) return;
+  if (pageOrder.length === 0) return;
   const keep = selected;
   selected = new Set([pageOrder[currentPage]]);
   await extractSelected(false);
@@ -3371,6 +3514,11 @@ async function buildPdf(indices, name, successMsg) {
     if (comments.length) addPdfComments(out, p, comments);
   }
   const bytes = await out.save();
+  return bytes;
+}
+
+async function buildPdf(indices, name, successMsg) {
+  const bytes = await buildPdfBytes(indices);
   downloadBlob(new Blob([bytes], { type: "application/pdf" }), name);
   toast(successMsg);
 }
@@ -3387,6 +3535,100 @@ async function savePdf() {
       toast("Speichern fehlgeschlagen: " + (err.message || err), true);
     }
   }
+}
+
+/* Speichern unter: freier Dateiname über Eingabedialog */
+async function savePdfAs() {
+  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
+  const raw = window.prompt("Unter welchem Dateinamen soll gespeichert werden?", fileName);
+  if (raw === null) return;
+  const base = (raw.trim() || fileName).replace(/[\\/:*?"<>|]/g, "_");
+  try {
+    await buildPdf(pageOrder, base.endsWith(".pdf") ? base : base + ".pdf",
+      "Datei gespeichert. Der Download wurde gestartet.");
+  } catch (err) {
+    toast("Speichern fehlgeschlagen: " + (err.message || err), true);
+  }
+}
+
+/* Drucken: die bearbeitete Datei in einem Druckrahmen öffnen */
+async function printPdf() {
+  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
+  try {
+    const bytes = await buildPdfBytes(pageOrder);
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    const fr = document.createElement("iframe");
+    fr.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;visibility:hidden;";
+    fr.src = url;
+    fr.onload = () => {
+      try {
+        fr.contentWindow.focus();
+        fr.contentWindow.print();
+      } catch (e) {
+        window.open(url, "_blank");
+      }
+    };
+    document.body.appendChild(fr);
+    setTimeout(() => { fr.remove(); URL.revokeObjectURL(url); }, 60000);
+    toast("Druckdialog wird geöffnet …");
+  } catch (err) {
+    toast("Drucken fehlgeschlagen: " + (err.message || err), true);
+  }
+}
+
+/* Dokument schließen und zur Startseite zurückkehren */
+function closeDoc() {
+  if (!doc) return;
+  doc = null;
+  pdfBytes = null;
+  pageOrder = [];
+  rotDelta = {};
+  annos = new Map();
+  selected.clear();
+  currentPage = 0;
+  zoom = 1.0;
+  selAnno = null;
+  selOrig = -1;
+  editBox = null;
+  undoStack.length = 0;
+  redoStack.length = 0;
+  thumbCache.clear();
+  fileName = "dokument";
+  $("docInfo").textContent = "";
+  $("dropzone").hidden = false;
+  $("scrollWrap").hidden = true;
+  buildEntries();
+  rebuildThumbs();
+  refreshComments();
+  setTool("select");
+  lastBaseTab = "paneStart";
+  activateTab("paneStart");
+  updateUi();
+  toast("Dokument geschlossen. Über „Datei“ können Sie eine neue Datei öffnen.");
+}
+
+/* Lizenz- und Urheberrechtshinweis */
+function showLicense() {
+  let dlg = $("licenseDlg");
+  if (!dlg) {
+    dlg = document.createElement("div");
+    dlg.id = "licenseDlg";
+    dlg.className = "license-dlg";
+    dlg.innerHTML =
+      '<div class="license-card">' +
+      '<h3>Paperino – Lizenz und Urheberrecht</h3>' +
+      '<p>Paperino ist freie Software im Sinne der <a href="https://www.gnu.org/licenses/agpl-3.0.de.html" target="_blank" rel="noopener">GNU Affero General Public License 3.0 (AGPL-3.0)</a>. Der vollständige Lizenztext liegt im Repository: <a href="https://github.com/BaCnGaplays/Paperino/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a>. Beim Betrieb als Web-Dienst muss der Quellcode den Nutzerinnen und Nutzern zugänglich gemacht werden.</p>' +
+      '<p>Eingesetzte Bibliotheken: <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a> (Apache-2.0) zum Rendern der Seiten, <a href="https://pdf-lib.js.org/" target="_blank" rel="noopener">pdf-lib</a> (MIT) zum Aufbau der Dateien.</p>' +
+      '<p>Eingesetzte Schriftarten aus dem <a href="https://github.com/google/fonts" target="_blank" rel="noopener">Google-Fonts-Projekt</a>: Lato, PT Sans, PT Serif, Fira Sans, IBM Plex Serif, Crimson Text, Space Mono, Arvo (SIL Open Font License) sowie Ubuntu (Ubuntu Font Licence).</p>' +
+      '<p>Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.</p>' +
+      '<button type="button" data-close>Schließen</button>' +
+      "</div>";
+    dlg.addEventListener("click", (e) => {
+      if (e.target === dlg || e.target.closest("[data-close]")) dlg.hidden = true;
+    });
+    document.body.appendChild(dlg);
+  }
+  dlg.hidden = false;
 }
 
 function downloadBlob(blob, name) {
@@ -3502,9 +3744,10 @@ function updateUi() {
   $("btnZoomIn").disabled = !hasDoc;
   $("btnZoomOut").disabled = !hasDoc;
   $("btnFitWidth").disabled = !hasDoc;
-  $("btnSave").disabled = !hasDoc;
+  ["mnuSave", "mnuSaveAs", "mnuPrint", "mnuClose"].forEach((id) => { $(id).disabled = !hasDoc; });
   $("btnExtractPage").disabled = !hasDoc;
   $("btnUndo").disabled = undoStack.length === 0;
+  $("btnRedo").disabled = redoStack.length === 0;
   $("btnDeleteSel").disabled = selCount === 0;
   $("btnExtractSel").disabled = selCount === 0;
   $("btnCutSel").disabled = selCount === 0;
@@ -3530,7 +3773,64 @@ function updateUi() {
 /* =========================================================
    Ereignishandler
    ========================================================= */
-$("btnOpen").addEventListener("click", () => $("fileInput").click());
+/* Dateimenü: einmal aufgebaut, danach nur ein- und ausgeblendet */
+const fileMenu = (function buildFileMenu() {
+  const btn = $("btnFile");
+  const pop = document.createElement("div");
+  pop.className = "file-pop";
+  pop.style.display = "none";
+  const mkItem = (id, label, key, fn) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "fp-item";
+    b.id = id;
+    b.textContent = label;
+    if (key) {
+      const k = document.createElement("span");
+      k.className = "fp-key";
+      k.textContent = key;
+      b.appendChild(k);
+    }
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hideFileMenu();
+      fn();
+    });
+    return b;
+  };
+  const mkSep = () => {
+    const s = document.createElement("div");
+    s.className = "fp-sep";
+    return s;
+  };
+  pop.appendChild(mkItem("mnuOpen", "Öffnen …", "Strg+O", () => $("fileInput").click()));
+  pop.appendChild(mkItem("mnuSave", "Speichern", "Strg+S", savePdf));
+  pop.appendChild(mkItem("mnuSaveAs", "Speichern unter …", "Strg+Umschalt+S", savePdfAs));
+  pop.appendChild(mkItem("mnuPrint", "Drucken …", "Strg+P", printPdf));
+  pop.appendChild(mkSep());
+  pop.appendChild(mkItem("mnuClose", "Dokument schließen", null, closeDoc));
+  pop.appendChild(mkSep());
+  pop.appendChild(mkItem("mnuOptions", "Optionen", null, () => toast("Die Optionen sind noch nicht verfügbar und folgen in einer späteren Version.")));
+  pop.appendChild(mkItem("mnuLicense", "Lizenz und Urheberrecht", null, showLicense));
+  document.body.appendChild(pop);
+  function showFileMenu() {
+    const r = btn.getBoundingClientRect();
+    pop.style.left = Math.max(8, r.right - 262) + "px";
+    pop.style.top = (r.bottom + 4) + "px";
+    pop.style.display = "block";
+  }
+  function hideFileMenu() { pop.style.display = "none"; }
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (pop.style.display === "none") showFileMenu(); else hideFileMenu();
+  });
+  document.addEventListener("click", (e) => {
+    if (pop.style.display !== "none" && !pop.contains(e.target) && !btn.contains(e.target)) hideFileMenu();
+  });
+  return { showFileMenu, hideFileMenu };
+})();
+function hideFileMenu() { fileMenu.hideFileMenu(); }
+
 $("fileInput").addEventListener("change", (e) => openFile(e.target.files[0]));
 
 $("btnPrev").addEventListener("click", () => goTo(currentPage - 1));
@@ -3642,6 +3942,7 @@ $("btnRotL").addEventListener("click", () => rotateCurrent(-90));
 $("btnRotR").addEventListener("click", () => rotateCurrent(90));
 
 $("btnUndo").addEventListener("click", undoOne);
+$("btnRedo").addEventListener("click", redoOne);
 $("btnDeleteSel").addEventListener("click", deleteSelected);
 $("btnExtractSel").addEventListener("click", () => extractSelected(false));
 $("btnCutSel").addEventListener("click", () => extractSelected(true));
@@ -3649,7 +3950,6 @@ $("btnClearSel").addEventListener("click", () => { selected.clear(); rebuildThum
 $("btnMoveUp").addEventListener("click", () => moveSelected(-1));
 $("btnMoveDown").addEventListener("click", () => moveSelected(1));
 $("btnExtractPage").addEventListener("click", extractCurrentPage);
-$("btnSave").addEventListener("click", savePdf);
 
 $("btnAnnoClear").addEventListener("click", () => {
   const orig = pageOrder[currentPage];
@@ -3667,6 +3967,86 @@ $("btnAnnoClear").addEventListener("click", () => {
 document.querySelectorAll("[data-tool]").forEach((b) => {
   b.addEventListener("click", () => setTool(b.dataset.tool));
 });
+
+/* Werkzeugmenü unter einem Werkzeugknopf: Regler, vorausgewählte Farben, optional ein Häkchen */
+const toolMenuClosers = [];
+function closeToolMenus() { toolMenuClosers.forEach((close) => close()); }
+function buildToolMenu(btnId, opts) {
+  const btn = $(btnId);
+  let pop = null;
+  const close = () => { if (pop) { pop.remove(); pop = null; } };
+  toolMenuClosers.push(close);
+  const save = opts.save || (() => {});
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (pop) { close(); return; }
+    closeToolMenus();
+    pop = document.createElement("div");
+    pop.className = "tool-pop";
+    const title = document.createElement("div");
+    title.className = "tp-title";
+    title.textContent = opts.title;
+    pop.appendChild(title);
+    for (const s of opts.sliders || []) {
+      const row = document.createElement("div");
+      row.className = "tp-row";
+      const lbl = document.createElement("span");
+      lbl.className = "tp-lbl";
+      lbl.textContent = s.label;
+      const rng = document.createElement("input");
+      rng.type = "range";
+      rng.min = String(s.min);
+      rng.max = String(s.max);
+      rng.step = String(s.step);
+      rng.value = String(s.get());
+      const val = document.createElement("span");
+      val.className = "tp-val";
+      val.textContent = s.fmt(parseFloat(rng.value));
+      rng.addEventListener("input", () => { val.textContent = s.fmt(parseFloat(rng.value)); });
+      rng.addEventListener("change", () => { s.set(parseFloat(rng.value)); save(); });
+      row.append(lbl, rng, val);
+      pop.appendChild(row);
+    }
+    if (opts.colors) {
+      const grid = document.createElement("div");
+      grid.className = "tp-swatches";
+      for (const c of STD_COLORS) {
+        const sw = document.createElement("button");
+        sw.type = "button";
+        sw.className = "swatch" + (opts.colors.get() === c ? " sel" : "");
+        sw.style.background = c;
+        sw.title = c;
+        sw.addEventListener("click", () => {
+          opts.colors.set(c);
+          save();
+          grid.querySelectorAll(".swatch").forEach((x) => x.classList.remove("sel"));
+          sw.classList.add("sel");
+        });
+        grid.appendChild(sw);
+      }
+      pop.appendChild(grid);
+    }
+    if (opts.checkbox) {
+      const lab = document.createElement("label");
+      lab.className = "tp-check";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!opts.checkbox.get();
+      cb.addEventListener("change", () => { opts.checkbox.set(cb.checked); save(); });
+      const txt = document.createElement("span");
+      txt.textContent = opts.checkbox.label;
+      lab.append(cb, txt);
+      pop.appendChild(lab);
+    }
+    document.body.appendChild(pop);
+    const r = btn.getBoundingClientRect();
+    pop.style.left = Math.min(r.left, window.innerWidth - 250) + "px";
+    pop.style.top = (r.bottom + 4) + "px";
+  });
+  document.addEventListener("click", (e) => {
+    if (pop && !pop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) close();
+  });
+}
 
 /* Werkzeugmenüs: Stift, Textmarker und textgebundene Werkzeuge (nach den Werkzeug-Bindings, damit das Menü beim Aktivieren stehen bleibt) */
 buildToolMenu("toolDraw", {
@@ -4137,85 +4517,6 @@ function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
   });
 }
 
-/* Werkzeugmenü unter einem Werkzeugknopf: Regler, vorausgewählte Farben, optional ein Häkchen */
-const toolMenuClosers = [];
-function closeToolMenus() { toolMenuClosers.forEach((close) => close()); }
-function buildToolMenu(btnId, opts) {
-  const btn = $(btnId);
-  let pop = null;
-  const close = () => { if (pop) { pop.remove(); pop = null; } };
-  toolMenuClosers.push(close);
-  const save = opts.save || (() => {});
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (pop) { close(); return; }
-    closeToolMenus();
-    pop = document.createElement("div");
-    pop.className = "tool-pop";
-    const title = document.createElement("div");
-    title.className = "tp-title";
-    title.textContent = opts.title;
-    pop.appendChild(title);
-    for (const s of opts.sliders || []) {
-      const row = document.createElement("div");
-      row.className = "tp-row";
-      const lbl = document.createElement("span");
-      lbl.className = "tp-lbl";
-      lbl.textContent = s.label;
-      const rng = document.createElement("input");
-      rng.type = "range";
-      rng.min = String(s.min);
-      rng.max = String(s.max);
-      rng.step = String(s.step);
-      rng.value = String(s.get());
-      const val = document.createElement("span");
-      val.className = "tp-val";
-      val.textContent = s.fmt(parseFloat(rng.value));
-      rng.addEventListener("input", () => { val.textContent = s.fmt(parseFloat(rng.value)); });
-      rng.addEventListener("change", () => { s.set(parseFloat(rng.value)); save(); });
-      row.append(lbl, rng, val);
-      pop.appendChild(row);
-    }
-    if (opts.colors) {
-      const grid = document.createElement("div");
-      grid.className = "tp-swatches";
-      for (const c of STD_COLORS) {
-        const sw = document.createElement("button");
-        sw.type = "button";
-        sw.className = "swatch" + (opts.colors.get() === c ? " sel" : "");
-        sw.style.background = c;
-        sw.title = c;
-        sw.addEventListener("click", () => {
-          opts.colors.set(c);
-          save();
-          grid.querySelectorAll(".swatch").forEach((x) => x.classList.remove("sel"));
-          sw.classList.add("sel");
-        });
-        grid.appendChild(sw);
-      }
-      pop.appendChild(grid);
-    }
-    if (opts.checkbox) {
-      const lab = document.createElement("label");
-      lab.className = "tp-check";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!opts.checkbox.get();
-      cb.addEventListener("change", () => { opts.checkbox.set(cb.checked); save(); });
-      const txt = document.createElement("span");
-      txt.textContent = opts.checkbox.label;
-      lab.append(cb, txt);
-      pop.appendChild(lab);
-    }
-    document.body.appendChild(pop);
-    const r = btn.getBoundingClientRect();
-    pop.style.left = Math.min(r.left, window.innerWidth - 250) + "px";
-    pop.style.top = (r.bottom + 4) + "px";
-  });
-  document.addEventListener("click", (e) => {
-    if (pop && !pop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) close();
-  });
-}
 
 /* Steuerelemente binden */
 function setFontSizeSelect(sz) {
@@ -4368,15 +4669,19 @@ window.addEventListener("drop", (e) => {
 /* Tastatur */
 window.addEventListener("keydown", (e) => {
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
-  if (e.key === "Escape") { setTool("select"); deselectAnno(); return; }
-  if ((e.key === "Delete" || e.key === "Backspace") && selAnno) { e.preventDefault(); deleteSelectedAnno(); return; }
+  if (e.key === "Escape") { setTool("select"); deselectAnno(); hideFileMenu(); return; }
+  if (e.key === "Delete" || e.key === "Backspace") { if (selAnno) { e.preventDefault(); deleteSelectedAnno(); return; } }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") { e.preventDefault(); $("fileInput").click(); return; }
   if (!doc) return;
   if (e.key === "ArrowLeft") goTo(currentPage - 1);
   if (e.key === "ArrowRight") goTo(currentPage + 1);
   if (e.key === "+" || e.key === "=") setZoom(zoom * 1.25);
   if (e.key === "-") setZoom(zoom / 1.25);
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undoOne(); }
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); savePdf(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); if (e.shiftKey) redoOne(); else undoOne(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") { e.preventDefault(); redoOne(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); if (e.shiftKey) savePdfAs(); else savePdf(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") { e.preventDefault(); $("fileInput").click(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") { e.preventDefault(); printPdf(); }
 });
 
 /* ---------- Seitenleiste in der Breite ziehen ---------- */
@@ -4442,6 +4747,9 @@ function runSelfTests() {
   test("Begradigen richtet waagerechte Striche aus", () => { const s = straightened([[10, 20], [30, 21], [50, 20.5]]); assert(s.length === 2 && s[0][1] === s[1][1], "Strich nicht waagerecht"); });
   test("Begradigen richtet senkrechte Striche aus", () => { const s = straightened([[10, 20], [10.5, 40], [10, 60]]); assert(s.length === 2 && s[0][0] === s[1][0], "Strich nicht senkrecht"); });
   test("Jede Schriftart im Auswahlmenü und eingebettet", () => { for (const k of Object.keys(FONT_STACKS)) { if (["helvetica", "times", "courier"].includes(k)) continue; assert(document.querySelector('#annoFontFamily option[value="' + k + '"]'), "Menüeintrag fehlt: " + k); assert(k in EMBED_FONT_FILES, "Einzubettende Schrift fehlt: " + k); } });
+  test("Wiederholen: Spiegelaktion und Rückspiegel stimmen", () => { const a1 = mirrorAction({ kind: "annoAdd", orig: 0, anno: { type: "draw" } }); assert(a1 && a1.kind === "annoRemove", "Spiegel von annoAdd"); const a2 = mirrorAction(a1); assert(a2 && a2.kind === "annoAdd", "Rückspiegel von annoRemove"); const r1 = mirrorAction({ kind: "rot", orig: 3, prev: 90 }); assert(r1 && r1.kind === "rot" && r1.orig === 3, "Spiegel von rot"); });
+  test("Dateimenü führt alle Einträge", () => { for (const id of ["mnuOpen", "mnuSave", "mnuSaveAs", "mnuPrint", "mnuClose", "mnuOptions", "mnuLicense"]) assert($(id), "Menüeintrag fehlt: " + id); });
+  test("Extrahieren bietet PDF, JPEG und PNG", () => { for (const v of ["pdf", "jpg", "png"]) assert(document.querySelector('#extractFormat option[value="' + v + '"]'), "Format fehlt: " + v); });
   test("Formformat-Reiter führt alle Formwerkzeuge", () => { for (const t of SHAPE_TOOLS) assert(document.querySelector('#paneFormformat [data-tool="' + t + '"]'), "Formknopf fehlt: " + t); });
   test("Textbegrenzung ohne Box plausibel", () => { const bb = annoBBox({ type: "text", x: 10, y: 20, size: 12, text: "Hallo" }); assert(bb.x2 > bb.x1 && bb.y2 > bb.y1 && bb.x1 === 10, "Box unplausibel"); });
   test("Einzubettende Schriften vollständig definiert", () => { for (const k of Object.keys(EMBED_FONT_FILES)) { const f = EMBED_FONT_FILES[k]; for (const s of ["regular", "bold", "italic", "boldItalic"]) assert(typeof f[s] === "string" && f[s].startsWith("https://"), k + "." + s + " fehlt"); } });

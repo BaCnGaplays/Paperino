@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.13**
+> Aktuelle Version: **Alpha 0.14**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -11,7 +11,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - PDFs öffnen, anzeigen und navigieren (Zoom, Seitenbreite, 100-Prozent-Ansicht, Ein- und Doppelseitenansicht, fortlaufender Bildlauf, Tastaturkürzel, Miniaturansichten)
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
 - Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
-- Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen
+- Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
 - Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
@@ -28,7 +28,9 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Kommentaren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
 - Statusleiste unten mit Bibliothekenstatus und Seitenanzeige
-- Ein-Schritt-Rückgängig für alle Aktionen und Speichern der bearbeiteten Datei als Download
+- Dateimenü mit Öffnen, Speichern, Speichern unter, Drucken, Schließen, Optionen (Platzhalter) und Lizenz- und Urheberrechtshinweis; in der Ecke liegen nur Rückgängig und Wiederholen
+- Rückgängig und Wiederholen für alle Aktionen, mehrfach hintereinander (Strg+Z und Strg+Y sowie Knöpfe)
+- Speichern und Speichern unter (freier Dateiname), Drucken der bearbeiteten Datei über den Druckdialog des Browsers
 
 ## Nutzung
 
@@ -63,6 +65,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.11 | Auswahlrahmen und Textdeckung bei Web-Schriftarten korrigiert: die gewählte Schriftart wird beim Wechsel sofort geladen und nach dem Laden werden alle Anmerkungen neu gezeichnet, damit Begrenzungsrahmen und Text immer übereinstimmen (Ursache für Text, der außerhalb seines Rahmens erschien) |
 | Alpha 0.12 | Lektorieren-Reiter in „Bestehenden Text bearbeiten“ und „Ergänzen“ gegliedert, Formenauswahl direkt im Formformat-Reiter (das separate Formen-Menü entfällt), Formformat mit Kontur, Strichstärke, Strichart, Füllung und Pfeilspitzen auch vor dem Zeichnen als Voreinstellung festlegbar (wird gemerkt), der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs, Auswahlwerkzeug in der Gruppe „Ergänzen“ |
 | Alpha 0.13 | Werkzeugmenüs am Knopf: Stift (Deckkraft, Stärke, Farbe), Textmarker (Deckkraft, Größe, Farbe, Häkchen „Linie begradigen“ — freihändige Striche werden nach dem Loslassen zu geraden Linien ausgerichtet) und Markieren/Durchstreichen/Unterstreichen (Farbe je Werkzeug, vor dem Markieren wählbar), Auswahlwerkzeug vorangestellt in eigener Gruppe „Standard“ (Stift und Textmarker öffnen keinen Formformat-Reiter mehr), sechs zusätzliche freie Schriftarten (Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, mit allen Schnitten eingebettet) |
+| Alpha 0.14 | Korrektur des Ladefehlers aus Alpha 0.13 (ein Initialisierungsfehler blockierte die Werkzeugmenüs und damit die gesamte Oberfläche), Rückgängig und Wiederholen mehrfach hintereinander (Strg+Z/Strg+Y, Knöpfe in der Ecke), Dateimenü mit Öffnen, Speichern, Speichern unter, Drucken, Schließen, Optionen (Platzhalter) und Lizenzhinweis, Extrahieren und Ausschneiden wahlweise als PDF, JPEG oder PNG |
 
 ## Hinweise und Grenzen
 
@@ -70,7 +73,8 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 - Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono oder Arvo gespeichert (die freien Schriften werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
 - LaTeX-Formeln werden beim Speichern als eingebettetes Bild abgelegt, da die PDF-Standardschriften keine mathematischen Symbole enthalten.
 - Wellige Unterstreichungen werden beim Speichern als gerade Linie angenähert; gedrehter Text wird beim Speichern an gleicher Stelle ohne Drehung abgelegt.
-- Schwärzungen ohne Sicherheitsmodus verdecken den Inhalt nur optisch; der Text bleibt in der Datei enthalten. Der Sicherheitsmodus ist daher standardmäßig aktiviert.
+- Schwärzungen ohne Sicherheitsmodus verdecken den Inhalt nur optisch; der Text bleibt in der Datei enthalten. Der Sicherheitsmodus ist daher standardmäßig aktiviert. Beim Bild-Export (JPEG/PNG) sind geschwärzte Bereiche im Bild abgedeckt.
+- Beim Export mehrerer Seiten als JPEG oder PNG lädt der Browser mehrere Dateien nacheinander herunter und fragt gegebenenfalls nach Erlaubnis.
 
 ## Lizenz
 
