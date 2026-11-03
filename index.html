@@ -46,6 +46,7 @@
   body.dark .ul-pop .ul-row.active { background: #342030; }
   body.dark .outline-item:hover { background: #342030; }
   body.dark .side-tab:hover, body.dark .side-tab.active { color: #f2c7d8; }
+  body.dark .side-arrow:hover:not(:disabled) { color: #f2c7d8; background: #342030; }
   body.dark #rulerTop, body.dark #rulerLeft, body.dark #rulerRight { background: #191d2b; }
   body.dark .side-title .t-btn:hover { color: #f2c7d8; border-color: #8a5570; }
   body.dark .license-card button { background: #342030; color: #f2c7d8; border-color: var(--line); }
@@ -630,6 +631,20 @@
   }
   .side-tab:hover { color: #6F003C; }
   .side-tab.active { color: #6F003C; border-bottom-color: #6F003C; font-weight: 600; }
+  .side-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font: inherit;
+  }
+  .side-arrow:hover:not(:disabled) { color: #6F003C; background: #f5e3eb; border-radius: 5px; }
+  .side-arrow:disabled { color: #c3c9d4; cursor: default; }
+  #sideModeLabel { flex: 1; }
   .outline-item {
     display: block;
     width: 100%;
@@ -919,7 +934,18 @@
     border-left: 1px solid var(--line);
     display: flex;
     flex-direction: column;
+    position: relative;
   }
+  aside#commentPanel .side-resize {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 7px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 5;
+  }
+  aside#commentPanel .side-resize:hover, aside#commentPanel .side-resize.dragging { background: rgba(111, 0, 60, 0.25); }
   #commentList {
     flex: 1;
     overflow-y: auto;
@@ -979,7 +1005,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.16</span>
+  <span class="version" id="appVersion">Alpha 0.17</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1116,20 +1142,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span>Kommentarleiste</span>
           </button>
-          <button id="btnToggleBookmarkPane" class="rb-btn small" title="Lesezeichenleiste anzeigen">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-            <span>Lesezeichenleiste</span>
-          </button>
-          <button id="btnToggleOutline" class="rb-btn small" title="Navigationsleiste mit dem Inhaltsverzeichnis des Dokuments anzeigen">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
-            <span>Inhaltsverzeichnis</span>
-          </button>
-          <button id="btnAddBookmark" class="rb-btn small" title="Lesezeichen für die aktuelle Seite anlegen" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-            <span>Lesezeichen hinzufügen</span>
-          </button>
         </div>
-        <div class="group-label">Bereiche</div>
+        <div class="group-label">Bereiche (Lesezeichen, Inhaltsverzeichnis und Suchergebnisse werden über die Pfeile der Seitenleiste umgeschaltet)</div>
       </div>
     </div>
 
@@ -1532,10 +1546,13 @@
   <aside id="thumbPanel">
     <div class="side-resize" id="sideResize" title="Breite der Seitenleiste durch Ziehen ändern"></div>
     <div class="side-tabs">
-      <button class="side-tab active" id="stabPages" title="Seitenliste anzeigen">Seiten</button>
-      <button class="side-tab" id="stabOutline" title="Inhaltsverzeichnis des Dokuments anzeigen">Inhalt</button>
-      <button class="side-tab" id="stabBookmarks" title="Lesezeichen anzeigen">Lesezeichen</button>
-      <button class="side-tab" id="stabSearch" title="Suchtreffer anzeigen" disabled>Suchen</button>
+      <button class="side-arrow" id="sidePrev" title="Vorherige Ansicht der Seitenleiste anzeigen" disabled>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+      </button>
+      <button class="side-tab active" id="sideModeLabel" title="Ansicht der Seitenleiste umschalten" disabled>Seiten</button>
+      <button class="side-arrow" id="sideNext" title="Nächste Ansicht der Seitenleiste anzeigen" disabled>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
       <button class="t-btn" id="btnAddBookmarkSide" title="Lesezeichen für die aktuelle Seite anlegen" disabled hidden>+</button>
     </div>
     <div id="thumbs" class="panel-body"></div>
@@ -1559,6 +1576,7 @@
   </section>
 
   <aside id="commentPanel" hidden>
+    <div class="side-resize" id="commentResize" title="Breite der Kommentarleiste durch Ziehen ändern"></div>
     <div class="side-title">
       <span class="t-label">Kommentare</span>
       <button class="t-btn" id="toggleComments" title="Kommentarleiste schließen">×</button>
@@ -1585,7 +1603,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.16"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.17"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -4431,12 +4449,9 @@ function updateUi() {
   $("btnRotR").disabled = !hasDoc;
   $("btnAnnoClear").disabled = annoCount === 0;
   $("btnCommentList").disabled = !hasDoc;
-  $("btnAddBookmark").disabled = !hasDoc;
   $("btnAddBookmarkSide").disabled = !hasDoc;
-  ["btnView100", "btnViewFit", "btnToggleBookmarkPane", "btnToggleOutline"].forEach((id) => { $(id).disabled = !hasDoc; });
-  $("stabOutline").disabled = !hasDoc;
-  $("stabBookmarks").disabled = !hasDoc;
-  $("stabSearch").disabled = !hasDoc;
+  ["btnView100", "btnViewFit", "btnToggleThumbsPane", "btnToggleCommentPane"].forEach((id) => { $(id).disabled = !hasDoc; });
+  ["sidePrev", "sideNext", "sideModeLabel"].forEach((id) => { $(id).disabled = !hasDoc; });
   $("pagePos").textContent = hasDoc ? `Seite ${currentPage + 1} von ${pageOrder.length}` : "";
   $("zoomLabel").textContent = Math.round(zoom * 100) + "%";
   $("hint").textContent = selAnno
@@ -4874,10 +4889,9 @@ function setCommentPanel(open) {
 
 function setSideMode(mode) {
   sideMode = mode;
-  $("stabPages").classList.toggle("active", mode === "pages");
-  $("stabOutline").classList.toggle("active", mode === "outline");
-  $("stabBookmarks").classList.toggle("active", mode === "bookmarks");
-  $("stabSearch").classList.toggle("active", mode === "search");
+  const def = SIDE_MODES.find((m) => m.id === mode) || SIDE_MODES[0];
+  $("sideModeLabel").textContent = def.label;
+  $("sideModeLabel").classList.add("active");
   $("thumbs").hidden = mode !== "pages";
   $("outlineList").hidden = mode !== "outline";
   $("bookmarkList").hidden = mode !== "bookmarks";
@@ -4889,21 +4903,30 @@ function setThumbsPanel(open, mode) {
   sidePanelOpen = open;
   $("thumbPanel").hidden = !open;
   $("btnToggleThumbsPane").classList.toggle("active", open);
-  $("btnToggleBookmarkPane").classList.toggle("active", open && sideMode === "bookmarks");
-  $("btnToggleOutline").classList.toggle("active", open && sideMode === "outline");
   if (open && mode) setSideMode(mode);
   scheduleRuler();
 }
 
+/* Ansichten der Seitenleiste in fester Reihenfolge über Pfeile umschalten */
+const SIDE_MODES = [
+  { id: "pages", label: "Seiten" },
+  { id: "outline", label: "Inhaltsverzeichnis" },
+  { id: "bookmarks", label: "Lesezeichen" },
+  { id: "search", label: "Suchergebnisse" }
+];
+function cycleSideMode(step) {
+  const n = SIDE_MODES.length;
+  const i = Math.max(0, SIDE_MODES.findIndex((m) => m.id === sideMode));
+  const next = SIDE_MODES[((i + step) % n + n) % n].id;
+  setThumbsPanel(true, next);
+}
+
 $("toggleComments").addEventListener("click", () => setCommentPanel(false));
-$("stabPages").addEventListener("click", () => { setThumbsPanel(true, "pages"); });
-$("stabOutline").addEventListener("click", () => { setThumbsPanel(true, "outline"); });
-$("stabBookmarks").addEventListener("click", () => { setThumbsPanel(true, "bookmarks"); });
-$("stabSearch").addEventListener("click", () => { setThumbsPanel(true, "search"); });
+$("sidePrev").addEventListener("click", () => cycleSideMode(-1));
+$("sideNext").addEventListener("click", () => cycleSideMode(1));
+$("sideModeLabel").addEventListener("click", () => cycleSideMode(1));
 $("btnToggleThumbsPane").addEventListener("click", () => setThumbsPanel(!sidePanelOpen || sideMode !== "pages", "pages"));
 $("btnToggleCommentPane").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
-$("btnToggleBookmarkPane").addEventListener("click", () => setThumbsPanel(!sidePanelOpen || sideMode !== "bookmarks", "bookmarks"));
-$("btnToggleOutline").addEventListener("click", () => setThumbsPanel(!sidePanelOpen || sideMode !== "outline", "outline"));
 $("btnCommentList").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
 
 /* Inhaltsverzeichnis des Dokuments (PDF-Lesezeichenhierarchie) anzeigen */
@@ -5020,7 +5043,6 @@ function rebuildBookmarks() {
     box.appendChild(div);
   }
 }
-$("btnAddBookmark").addEventListener("click", addBookmark);
 $("btnAddBookmarkSide").addEventListener("click", addBookmark);
 
 /* Seitenlauf: aktuelle Seite beim Scrollen bestimmen */
@@ -5547,6 +5569,37 @@ window.addEventListener("keydown", (e) => {
   handle.addEventListener("pointercancel", stop);
 })();
 
+/* Kommentarleiste in der Breite ziehen (Griff am linken Rand) */
+(function bindCommentResize() {
+  const panel = $("commentPanel");
+  const handle = $("commentResize");
+  if (!panel || !handle) return;
+  const applyW = (w) => {
+    const v = Math.round(Math.max(180, Math.min(460, w)));
+    panel.style.width = v + "px";
+    panel.style.minWidth = v + "px";
+    try { localStorage.setItem("paperinoCommentW", String(v)); } catch (e) { /* Speicher nicht verfügbar */ }
+    scheduleRuler();
+  };
+  try {
+    const saved = localStorage.getItem("paperinoCommentW");
+    if (saved) applyW(parseFloat(saved) || 250);
+  } catch (e) { /* Speicher nicht verfügbar */ }
+  let dragging = false, startX = 0, startW = 0;
+  handle.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    startX = e.clientX;
+    startW = panel.getBoundingClientRect().width;
+    handle.classList.add("dragging");
+    handle.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  handle.addEventListener("pointermove", (e) => { if (dragging) applyW(startW - (e.clientX - startX)); });
+  const stop = (e) => { dragging = false; handle.classList.remove("dragging"); try { handle.releasePointerCapture(e.pointerId); } catch (err) { /* bereits gelöst */ } };
+  handle.addEventListener("pointerup", stop);
+  handle.addEventListener("pointercancel", stop);
+})();
+
 /* ---------- Selbsttests (mit ?test in der Adresse ausführbar) ---------- */
 function runSelfTests() {
   const results = [];
@@ -5593,7 +5646,7 @@ function runSelfTests() {
   test("Formularwerte als Map verwaltet", () => { assert(formValues instanceof Map, "formValues muss eine Map sein"); });
   test("Signieren: Einfügen und Liste vorhanden", () => { assert(typeof insertSignature === "function" && typeof renderSignList === "function" && typeof loadSignatures === "function", "Signierfunktionen fehlen"); assert($("btnSignInsert") && $("signInput") && $("signList"), "Signier-Elemente fehlen"); });
   test("Lineale über, links und rechts der Seiten vorhanden", () => { for (const id of ["rulerTop", "rulerLeft", "rulerRight"]) assert($(id), "Lineal fehlt: " + id); assert(typeof scheduleRuler === "function" && typeof rulerCmPerPx === "function", "Linealfunktionen fehlen"); const cm = rulerCmPerPx({ canvas: { style: { width: "595px", height: "842px" } }, viewport: { viewBox: [0, 0, 595, 842], rotation: 0 } }); assert(Math.abs(cm.x - 72 / 2.54) < 0.2 && Math.abs(cm.y - 72 / 2.54) < 0.2, "Zentimeterrechnung stimmt nicht"); });
-  test("Suchtreffer liegen in der Seitenleiste", () => { assert($("stabSearch") && $("searchSide"), "Suche-Seitenleiste fehlt"); assert(!$("searchResults"), "Alte Trefferliste darf nicht mehr bestehen"); });
+  test("Suchtreffer liegen in der Seitenleiste mit Pfeil-Auswahl", () => { assert($("sidePrev") && $("sideNext") && $("sideModeLabel") && $("searchSide"), "Seitenleisten-Auswahl fehlt"); assert(typeof cycleSideMode === "function", "Umschalten fehlt"); assert(!document.getElementById("stabPages") && !document.getElementById("stabSearch"), "Alte Reiter dürfen nicht mehr bestehen"); assert(SIDE_MODES.length === 4 && SIDE_MODES[1].label === "Inhaltsverzeichnis" && SIDE_MODES[3].label === "Suchergebnisse", "Ansichtennamen unvollständig"); });
   const failed = results.filter((r) => !r.ok);
   console.log("Selbsttests: " + (results.length - failed.length) + "/" + results.length + " bestanden", results);
   const box = document.createElement("div");

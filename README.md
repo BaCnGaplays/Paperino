@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.16**
+> Aktuelle Version: **Alpha 0.17**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -10,7 +10,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 
 - PDFs öffnen, anzeigen und navigieren (Zoom, Seitenbreite, 100-Prozent-Ansicht, Ein- und Doppelseitenansicht, fortlaufender Bildlauf, Tastaturkürzel, Miniaturansichten)
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht; die Lineale liegen fest am Ansichtsbereich, und die Skala beginnt am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite
-- Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
+- Seitenleiste mit vier Ansichten: Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse; die Ansicht wird über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
 - Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
@@ -25,7 +25,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Schwärzen als Rechteck oder für markierten Text; mit Sicherheitsmodus wird die Seite beim Speichern als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird dabei tatsächlich entfernt und ist danach nicht mehr markierbar
 - Freihändiges Zeichnen mit Stift und Textmarker: beim Aktivieren öffnet sich am Knopf ein Menü mit Deckkraft, Stärke (beziehungsweise Markergröße) und vorausgewählten Farben; der Textmarker kann optional jede Linie nach dem Loslassen automatisch begradigen (waagerecht, senkrecht oder gerade Verbindung)
 - Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil; Formenauswahl, Konturfarbe, Strichstärke, Strichart, Füllung (inklusive Transparenz) und Pfeilspitzen lassen sich im Formformat-Reiter auch vor dem Zeichnen als Voreinstellung festlegen (wird gemerkt); der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs
-- Kommentieren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
+- Kommentieren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen, über die Ansicht wieder öffnen und in der Breite frei ziehen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
 - Suche im Dokument: Suchfeld im Start-Reiter; die Trefferliste erscheint in einem eigenen Seitenleisten-Reiter „Suchen” mit Seitenangabe und Textauszug; Weiter- und Zurückspringen über Eingabetaste, F3 und Umschalt+F3; Hervorhebung der Treffer im Seitentext
 - Ausfüllbare Formularfelder (AcroForm): Textfelder, Kontrollkästchen, Optionsfelder und Auswahllisten lassen sich direkt im Dokument ausfüllen; die Werte werden beim Speichern fest in die Datei geschrieben
@@ -73,6 +73,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.14 | Korrektur des Ladefehlers aus Alpha 0.13 (ein Initialisierungsfehler blockierte die Werkzeugmenüs und damit die gesamte Oberfläche), Rückgängig und Wiederholen mehrfach hintereinander (Strg+Z/Strg+Y, Knöpfe in der Ecke), Dateimenü mit Öffnen, Speichern, Speichern unter, Drucken, Schließen, Optionen (Platzhalter) und Lizenzhinweis, Extrahieren und Ausschneiden wahlweise als PDF, JPEG oder PNG |
 | Alpha 0.15 | Suche im Dokument (Suchfeld im Start-Reiter, Trefferliste, Weiter- und Zurückspringen mit F3, Hervorhebung der Treffer), AcroForm-Formularfelder ausfüllen (Werte werden beim Speichern fest in die Datei geschrieben), Komprimieren im Dateimenü (Seiten werden als JPEG-Bilder neu aufgebaut), fremde Kommentare und Markierungen je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage, nicht rückgängig machbar, Formularfelder bleiben erhalten), Reiter Signieren (Signaturbilder als PNG/JPEG, werden im Browser gemerkt und beim Speichern als Bild eingebettet), Darstellung Hell oder Dunkel in den Optionen (wird gemerkt) |
 | Alpha 0.16 | Korrektur der Lineale: die Skalen liegen nun fest am Ansichtsbereich und beginnen am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite; Suchtreffer erscheinen in einem eigenen Seitenleisten-Reiter „Suchen”; Korrektur des Optionsfensters (die Hell-/Dunkel-Auswahl ließ sich zuvor nicht öffnen) |
+| Alpha 0.17 | Seitenleiste als Auswahlleiste: die Ansichten Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse werden über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Kommentarleiste in der Breite frei ziehbar (wird gemerkt); Ansichtsbereich bereinigt (die Umschalter für Lesezeichenleiste, Inhaltsverzeichnis und Lesezeichen hinzufügen entfallen, da die Seitenleiste diese Auswahl übernimmt) |
 
 ## Hinweise und Grenzen
 
