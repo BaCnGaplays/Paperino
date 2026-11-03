@@ -104,6 +104,7 @@
     color: #6F003C;
     font-weight: 600;
   }
+  .tab.hidden { display: none; }
   .ribbon-body { padding: 8px 12px 4px; display: flex; overflow-x: auto; }
   .pane { display: flex; align-items: stretch; flex-wrap: nowrap; }
   .pane[hidden] { display: none; }
@@ -229,12 +230,13 @@
     align-items: center;
     padding: 5px 14px;
     background: var(--panel);
-    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--line);
     font-size: 12px;
     color: var(--muted);
     min-height: 26px;
     flex-wrap: wrap;
   }
+  #statusbar #hint { margin-left: auto; text-align: right; }
   .lib-ok { color: var(--ok); font-weight: 600; }
   .lib-missing { color: var(--danger); font-weight: 600; }
 
@@ -251,15 +253,69 @@
     flex-direction: column;
   }
   .side-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--muted);
     text-align: center;
-    padding: 8px 0 6px;
+    padding: 6px 4px;
     border-bottom: 1px solid var(--line);
+    white-space: nowrap;
   }
+  .side-title .t-btn {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 5px;
+    font: inherit;
+    font-size: 12px;
+    line-height: 1;
+    padding: 2px 7px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .side-title .t-btn:hover { color: #6F003C; border-color: #6F003C; }
+  .side-title .t-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .panel-body { flex: 1; overflow-y: auto; min-height: 0; }
+  aside.collapsed { width: 44px !important; min-width: 44px !important; }
+  aside.collapsed .panel-body { display: none; }
+  aside.collapsed .side-title .t-label { display: none; }
+  #bookmarkList {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid var(--line);
+  }
+  .bookmark-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 12px;
+    background: #fbfdff;
+    cursor: pointer;
+    user-select: none;
+  }
+  .bookmark-item button {
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0 2px;
+  }
+  .bookmark-item button:hover { color: var(--danger); }
   #thumbs {
     flex: 1;
     overflow-y: auto;
@@ -453,7 +509,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.4</span>
+  <span class="version" id="appVersion">Alpha 0.5</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -480,6 +536,8 @@
     <button class="tab" data-tab="paneAnon">Anonymisieren</button>
     <button class="tab" data-tab="paneEdit">Lektorieren</button>
     <button class="tab" data-tab="paneComment">Kommentieren</button>
+    <button class="tab contextual hidden" id="tabTextfeld" data-tab="paneTextfeld" title="Öffnet sich automatisch, wenn ein Textfeld ausgewählt ist">Textfeld</button>
+    <button class="tab contextual hidden" id="tabFormformat" data-tab="paneFormformat" title="Öffnet sich automatisch, wenn eine Form oder Markierung ausgewählt ist">Formformat</button>
   </div>
   <div class="ribbon-body">
 
@@ -531,6 +589,28 @@
           </label>
         </div>
         <div class="group-label">Anzeige</div>
+      </div>
+      <div class="group">
+        <div class="group-buttons">
+          <button id="btnToggleThumbsPane" class="rb-btn small active" title="Seitenliste am linken Rand ein- und ausklappen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+            <span>Seitenliste</span>
+          </button>
+          <button id="btnToggleCommentPane" class="rb-btn small" title="Kommentarfenster am rechten Rand ein- und ausklappen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Kommentarfenster</span>
+          </button>
+        </div>
+        <div class="group-label">Bereiche</div>
+      </div>
+      <div class="group">
+        <div class="group-buttons">
+          <button id="btnAddBookmark" class="rb-btn small" title="Lesezeichen für die aktuelle Seite anlegen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            <span>Lesezeichen hinzufügen</span>
+          </button>
+        </div>
+        <div class="group-label">Lesezeichen</div>
       </div>
       <div class="group">
         <div class="group-buttons">
@@ -739,19 +819,107 @@
       </div>
     </div>
 
-  </div>
-</div>
+    <div class="pane" id="paneTextfeld" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <label class="rb-check" title="Schriftgröße in Punkten">
+            Größe
+            <input type="number" id="annoFontSize" min="4" max="96" step="0.5" value="12" disabled />
+          </label>
+          <label class="rb-check" title="Schriftfarbe">
+            Farbe
+            <input type="color" id="annoTextColor" value="#dc2626" disabled />
+          </label>
+          <label class="rb-check" title="Fett (wird mit Helvetica Fett gespeichert)">
+            <input type="checkbox" id="annoBold" disabled /> Fett
+          </label>
+          <label class="rb-check" title="Kursiv (wird mit Helvetica Kursiv gespeichert)">
+            <input type="checkbox" id="annoItalic" disabled /> Kursiv
+          </label>
+        </div>
+        <div class="group-label">Schrift</div>
+      </div>
 
-<div id="statusbar">
-  <span id="libPdfJs">PDF.js: wird geladen …</span>
-  <span id="libPdfLib">pdf-lib: wird geladen …</span>
-  <span id="hint"></span>
+      <div class="group">
+        <div class="group-buttons">
+          <label class="rb-check" title="Inhalt als LaTeX-Formel rendern, z. B. \frac{a}{b}, x^2 oder \sqrt{x}">
+            <input type="checkbox" id="annoLatex" disabled /> Als Formel rendern (LaTeX)
+          </label>
+          <button id="btnEditText" class="rb-btn small" title="Text bearbeiten (auch per Doppelklick im Dokument)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            <span>Bearbeiten</span>
+          </button>
+        </div>
+        <div class="group-label">Inhalt</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <span class="group-note">Formeln unterstützen Brüche (\frac{}{}), Wurzeln (\sqrt{}), Hoch- und Tiefstellen (^ und _), griechische Buchstaben (\alpha, \pi …) sowie Symbole (\times, \leq, \infty …). Beispiel: E=m\,c^2 oder \frac{-b\pm\sqrt{b^2-4ac}}{2a}.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
+      </div>
+    </div>
+
+    <div class="pane" id="paneFormformat" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <label class="rb-check" title="Konturfarbe der Form oder Markierung">
+            Kontur
+            <input type="color" id="annoShapeColor" value="#dc2626" disabled />
+          </label>
+          <label class="rb-check" title="Strichstärke in Punkten">
+            Strichstärke
+            <select id="annoShapeWidth" disabled>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="4">4</option>
+            </select>
+          </label>
+          <label class="rb-check" title="Füllfarbe (nur geschlossene Formen)">
+            Füllung
+            <input type="color" id="annoFillColor" value="#ffe08a" disabled />
+          </label>
+          <label class="rb-check" title="Füllung deaktivieren">
+            <input type="checkbox" id="annoNoFill" checked disabled /> Keine Füllung
+          </label>
+        </div>
+        <div class="group-label">Format</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <button id="btnDeleteAnno" class="rb-btn" title="Ausgewähltes Element löschen (Entf)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg>
+            <span>Löschen</span>
+          </button>
+        </div>
+        <div class="group-label">Element</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <span class="group-note">Füllung und Kontur wirken bei geschlossenen Formen (Rechteck, Ellipse, Dreieck, Raute, Stern); Linien und Pfeile nutzen nur Kontur und Strichstärke. Schwärzungen bleiben aus Gründen der Nachvollziehbarkeit immer schwarz.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <main>
   <aside id="thumbPanel">
-    <div class="side-title">Seiten</div>
-    <div id="thumbs"></div>
+    <div class="side-title">
+      <span class="t-label">Seiten</span>
+      <button class="t-btn" id="toggleThumbs" title="Seitenliste ein- und ausklappen">«</button>
+    </div>
+    <div id="thumbs" class="panel-body"></div>
+    <div class="side-title">
+      <span class="t-label">Lesezeichen</span>
+      <button class="t-btn" id="btnAddBookmarkSide" title="Lesezeichen für die aktuelle Seite anlegen" disabled>+</button>
+    </div>
+    <div id="bookmarkList" class="panel-body"></div>
   </aside>
 
   <section id="viewer">
@@ -765,11 +933,21 @@
     </div>
   </section>
 
-  <aside id="commentPanel" hidden>
-    <div class="side-title">Kommentare</div>
-    <div id="commentList"></div>
+  <aside id="commentPanel" class="collapsed">
+    <div class="side-title">
+      <span class="t-label">Kommentare</span>
+      <button class="t-btn" id="toggleComments" title="Kommentarfenster ein- und ausklappen">«</button>
+    </div>
+    <div id="commentList" class="panel-body"></div>
   </aside>
 </main>
+
+<div id="statusbar">
+  <span id="libPdfJs">PDF.js: wird geladen …</span>
+  <span id="libPdfLib">pdf-lib: wird geladen …</span>
+  <span id="pagePos"></span>
+  <span id="hint"></span>
+</div>
 
 <div class="shape-menu" id="shapeMenu">
   <button data-tool="rect" title="Rechteck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="1"/></svg></button>
@@ -792,7 +970,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.4"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.5"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -943,6 +1121,7 @@ async function openFile(file) {
     updateView();
     rebuildThumbs();
     refreshComments();
+    loadBookmarks();
     updateUi();
     toast(`„${fileName}.pdf“ mit ${doc.numPages} Seite(n) geöffnet.`);
   } catch (err) {
@@ -1009,6 +1188,7 @@ async function renderEntry(entry, force = false) {
     const tv = page.getViewport({ scale: zoom, rotation: rot });
     entry.textLayer.style.width = tv.width + "px";
     entry.textLayer.style.height = tv.height + "px";
+    entry.textLayer.style.setProperty("--scale-factor", String(zoom));
     const tc = await page.getTextContent();
     if (entry.textLayer.childElementCount > 0) entry.textLayer.innerHTML = "";
     pdfjsLib.renderTextLayer({ textContentSource: tc, container: entry.textLayer, viewport: tv });
@@ -1164,14 +1344,36 @@ function drawAnno(ctx, a, viewport) {
       ctx.stroke();
     }
   } else if (a.type === "text") {
-    const lines = a.text.split("\n");
-    ctx.fillStyle = a.color;
-    ctx.font = `${a.size * PT_TO_PX * scale}px Helvetica, sans-serif`;
-    ctx.textBaseline = "alphabetic";
-    lines.forEach((t, i) => {
-      const q = viewport.convertToViewportPoint(a.x, a.y - i * a.size * 1.2);
-      ctx.fillText(t, q[0], q[1]);
-    });
+    if (a.latex) {
+      const L = layoutLatex(a);
+      ctx.fillStyle = a.color;
+      ctx.strokeStyle = a.color;
+      ctx.textBaseline = "alphabetic";
+      for (const p of L.prims) {
+        if (p.t === "text") {
+          ctx.font = `${p.size * PT_TO_PX * scale}px Helvetica, sans-serif`;
+          const q = viewport.convertToViewportPoint(a.x + p.x, a.y + p.y);
+          ctx.fillText(p.s, q[0], q[1]);
+        } else {
+          const q1 = viewport.convertToViewportPoint(a.x + p.x1, a.y + p.y1);
+          const q2 = viewport.convertToViewportPoint(a.x + p.x2, a.y + p.y2);
+          ctx.lineWidth = Math.max(1, p.w * PT_TO_PX * scale);
+          ctx.beginPath();
+          ctx.moveTo(q1[0], q1[1]);
+          ctx.lineTo(q2[0], q2[1]);
+          ctx.stroke();
+        }
+      }
+    } else {
+      const lines = a.text.split("\n");
+      ctx.fillStyle = a.color;
+      ctx.font = `${a.italic ? "italic " : ""}${a.bold ? "700 " : ""}${a.size * PT_TO_PX * scale}px Helvetica, sans-serif`;
+      ctx.textBaseline = "alphabetic";
+      lines.forEach((t, i) => {
+        const q = viewport.convertToViewportPoint(a.x, a.y - i * a.size * 1.2);
+        ctx.fillText(t, q[0], q[1]);
+      });
+    }
   } else if (a.type === "comment") {
     const p = viewport.convertToViewportPoint(a.x, a.y);
     const r = 9 * scale;
@@ -1223,12 +1425,14 @@ function drawAnno(ctx, a, viewport) {
     } else if (a.type === "rect") {
       ctx.strokeStyle = a.color;
       ctx.lineWidth = a.width * scale;
+      if (a.fill) { ctx.fillStyle = a.fill; ctx.fillRect(x, y, w, h); }
       ctx.strokeRect(x, y, w, h);
     } else if (a.type === "ellipse") {
       ctx.strokeStyle = a.color;
       ctx.lineWidth = a.width * scale;
       ctx.beginPath();
       ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
       ctx.stroke();
     } else if (a.type === "triangle") {
       ctx.strokeStyle = a.color;
@@ -1238,6 +1442,7 @@ function drawAnno(ctx, a, viewport) {
       ctx.lineTo(x + w, y + h);
       ctx.lineTo(x, y + h);
       ctx.closePath();
+      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
       ctx.stroke();
     } else if (a.type === "diamond") {
       ctx.strokeStyle = a.color;
@@ -1248,6 +1453,7 @@ function drawAnno(ctx, a, viewport) {
       ctx.lineTo(x + w / 2, y + h);
       ctx.lineTo(x, y + h / 2);
       ctx.closePath();
+      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
       ctx.stroke();
     } else if (a.type === "star") {
       ctx.strokeStyle = a.color;
@@ -1261,6 +1467,7 @@ function drawAnno(ctx, a, viewport) {
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
       }
       ctx.closePath();
+      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
       ctx.stroke();
     }
   }
@@ -1291,9 +1498,138 @@ function refreshEntryByOrig(orig) {
    ========================================================= */
 const measureCtx = document.createElement("canvas").getContext("2d");
 
+/* ---------- LaTeX-Mini-Renderer für Formeln ---------- */
+const LATEX_SYMBOLS = {
+  alpha: "α", beta: "β", gamma: "γ", delta: "δ", epsilon: "ε", varepsilon: "ε",
+  zeta: "ζ", eta: "η", theta: "θ", vartheta: "θ", iota: "ι", kappa: "κ", lambda: "λ",
+  mu: "μ", nu: "ν", xi: "ξ", pi: "π", rho: "ρ", sigma: "σ", tau: "τ", upsilon: "υ",
+  phi: "φ", varphi: "φ", chi: "χ", psi: "ψ", omega: "ω",
+  Gamma: "Γ", Delta: "Δ", Theta: "Θ", Lambda: "Λ", Xi: "Ξ", Pi: "Π", Sigma: "Σ",
+  Phi: "Φ", Psi: "Ψ", Omega: "Ω",
+  times: "×", cdot: "·", pm: "±", mp: "∓", ast: "∗",
+  leq: "≤", geq: "≥", neq: "≠", approx: "≈", equiv: "≡", sim: "∼",
+  infty: "∞", partial: "∂", nabla: "∇", propto: "∝",
+  sum: "∑", prod: "∏", int: "∫",
+  rightarrow: "→", to: "→", leftarrow: "←", Rightarrow: "⇒", Leftrightarrow: "⇔",
+  in: "∈", notin: "∉", subset: "⊂", cup: "∪", cap: "∩", emptyset: "∅",
+  forall: "∀", exists: "∃", neg: "¬", land: "∧", lor: "∨",
+  degree: "°", cdots: "⋯", ldots: "…", ell: "ℓ"
+};
+
+function latexMeasure(s, size) {
+  measureCtx.font = `${size * PT_TO_PX}px Helvetica, sans-serif`;
+  return measureCtx.measureText(s).width / PT_TO_PX;
+}
+
+function latexParse(src) {
+  let i = 0;
+  function parseArg() {
+    if (src[i] === "{") { i++; const r = parseSeq("}"); i++; return r; }
+    if (src[i] === "\\") {
+      i++;
+      let name = "";
+      while (i < src.length && /[a-zA-Z]/.test(src[i])) name += src[i++];
+      if (!name) { const ch = src[i++] || " "; return [{ k: "txt", s: ch }]; }
+      if (LATEX_SYMBOLS[name]) return [{ k: "txt", s: LATEX_SYMBOLS[name] }];
+      return [{ k: "txt", s: name }];
+    }
+    return [{ k: "txt", s: src[i++] || "" }];
+  }
+  function parseSeq(stop) {
+    const out = [];
+    while (i < src.length) {
+      const c = src[i];
+      if (stop && c === stop) return out;
+      if (c === "{") { i++; out.push(...parseSeq("}")); i++; }
+      else if (c === "}") { i++; }
+      else if (c === "\\") {
+        i++;
+        let name = "";
+        while (i < src.length && /[a-zA-Z]/.test(src[i])) name += src[i++];
+        if (!name) {
+          const ch = src[i++] || " ";
+          if (ch === "," || ch === ";" || ch === " " || ch === ":") out.push({ k: "sp", w: 0.3 });
+          else out.push({ k: "txt", s: ch });
+        } else if (name === "frac") {
+          const u = parseArg();
+          const d = parseArg();
+          out.push({ k: "frac", u, d });
+        } else if (name === "sqrt") {
+          out.push({ k: "sqrt", n: parseArg() });
+        } else if (name === "left" || name === "right") {
+          i++;
+        } else if (name === "quad" || name === "qquad") {
+          out.push({ k: "sp", w: name === "quad" ? 1 : 2 });
+        } else if (name === "text" || name === "mathrm") {
+          out.push(...parseArg());
+        } else if (LATEX_SYMBOLS[name]) {
+          out.push({ k: "txt", s: LATEX_SYMBOLS[name] });
+        } else {
+          out.push({ k: "txt", s: name });
+        }
+      }
+      else if (c === "^") { i++; out.push({ k: "sup", n: parseArg() }); }
+      else if (c === "_") { i++; out.push({ k: "sub", n: parseArg() }); }
+      else if (c === " ") { i++; out.push({ k: "sp", w: 0.35 }); }
+      else { out.push({ k: "txt", s: c }); i++; }
+    }
+    return out;
+  }
+  return parseSeq(null);
+}
+
+function layoutSeq(nodes, size, ox, oy, prims) {
+  let cx = 0;
+  for (const nd of nodes) {
+    if (nd.k === "txt") {
+      if (nd.s) prims.push({ t: "text", x: ox + cx, y: oy, size: size, s: nd.s });
+      cx += latexMeasure(nd.s, size);
+    } else if (nd.k === "sp") {
+      cx += nd.w * size;
+    } else if (nd.k === "sup") {
+      cx += layoutSeq(nd.n, size * 0.7, ox + cx, oy + 0.45 * size, prims);
+    } else if (nd.k === "sub") {
+      cx += layoutSeq(nd.n, size * 0.7, ox + cx, oy - 0.28 * size, prims);
+    } else if (nd.k === "frac") {
+      const wu = layoutSeq(nd.u, size * 0.85, 0, 0, []);
+      const wd = layoutSeq(nd.d, size * 0.85, 0, 0, []);
+      const w = Math.max(wu, wd);
+      layoutSeq(nd.u, size * 0.85, ox + cx + (w - wu) / 2, oy + 0.48 * size, prims);
+      layoutSeq(nd.d, size * 0.85, ox + cx + (w - wd) / 2, oy - 0.32 * size, prims);
+      prims.push({ t: "line", x1: ox + cx, y1: oy + 0.08 * size, x2: ox + cx + w, y2: oy + 0.08 * size, w: Math.max(0.5, size * 0.06) });
+      cx += w + 0.12 * size;
+    } else if (nd.k === "sqrt") {
+      const sym = "√";
+      const wSym = latexMeasure(sym, size * 1.1);
+      prims.push({ t: "text", x: ox + cx, y: oy, size: size * 1.1, s: sym });
+      const wi = layoutSeq(nd.n, size, ox + cx + wSym, oy, prims);
+      prims.push({ t: "line", x1: ox + cx + wSym - 1, y1: oy + 0.72 * size, x2: ox + cx + wSym + wi, y2: oy + 0.72 * size, w: Math.max(0.5, size * 0.06) });
+      cx += wSym + wi + 0.08 * size;
+    }
+  }
+  return cx;
+}
+
+function layoutLatex(a) {
+  const prims = [];
+  const nodes = latexParse(a.text || "");
+  const w = layoutSeq(nodes, a.size, 0, 0, prims);
+  let up = a.size * 0.8;
+  let down = a.size * 0.25;
+  for (const p of prims) {
+    if (p.t === "text") {
+      up = Math.max(up, p.y + p.size * 0.8);
+      down = Math.max(down, p.size * 0.25 - p.y);
+    } else if (p.t === "line") {
+      up = Math.max(up, p.y1 + 2);
+    }
+  }
+  return { w: Math.max(4, w), up, down, prims };
+}
+
 function snapshotAnno(a) {
   const s = {};
-  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text"]) {
+  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "bold", "italic", "latex"]) {
     if (k in a) s[k] = a[k];
   }
   if (a.points) s.points = a.points.map((p) => p.slice());
@@ -1317,8 +1653,12 @@ function annoBBox(a) {
     return { x1: a.x - 9, y1: a.y - 9, x2: a.x + 9, y2: a.y + 9 };
   }
   if (a.type === "text") {
+    if (a.latex) {
+      const L = layoutLatex(a);
+      return { x1: a.x, y1: a.y - L.down, x2: a.x + L.w, y2: a.y + L.up };
+    }
     const lines = a.text.split("\n");
-    measureCtx.font = `${a.size * PT_TO_PX}px Helvetica, sans-serif`;
+    measureCtx.font = `${a.italic ? "italic " : ""}${a.bold ? "700 " : ""}${a.size * PT_TO_PX}px Helvetica, sans-serif`;
     let w = 10;
     for (const t of lines) w = Math.max(w, measureCtx.measureText(t).width / PT_TO_PX);
     return {
@@ -1399,6 +1739,7 @@ function selectAnno(a, orig) {
   selAnno = a;
   selOrig = orig;
   refreshEntryByOrig(orig);
+  updateContextTabs();
   updateUi();
 }
 
@@ -1408,6 +1749,7 @@ function deselectAnno() {
   selAnno = null;
   selOrig = -1;
   refreshEntryByOrig(o);
+  updateContextTabs();
   updateUi();
 }
 
@@ -1671,7 +2013,12 @@ function selectionAnchor() {
   if (!entry || !entry.viewport) return null;
   const rects = Array.from(range.getClientRects()).filter((r) => r.width > 1 && r.height > 1);
   if (rects.length === 0) return null;
-  const converted = rects.map((r) => clientRectToPdf(entry, r));
+  /* Auswahl auf die tatsächliche Texthöhe schrumpfen, damit Markierungen präzise sitzen */
+  const converted = rects.map((r) => {
+    const c = clientRectToPdf(entry, r);
+    const k = Math.max(1, (c.y2 - c.y1) * 0.12);
+    return { x1: c.x1, y1: Math.min(c.y1, c.y2) + k, x2: c.x2, y2: Math.max(c.y1, c.y2) - k };
+  });
   const xs = converted.flatMap((c) => [c.x1, c.x2]);
   const ys = converted.flatMap((c) => [c.y1, c.y2]);
   return {
@@ -1988,7 +2335,7 @@ function textLines(a) {
   return a.text.split("\n").map((t, i) => ({ t, x: a.x, y: a.y - i * a.size * 1.2 }));
 }
 
-async function burnAnnotations(page, list, font) {
+async function burnAnnotations(out, page, list, fonts) {
   for (const a of list) {
     if (a.type === "draw" || a.type === "marker") {
       for (let i = 0; i + 1 < a.points.length; i++) {
@@ -2049,36 +2396,75 @@ async function burnAnnotations(page, list, font) {
       page.drawRectangle({
         x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
         width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
-        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
+        ...(a.fill ? { color: rgbFrom(a.fill) } : {})
       });
     } else if (a.type === "ellipse") {
       const cx = (a.x1 + a.x2) / 2, cy = (a.y1 + a.y2) / 2;
       page.drawEllipse({
         x: cx, y: cy,
         xScale: Math.abs(a.x2 - a.x1) / 2, yScale: Math.abs(a.y2 - a.y1) / 2,
-        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
+        ...(a.fill ? { color: rgbFrom(a.fill) } : {})
       });
     } else if (a.type === "triangle") {
       page.drawSvgPath("M 0.5 0 L 1 1 L 0 1 Z", {
         x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
         scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
-        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
+        ...(a.fill ? { color: rgbFrom(a.fill) } : {})
       });
     } else if (a.type === "diamond") {
       page.drawSvgPath("M 0.5 0 L 1 0.5 L 0.5 1 L 0 0.5 Z", {
         x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
         scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
-        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
+        ...(a.fill ? { color: rgbFrom(a.fill) } : {})
       });
     } else if (a.type === "star") {
       page.drawSvgPath(starPathUnit(), {
         x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
         scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
-        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
+        ...(a.fill ? { color: rgbFrom(a.fill) } : {})
       });
     } else if (a.type === "text") {
-      for (const ln of textLines(a)) {
-        page.drawText(ln.t, { x: ln.x, y: ln.y, size: a.size, font, color: rgbFrom(a.color) });
+      if (a.latex) {
+        /* Formeln als transparentes PNG einbetten, da Standardfonts kein Griechisch kennen */
+        try {
+          const L = layoutLatex(a);
+          const S = 4;
+          const pad = 2;
+          const wPx = Math.ceil((L.w + 2 * pad) * PT_TO_PX * S);
+          const hPx = Math.ceil((L.up + L.down + 2 * pad) * PT_TO_PX * S);
+          const c = document.createElement("canvas");
+          c.width = wPx;
+          c.height = hPx;
+          const cx = c.getContext("2d");
+          cx.fillStyle = a.color;
+          cx.strokeStyle = a.color;
+          for (const p of L.prims) {
+            if (p.t === "text") {
+              cx.font = `${p.size * PT_TO_PX * S}px Helvetica, sans-serif`;
+              cx.fillText(p.s, (p.x + pad) * PT_TO_PX * S, (L.up + pad - p.y) * PT_TO_PX * S);
+            } else {
+              cx.lineWidth = Math.max(1, p.w * PT_TO_PX * S);
+              cx.beginPath();
+              cx.moveTo((p.x1 + pad) * PT_TO_PX * S, (L.up + pad - p.y1) * PT_TO_PX * S);
+              cx.lineTo((p.x2 + pad) * PT_TO_PX * S, (L.up + pad - p.y2) * PT_TO_PX * S);
+              cx.stroke();
+            }
+          }
+          const png = await out.embedPng(c.toDataURL("image/png"));
+          page.drawImage(png, { x: a.x - pad, y: a.y - L.down - pad, width: L.w + 2 * pad, height: L.up + L.down + 2 * pad });
+        } catch (e) {
+          toast("Formel konnte nicht eingebettet werden: " + (e.message || e), true);
+        }
+      } else {
+        const font = a.bold && a.italic ? fonts.boldItalic : a.bold ? fonts.bold : a.italic ? fonts.italic : fonts.regular;
+        for (const ln of textLines(a)) {
+          page.drawText(ln.t, { x: ln.x, y: ln.y, size: a.size, font, color: rgbFrom(a.color) });
+        }
       }
     }
   }
@@ -2136,7 +2522,12 @@ function addPdfComments(out, page, comments) {
 async function buildPdf(indices, name, successMsg) {
   const src = await PDFLib.PDFDocument.load(pdfBytes);
   const out = await PDFLib.PDFDocument.create();
-  const font = await out.embedFont(PDFLib.StandardFonts.Helvetica);
+  const fonts = {
+    regular: await out.embedFont(PDFLib.StandardFonts.Helvetica),
+    bold: await out.embedFont(PDFLib.StandardFonts.HelveticaBold),
+    italic: await out.embedFont(PDFLib.StandardFonts.HelveticaOblique),
+    boldItalic: await out.embedFont(PDFLib.StandardFonts.HelveticaBoldOblique)
+  };
   for (const orig of indices) {
     const list = annos.get(orig) || [];
     const visual = list.filter((a) => a.type !== "comment");
@@ -2150,7 +2541,7 @@ async function buildPdf(indices, name, successMsg) {
       applyRotation(cp, orig);
       out.addPage(cp);
       p = cp;
-      if (visual.length) await burnAnnotations(p, visual, font);
+      if (visual.length) await burnAnnotations(out, p, visual, fonts);
     }
     if (comments.length) addPdfComments(out, p, comments);
   }
@@ -2261,6 +2652,7 @@ async function rebuildThumbs() {
     });
     box.appendChild(div);
   }
+  rebuildBookmarks();
   updateUi();
 }
 
@@ -2298,6 +2690,9 @@ function updateUi() {
   $("btnRotR").disabled = !hasDoc;
   $("btnAnnoClear").disabled = annoCount === 0;
   $("btnCommentList").disabled = !hasDoc;
+  $("btnAddBookmark").disabled = !hasDoc;
+  $("btnAddBookmarkSide").disabled = !hasDoc;
+  $("pagePos").textContent = hasDoc ? `Seite ${currentPage + 1} von ${pageOrder.length}` : "";
   $("zoomLabel").textContent = Math.round(zoom * 100) + "%";
   $("hint").textContent = selAnno
     ? "Element ausgewählt: ziehen verschiebt, Griffe ändern die Größe, Entf löscht, Doppelklick bearbeitet den Text."
@@ -2395,13 +2790,94 @@ document.addEventListener("click", (e) => {
   if (!shapeMenu.contains(e.target) && e.target.closest("#btnShapes") === null) closeShapeMenu();
 });
 
-/* Kommentarliste */
-$("btnCommentList").addEventListener("click", () => {
+/* Kommentarliste und Seitenbereich ein- und ausklappen */
+let commentPanelOpen = false;
+let thumbsPanelOpen = true;
+
+function setCommentPanel(open) {
+  commentPanelOpen = open;
   const panel = $("commentPanel");
-  panel.hidden = !panel.hidden;
-  $("btnCommentListLabel").textContent = panel.hidden ? "Liste anzeigen" : "Liste ausblenden";
-  refreshComments();
-});
+  panel.classList.toggle("collapsed", !open);
+  $("toggleComments").textContent = open ? "»" : "«";
+  $("btnToggleCommentPane").classList.toggle("active", open);
+  $("btnCommentListLabel").textContent = open ? "Liste ausblenden" : "Liste anzeigen";
+  if (open) refreshComments();
+}
+
+function setThumbsPanel(open) {
+  thumbsPanelOpen = open;
+  $("thumbPanel").classList.toggle("collapsed", !open);
+  $("toggleThumbs").textContent = open ? "«" : "»";
+  $("btnToggleThumbsPane").classList.toggle("active", open);
+}
+
+$("toggleComments").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
+$("toggleThumbs").addEventListener("click", () => setThumbsPanel(!thumbsPanelOpen));
+$("btnToggleThumbsPane").addEventListener("click", () => setThumbsPanel(!thumbsPanelOpen));
+$("btnToggleCommentPane").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
+$("btnCommentList").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
+
+/* Lesezeichen pro Dokument im Browser speichern */
+let bookmarks = [];
+function bookmarkKey() { return "paperino-lesezeichen-" + fileName; }
+function loadBookmarks() {
+  bookmarks = [];
+  try {
+    const raw = localStorage.getItem(bookmarkKey());
+    if (raw) bookmarks = JSON.parse(raw);
+  } catch (e) { bookmarks = []; }
+  rebuildBookmarks();
+}
+function saveBookmarks() {
+  try { localStorage.setItem(bookmarkKey(), JSON.stringify(bookmarks)); } catch (e) { /* Speicher nicht verfügbar */ }
+}
+function addBookmark() {
+  if (!doc || pageOrder.length === 0) return;
+  const orig = pageOrder[currentPage];
+  if (bookmarks.some((b) => b.orig === orig)) {
+    toast("Für diese Seite existiert bereits ein Lesezeichen.");
+    return;
+  }
+  bookmarks.push({ orig, pos: currentPage });
+  bookmarks.sort((x, y) => x.orig - y.orig);
+  saveBookmarks();
+  rebuildBookmarks();
+  toast(`Lesezeichen für Seite ${orig + 1} angelegt.`);
+}
+function rebuildBookmarks() {
+  const box = $("bookmarkList");
+  box.innerHTML = "";
+  if (!doc) return;
+  if (bookmarks.length === 0) {
+    box.innerHTML = '<div class="bookmark-item" style="opacity:.6">Noch keine Lesezeichen</div>';
+    return;
+  }
+  for (const b of bookmarks) {
+    const pos = pageOrder.indexOf(b.orig);
+    const div = document.createElement("div");
+    div.className = "bookmark-item";
+    const label = pos >= 0 ? `Seite ${b.orig + 1} · Pos. ${pos + 1}` : `Seite ${b.orig + 1} · entfernt`;
+    const span = document.createElement("span");
+    span.textContent = label;
+    div.appendChild(span);
+    if (pos >= 0) div.addEventListener("click", () => goTo(pos));
+    else div.style.opacity = ".5";
+    const del = document.createElement("button");
+    del.className = "t-btn";
+    del.textContent = "×";
+    del.title = "Lesezeichen entfernen";
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      bookmarks = bookmarks.filter((x) => x.orig !== b.orig);
+      saveBookmarks();
+      rebuildBookmarks();
+    });
+    div.appendChild(del);
+    box.appendChild(div);
+  }
+}
+$("btnAddBookmark").addEventListener("click", addBookmark);
+$("btnAddBookmarkSide").addEventListener("click", addBookmark);
 
 /* Seitenlauf: aktuelle Seite beim Scrollen bestimmen */
 let scrollTimer = null;
@@ -2429,12 +2905,121 @@ $("viewer").addEventListener("scroll", () => {
 /* Registerkarten des Menübands */
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-    document.querySelectorAll(".pane").forEach((p) => {
-      p.hidden = p.id !== tab.dataset.tab;
-    });
+    activateTab(tab.dataset.tab);
+    if (!tab.classList.contains("contextual")) lastBaseTab = tab.dataset.tab;
   });
+});
+
+/* Kontextreiter: Textfeld bzw. Formformat erscheinen bei Auswahl */
+const FILLABLE = ["rect", "ellipse", "triangle", "diamond", "star"];
+let lastBaseTab = "paneStart";
+
+function activateTab(paneId) {
+  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+  const btn = Array.from(document.querySelectorAll(".tab")).find((t) => t.dataset.tab === paneId);
+  if (btn) btn.classList.add("active");
+  document.querySelectorAll(".pane").forEach((p) => {
+    p.hidden = p.id !== paneId;
+  });
+}
+
+function updateContextTabs() {
+  const tText = $("tabTextfeld");
+  const tForm = $("tabFormformat");
+  if (selAnno && selAnno.type === "text") {
+    tText.classList.remove("hidden");
+    tForm.classList.add("hidden");
+    refreshContextPane();
+    activateTab("paneTextfeld");
+  } else if (selAnno && selAnno.type !== "comment") {
+    tForm.classList.remove("hidden");
+    tText.classList.add("hidden");
+    refreshContextPane();
+    activateTab("paneFormformat");
+  } else {
+    tText.classList.add("hidden");
+    tForm.classList.add("hidden");
+    activateTab(lastBaseTab);
+  }
+}
+
+function refreshContextPane() {
+  const a = selAnno;
+  const isText = !!a && a.type === "text";
+  const isForm = !!a && a.type !== "text" && a.type !== "comment";
+  const isRedact = !!a && a.type === "redact";
+  if (a) {
+    if (isText) {
+      $("annoFontSize").value = a.size;
+      $("annoTextColor").value = a.color;
+      $("annoBold").checked = !!a.bold;
+      $("annoItalic").checked = !!a.italic;
+      $("annoLatex").checked = !!a.latex;
+    } else if (isForm) {
+      $("annoShapeColor").value = a.color;
+      $("annoShapeWidth").value = a.width;
+      if (FILLABLE.includes(a.type)) {
+        $("annoFillColor").value = a.fill || "#ffffff";
+        $("annoNoFill").checked = !a.fill;
+      } else {
+        $("annoNoFill").checked = true;
+      }
+    }
+  }
+  $("annoFontSize").disabled = !isText;
+  $("annoTextColor").disabled = !isText;
+  $("annoBold").disabled = !isText;
+  $("annoItalic").disabled = !isText;
+  $("annoLatex").disabled = !isText;
+  $("btnEditText").disabled = !isText;
+  $("annoShapeColor").disabled = !isForm || isRedact;
+  $("annoShapeWidth").disabled = !isForm || isRedact;
+  $("annoFillColor").disabled = !isForm || !FILLABLE.includes(a && a.type);
+  $("annoNoFill").disabled = !isForm || !FILLABLE.includes(a && a.type);
+  $("btnDeleteAnno").disabled = !a;
+}
+
+function bindCtxControl(id, apply) {
+  const el = $(id);
+  el.addEventListener("focus", () => { el._armed = true; });
+  el.addEventListener("input", () => {
+    if (!selAnno) return;
+    if (el._armed) {
+      pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) });
+      el._armed = false;
+    }
+    apply(selAnno);
+    refreshEntryByOrig(selOrig);
+    if (selAnno.type === "comment") refreshComments();
+  });
+  el.addEventListener("change", () => { el._armed = true; });
+}
+
+bindCtxControl("annoFontSize", (a) => { a.size = Math.max(4, Math.min(96, parseFloat($("annoFontSize").value) || 12)); });
+bindCtxControl("annoTextColor", (a) => { a.color = $("annoTextColor").value; });
+bindCtxControl("annoBold", (a) => { a.bold = $("annoBold").checked; });
+bindCtxControl("annoItalic", (a) => { a.italic = $("annoItalic").checked; });
+bindCtxControl("annoLatex", (a) => { a.latex = $("annoLatex").checked; });
+bindCtxControl("annoShapeColor", (a) => { a.color = $("annoShapeColor").value; });
+bindCtxControl("annoShapeWidth", (a) => { a.width = Math.max(0.5, parseFloat($("annoShapeWidth").value) || 1); });
+bindCtxControl("annoFillColor", (a) => {
+  if (FILLABLE.includes(a.type) && !$("annoNoFill").checked) a.fill = $("annoFillColor").value;
+});
+$("annoNoFill").addEventListener("change", () => {
+  if (!selAnno || !FILLABLE.includes(selAnno.type)) return;
+  pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) });
+  selAnno.fill = $("annoNoFill").checked ? null : $("annoFillColor").value;
+  refreshEntryByOrig(selOrig);
+});
+
+$("btnEditText").addEventListener("click", () => {
+  if (!selAnno || selAnno.type !== "text") return;
+  const entry = entries.find((e) => e.orig === selOrig);
+  if (entry) openTextEditor(entry, selAnno);
+});
+
+$("btnDeleteAnno").addEventListener("click", () => {
+  if (selAnno) deleteSelectedAnno();
 });
 
 /* Drag & Drop von Dateien */
