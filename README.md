@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.12**
+> Aktuelle Version: **Alpha 0.13**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -12,7 +12,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
 - Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
@@ -20,10 +20,10 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Pfeile mit einstellbaren Pfeilspitzen: ohne, linke, rechte oder beide Spitzen, offen oder gefüllt
 - Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
 - Formen und Textfelder drehen: runde Eckgriffe, Seitenbalken zum einseitigen Ziehen, Drehgriff oben, Verschieben in Punkt-Schritten über Richtungspfeile
-- Textgebundenes Markieren, Durchstreichen und Unterstreichen direkt am Originaltext
-- Lektorieren-Reiter in „Bestehenden Text bearbeiten“ (Markieren, Durchstreichen, Unterstreichen) und „Ergänzen“ (Text, Formen, Stift, Textmarker, Auswahl) gegliedert
+- Textgebundenes Markieren, Durchstreichen und Unterstreichen direkt am Originaltext; die Farbe wird je Werkzeug über ein Menü am Knopf gewählt, bevor der Text markiert wird
+- Lektorieren-Reiter gegliedert in „Standard“ (Auswahlwerkzeug, vorangestellt), „Bestehenden Text bearbeiten“ (Markieren, Durchstreichen, Unterstreichen; Farbe je Werkzeug am Knopf wählbar) und „Ergänzen“ (Text, Formen, Stift, Textmarker)
 - Schwärzen als Rechteck oder für markierten Text; mit Sicherheitsmodus wird die Seite beim Speichern als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird dabei tatsächlich entfernt und ist danach nicht mehr markierbar
-- Freihändiges Zeichnen mit Stift und Textmarker (Farb- und Strichstärkenwahl)
+- Freihändiges Zeichnen mit Stift und Textmarker: beim Aktivieren öffnet sich am Knopf ein Menü mit Deckkraft, Stärke (beziehungsweise Markergröße) und vorausgewählten Farben; der Textmarker kann optional jede Linie nach dem Loslassen automatisch begradigen (waagerecht, senkrecht oder gerade Verbindung)
 - Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil; Formenauswahl, Konturfarbe, Strichstärke, Strichart, Füllung (inklusive Transparenz) und Pfeilspitzen lassen sich im Formformat-Reiter auch vor dem Zeichnen als Voreinstellung festlegen (wird gemerkt); der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs
 - Kommentaren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
@@ -62,11 +62,12 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.10 | Korrektur des Darstellungsfehlers beim Zoomen und Drehen (gleichzeitige Darstellungsvorgänge für dieselbe Seite wurden race-artig abgebrochen und hinterließen eine leere oder entstellte Seite; laufende Darstellungen werden nun zuverlässig abgebrochen und neu aufgebaut), Schriftart, Schriftgröße und sämtliche Textformatierungen lassen sich vor dem Einfügen im Textfeld-Reiter als Voreinstellung festlegen (werden gemerkt und auf neue Textfelder angewendet), der Textfeld-Reiter öffnet sich automatisch beim Aktivieren des Textwerkzeugs |
 | Alpha 0.11 | Auswahlrahmen und Textdeckung bei Web-Schriftarten korrigiert: die gewählte Schriftart wird beim Wechsel sofort geladen und nach dem Laden werden alle Anmerkungen neu gezeichnet, damit Begrenzungsrahmen und Text immer übereinstimmen (Ursache für Text, der außerhalb seines Rahmens erschien) |
 | Alpha 0.12 | Lektorieren-Reiter in „Bestehenden Text bearbeiten“ und „Ergänzen“ gegliedert, Formenauswahl direkt im Formformat-Reiter (das separate Formen-Menü entfällt), Formformat mit Kontur, Strichstärke, Strichart, Füllung und Pfeilspitzen auch vor dem Zeichnen als Voreinstellung festlegbar (wird gemerkt), der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs, Auswahlwerkzeug in der Gruppe „Ergänzen“ |
+| Alpha 0.13 | Werkzeugmenüs am Knopf: Stift (Deckkraft, Stärke, Farbe), Textmarker (Deckkraft, Größe, Farbe, Häkchen „Linie begradigen“ — freihändige Striche werden nach dem Loslassen zu geraden Linien ausgerichtet) und Markieren/Durchstreichen/Unterstreichen (Farbe je Werkzeug, vor dem Markieren wählbar), Auswahlwerkzeug vorangestellt in eigener Gruppe „Standard“ (Stift und Textmarker öffnen keinen Formformat-Reiter mehr), sechs zusätzliche freie Schriftarten (Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, mit allen Schnitten eingebettet) |
 
 ## Hinweise und Grenzen
 
 - Passwortgeschützte PDFs werden nicht unterstützt.
-- Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans oder PT Serif gespeichert (die Web-Schriftarten werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
+- Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono oder Arvo gespeichert (die freien Schriften werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
 - LaTeX-Formeln werden beim Speichern als eingebettetes Bild abgelegt, da die PDF-Standardschriften keine mathematischen Symbole enthalten.
 - Wellige Unterstreichungen werden beim Speichern als gerade Linie angenähert; gedrehter Text wird beim Speichern an gleicher Stelle ohne Drehung abgelegt.
 - Schwärzungen ohne Sicherheitsmodus verdecken den Inhalt nur optisch; der Text bleibt in der Datei enthalten. Der Sicherheitsmodus ist daher standardmäßig aktiviert.
