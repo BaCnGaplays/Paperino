@@ -748,7 +748,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.11</span>
+  <span class="version" id="appVersion">Alpha 0.12</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -970,14 +970,6 @@
     <div class="pane" id="paneEdit" hidden>
       <div class="group">
         <div class="group-buttons">
-          <button id="toolSelect" class="rb-btn active" data-tool="select" title="Normale Ansicht ohne Zeichenwerkzeug; Text kann markiert werden">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 1.5L11 20z"/></svg>
-            <span>Auswahl</span>
-          </button>
-          <button id="toolText" class="rb-btn" data-tool="text" title="Text einfügen: auf die Seite klicken und direkt im Dokument schreiben; das Werkzeug schaltet danach zurück">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14"/><path d="M12 5v14"/></svg>
-            <span>Text</span>
-          </button>
           <button id="toolHighlight" class="rb-btn" data-tool="highlight" title="Textgebundene Markierung: Text auf der Seite markieren; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M4 21h16"/></svg>
             <span>Markieren</span>
@@ -990,6 +982,20 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M5 20h14"/></svg>
             <span>Unterstreichen</span>
           </button>
+        </div>
+        <div class="group-label">Bestehenden Text bearbeiten</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <button id="toolText" class="rb-btn" data-tool="text" title="Text einfügen: auf die Seite klicken und direkt im Dokument schreiben; das Werkzeug schaltet danach zurück">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14"/><path d="M12 5v14"/></svg>
+            <span>Text</span>
+          </button>
+          <button id="btnShapes" class="rb-btn" title="Formen einfügen: öffnet den Formformat-Reiter mit Formenauswahl, Farbe, Strichstärke und Füllung">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><circle cx="17" cy="17" r="4"/><path d="M17 3l2.9 6h-5.8z"/></svg>
+            <span>Formen</span>
+          </button>
           <button id="toolDraw" class="rb-btn" data-tool="draw" title="Stift: eine freihändige Linie zeichnen; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4L8 20l-5 1 1-5z"/></svg>
             <span>Stift</span>
@@ -998,39 +1004,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 4-4 4 4-4 4z"/><path d="M12 15v3"/><path d="M4 21h16"/></svg>
             <span>Textmarker</span>
           </button>
-        </div>
-        <div class="group-label">Werkzeug</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons">
-          <button id="btnShapes" class="rb-btn" title="Formen einfügen (Rechteck, Ellipse, Dreieck, Raute, Stern, Linie, Pfeil)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><circle cx="17" cy="17" r="4"/><path d="M17 3l2.9 6h-5.8z"/></svg>
-            <span>Formen</span>
+          <button id="toolSelect" class="rb-btn active" data-tool="select" title="Normale Ansicht ohne Zeichenwerkzeug; Text kann markiert werden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 1.5L11 20z"/></svg>
+            <span>Auswahl</span>
           </button>
         </div>
-        <div class="group-label">Formen</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons">
-          <button class="rb-tgl" id="btnPenColor" title="Farbe für alle Zeichnungs- und Textwerkzeuge"><span class="swatch-dot" id="penColorDot"></span> Farbe</button>
-          <label class="rb-check" title="Strichstärke in Punkten">
-            Strichstärke
-            <select class="rb-select" id="penWidth">
-              <option value="0.25">¼ Pt</option>
-              <option value="0.75">¾ Pt</option>
-              <option value="1">1 Pt</option>
-              <option value="1.5">1½ Pt</option>
-              <option value="2" selected>2 Pt</option>
-              <option value="2.25">2¼ Pt</option>
-              <option value="3">3 Pt</option>
-              <option value="4.5">4½ Pt</option>
-              <option value="6">6 Pt</option>
-            </select>
-          </label>
-        </div>
-        <div class="group-label">Format</div>
+        <div class="group-label">Ergänzen</div>
       </div>
 
       <div class="group">
@@ -1130,6 +1109,40 @@
     </div>
 
     <div class="pane" id="paneFormformat" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <button class="rb-btn" data-tool="rect" title="Rechteck zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="1"/></svg>
+            <span>Rechteck</span>
+          </button>
+          <button class="rb-btn" data-tool="ellipse" title="Ellipse zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="8" ry="6.5"/></svg>
+            <span>Ellipse</span>
+          </button>
+          <button class="rb-btn" data-tool="triangle" title="Dreieck zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 4l8 15H4z"/></svg>
+            <span>Dreieck</span>
+          </button>
+          <button class="rb-btn" data-tool="diamond" title="Raute zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 9-8 9-8-9z"/></svg>
+            <span>Raute</span>
+          </button>
+          <button class="rb-btn" data-tool="star" title="Stern zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.4 6.2 6.6.4-5.1 4.2 1.7 6.4L12 16.6 6.4 20.2l1.7-6.4L3 9.6l6.6-.4z"/></svg>
+            <span>Stern</span>
+          </button>
+          <button class="rb-btn" data-tool="line" title="Linie zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19 19 5"/></svg>
+            <span>Linie</span>
+          </button>
+          <button class="rb-btn" data-tool="arrow" title="Pfeil zeichnen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5"/><path d="M12 5h7v7"/></svg>
+            <span>Pfeil</span>
+          </button>
+        </div>
+        <div class="group-label">Formen</div>
+      </div>
+
       <div class="group">
         <div class="group-buttons ctx-row">
           <button class="rb-tgl" id="btnShapeColor" title="Formkontur (Konturfarbe) wählen" disabled><span class="swatch-dot" id="shpColorDot"></span> Kontur</button>
@@ -1248,16 +1261,6 @@
   <span id="hint"></span>
 </div>
 
-<div class="shape-menu" id="shapeMenu">
-  <button data-tool="rect" title="Rechteck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="1"/></svg></button>
-  <button data-tool="ellipse" title="Ellipse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="8" ry="6.5"/></svg></button>
-  <button data-tool="triangle" title="Dreieck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 4l8 15H4z"/></svg></button>
-  <button data-tool="diamond" title="Raute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 9-8 9-8-9z"/></svg></button>
-  <button data-tool="star" title="Stern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.4 6.2 6.6.4-5.1 4.2 1.7 6.4L12 16.6 6.4 20.2l1.7-6.4L3 9.6l6.6-.4z"/></svg></button>
-  <button data-tool="line" title="Linie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19 19 5"/></svg></button>
-  <button data-tool="arrow" title="Pfeil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5"/><path d="M12 5h7v7"/></svg></button>
-</div>
-
 <div id="toast"></div>
 
 <script>
@@ -1269,7 +1272,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.11"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.12"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1289,7 +1292,16 @@ let entryObserver = null;       // Sichtbarkeitsbeobachter fuer Seitenlauf
 /* Anmerkungen */
 let tool = "select";            // Aktives Werkzeug
 let annos = new Map();          // origIndex -> Array von Anmerkungen
-let annoColor = "#dc2626";      // Aktuelle Farbe
+/* Voreinstellungen für neue Formen: im Formformat-Reiter auch vor dem Zeichnen wählbar */
+let shapeDefaults = { color: "#dc2626", width: 2, dash: "solid", head: "end", headFill: false, fill: null, fillOp: null };
+try {
+  const rawSd = localStorage.getItem("paperinoShapeDefaults");
+  if (rawSd) shapeDefaults = { ...shapeDefaults, ...JSON.parse(rawSd) };
+} catch (e) { /* Speicher nicht verfügbar */ }
+function saveShapeDefaults() {
+  try { localStorage.setItem("paperinoShapeDefaults", JSON.stringify(shapeDefaults)); } catch (e) { /* Speicher nicht verfügbar */ }
+}
+/* Formatierung anwenden: auf die Auswahl oder, falls nichts ausgewählt ist, auf die Voreinstellung */
 /* Voreinstellungen für neue Textfelder: im Textfeld-Reiter auch vor dem Einfügen wählbar */
 let textDefaults = { size: 12, font: "helvetica", color: "#dc2626", bold: false, italic: false, underline: null, strike: false, script: null, fill: null, fillOp: null, ocolor: null, owidth: null };
 try {
@@ -1304,7 +1316,11 @@ function applyTextFormat(fn, el) {
   if (selAnno) { if (el) ctxUndoOnce(el); ctxApply(fn); }
   else { fn(textDefaults); saveTextDefaults(); refreshContextPane(); }
 }
-let penWidth = 2;               // Strichstärke in Punkten
+/* Formformat anwenden: auf die Auswahl oder, falls nichts ausgewählt ist, auf die Voreinstellung */
+function applyShapeFormat(fn, el) {
+  if (selAnno) { if (el) ctxUndoOnce(el); ctxApply(fn); }
+  else { fn(shapeDefaults); saveShapeDefaults(); refreshContextPane(); }
+}
 let liveAnno = null;            // Anmerkung in Entstehung
 let liveEntry = null;           // Seiteneintrag der laufenden Anmerkung
 let redactHintShown = false;
@@ -1606,7 +1622,6 @@ function setTool(t) {
   for (const e of entries) {
     e.textLayer.style.cursor = t === "select" ? "default" : (CURSORS[t] || "crosshair");
   }
-  closeShapeMenu();
   updateContextTabs();
 }
 
@@ -2634,10 +2649,10 @@ document.addEventListener("mouseup", () => {
   const anchor = selectionAnchor();
   if (!anchor) return;
   const type = tool === "redactText" ? "redact" : tool;
-  const color = type === "redact" ? "#000000" : annoColor;
+  const color = type === "redact" ? "#000000" : shapeDefaults.color;
   const added = [];
   for (const c of anchor.rects) {
-    const a = { type, color, width: penWidth, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2 };
+    const a = { type, color, width: shapeDefaults.width, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2 };
     pageAnnos(anchor.entry.orig).push(a);
     added.push(a);
   }
@@ -2690,9 +2705,11 @@ pagesColumn.addEventListener("pointerdown", (e) => {
     return;
   }
   if (tool === "draw" || tool === "marker") {
-    liveAnno = { type: tool, color: annoColor, width: penWidth, points: [p] };
+    liveAnno = { type: tool, color: shapeDefaults.color, width: shapeDefaults.width, points: [p] };
   } else {
-    liveAnno = { type: tool, color: annoColor, width: penWidth, dash: "solid", x1: p[0], y1: p[1], x2: p[0], y2: p[1], head: "end", headFill: false };
+    const closed = ["rect", "ellipse", "triangle", "diamond", "star"].includes(tool);
+    liveAnno = { type: tool, color: shapeDefaults.color, width: shapeDefaults.width, dash: shapeDefaults.dash, x1: p[0], y1: p[1], x2: p[0], y2: p[1], head: shapeDefaults.head, headFill: shapeDefaults.headFill };
+    if (closed && shapeDefaults.fill) { liveAnno.fill = shapeDefaults.fill; liveAnno.fillOp = shapeDefaults.fillOp; }
   }
   liveEntry = entry;
   entry.wrap.setPointerCapture(e.pointerId);
@@ -3551,22 +3568,11 @@ $("btnAnnoClear").addEventListener("click", () => {
 document.querySelectorAll("[data-tool]").forEach((b) => {
   b.addEventListener("click", () => setTool(b.dataset.tool));
 });
-buildColorMenu("btnPenColor", "penColorDot", () => annoColor, (c) => { annoColor = c; });
-$("penColorDot").style.background = annoColor;
-$("penWidth").addEventListener("change", (e) => { penWidth = parseFloat(e.target.value) || 2; });
 
-/* Formen-Galerie */
-const shapeMenu = $("shapeMenu");
-function closeShapeMenu() { shapeMenu.classList.remove("open"); }
-$("btnShapes").addEventListener("click", (e) => {
-  e.stopPropagation();
-  const r = $("btnShapes").getBoundingClientRect();
-  shapeMenu.style.left = r.left + "px";
-  shapeMenu.style.top = (r.bottom + 4) + "px";
-  shapeMenu.classList.toggle("open");
-});
-document.addEventListener("click", (e) => {
-  if (!shapeMenu.contains(e.target) && e.target.closest("#btnShapes") === null) closeShapeMenu();
+/* Formen: Klick auf den Formenknopf öffnet den Formformat-Reiter mit Formenauswahl und Vorgaben */
+$("btnShapes").addEventListener("click", () => {
+  $("tabFormformat").classList.remove("hidden");
+  activateTab("paneFormformat");
 });
 
 /* Kommentarleiste und Seitenleiste */
@@ -3792,6 +3798,12 @@ function updateContextTabs() {
     tForm.classList.add("hidden");
     refreshContextPane();
     activateTab("paneTextfeld");
+  } else if (SHAPE_TOOLS.includes(tool) || tool === "draw" || tool === "marker") {
+    /* Formwerkzeug aktiv: Formenauswahl und Vorgaben im Formformat-Reiter zugänglich */
+    tText.classList.add("hidden");
+    tForm.classList.remove("hidden");
+    refreshContextPane();
+    activateTab("paneFormformat");
   } else {
     tText.classList.add("hidden");
     tForm.classList.add("hidden");
@@ -3849,6 +3861,13 @@ function refreshContextPane() {
     $("txtColorDot").style.background = textDefaults.color;
     $("txtFillDot").style.background = textDefaults.fill || "#ffffff";
     $("txtOutlineDot").style.background = textDefaults.ocolor || "#ffffff";
+    /* Voreinstellungen für neue Formen anzeigen */
+    $("shpColorDot").style.background = shapeDefaults.color;
+    $("annoShapeWidth").value = String(shapeDefaults.width);
+    $("annoShapeDash").value = shapeDefaults.dash || "solid";
+    $("shpFillDot").style.background = shapeDefaults.fill || "#ffffff";
+    $("annoArrowHead").value = shapeDefaults.head || "end";
+    $("btnArrowFill").classList.toggle("active", !!shapeDefaults.headFill);
   }
   /* Textfeld-Reiter: bedienbar bei Textauswahl oder (für Voreinstellungen) ohne Auswahl */
   const showTextUi = isText || !a;
@@ -3857,13 +3876,14 @@ function refreshContextPane() {
   ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor"].forEach((id) => { $(id).disabled = !showTextUi; });
   $("btnEditText").disabled = !isText;
   ["btnTextFill", "btnTextOutline"].forEach((id) => { $(id).disabled = !showTextUi; });
-  /* Formformat-Reiter */
-  $("btnShapeColor").disabled = !isForm || isRedact;
-  $("annoShapeWidth").disabled = !isForm || isRedact;
-  $("annoShapeDash").disabled = !isForm || isRedact;
-  $("btnShapeFill").disabled = !isForm || !FILLABLE.includes(a && a.type);
-  $("annoArrowHead").disabled = !isArrow;
-  $("btnArrowFill").disabled = !isArrow;
+  /* Formformat-Reiter: bedienbar bei Formauswahl oder (für Vorgaben) ohne Auswahl */
+  const showFormUi = isForm || !a;
+  $("btnShapeColor").disabled = !showFormUi || isRedact;
+  $("annoShapeWidth").disabled = !showFormUi || isRedact;
+  $("annoShapeDash").disabled = !showFormUi || isRedact;
+  $("btnShapeFill").disabled = !showFormUi || (a && !FILLABLE.includes(a.type));
+  $("annoArrowHead").disabled = !isArrow && !!a;
+  $("btnArrowFill").disabled = !isArrow && !!a;
   const nudge = ["btnNudgeLeft", "btnNudgeUp", "btnNudgeDown", "btnNudgeRight", "btnRotL", "btnRotR", "annoRot"];
   nudge.forEach((id) => { $(id).disabled = !(isForm || (isText && (id !== "annoRot" || isRotatable))); });
   $("btnDeleteAnno").disabled = !a;
@@ -3901,7 +3921,7 @@ function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
   const btn = $(btnId);
   let pop = null;
   const close = () => { if (pop) { pop.remove(); pop = null; } };
-  const apply = (fn) => { if (selAnno) { ctxUndoOnce(btn); ctxApply(fn); } else { fn(); saveTextDefaults(); refreshContextPane(); } };
+  const apply = (fn) => { if (selAnno) { ctxUndoOnce(btn); ctxApply(fn); } else { fn(); saveTextDefaults(); saveShapeDefaults(); refreshContextPane(); } };
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (pop) { close(); return; }
@@ -4088,15 +4108,15 @@ bindToggle("btnLatex", (a) => { a.latex = !a.latex; });
 buildColorMenu("btnTextColor", "txtColorDot", () => (selAnno ? selAnno.color : textDefaults.color), (c) => { if (selAnno) selAnno.color = c; else textDefaults.color = c; });
 buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno ? (selAnno.fill || "#ffffff") : (textDefaults.fill || "#ffffff")), (c) => { if (selAnno) selAnno.fill = c; else textDefaults.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => ((selAnno ? selAnno.fillOp : textDefaults.fillOp) != null ? (selAnno ? selAnno.fillOp : textDefaults.fillOp) : 1), setOp: (v) => { if (selAnno) selAnno.fillOp = v; else textDefaults.fillOp = v; } });
 buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno ? (selAnno.ocolor || "#000000") : (textDefaults.ocolor || "#000000")), (c) => { if (selAnno) selAnno.ocolor = c; else textDefaults.ocolor = c; }, { noneLabel: "Keine Kontur", withWidth: true, getWidth: () => ((selAnno ? selAnno.owidth : textDefaults.owidth) || 1), setWidth: (v) => { if (selAnno) selAnno.owidth = v; else textDefaults.owidth = v; } });
-buildColorMenu("btnShapeColor", "shpColorDot", () => (selAnno ? selAnno.color : "#000000"), (c) => { selAnno.color = c; });
-buildColorMenu("btnShapeFill", "shpFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno && selAnno.fillOp != null ? selAnno.fillOp : 1), setOp: (v) => { selAnno.fillOp = v; } });
+buildColorMenu("btnShapeColor", "shpColorDot", () => (selAnno ? selAnno.color : shapeDefaults.color), (c) => { if (selAnno) selAnno.color = c; else shapeDefaults.color = c; });
+buildColorMenu("btnShapeFill", "shpFillDot", () => (selAnno ? (selAnno.fill || "#ffffff") : (shapeDefaults.fill || "#ffffff")), (c) => { if (selAnno) selAnno.fill = c; else shapeDefaults.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno ? (selAnno.fillOp != null ? selAnno.fillOp : 1) : (shapeDefaults.fillOp != null ? shapeDefaults.fillOp : 1)), setOp: (v) => { if (selAnno) selAnno.fillOp = v; else shapeDefaults.fillOp = v; } });
 armOnFocus($("annoShapeWidth"));
-$("annoShapeWidth").addEventListener("change", () => { ctxUndoOnce($("annoShapeWidth")); ctxApply((a) => { a.width = parseFloat($("annoShapeWidth").value) || 2; }); });
+$("annoShapeWidth").addEventListener("change", () => { applyShapeFormat((a) => { a.width = parseFloat($("annoShapeWidth").value) || 2; }, $("annoShapeWidth")); });
 armOnFocus($("annoShapeDash"));
-$("annoShapeDash").addEventListener("change", () => { ctxUndoOnce($("annoShapeDash")); ctxApply((a) => { a.dash = $("annoShapeDash").value; }); });
+$("annoShapeDash").addEventListener("change", () => { applyShapeFormat((a) => { a.dash = $("annoShapeDash").value; }, $("annoShapeDash")); });
 armOnFocus($("annoArrowHead"));
-$("annoArrowHead").addEventListener("change", () => { ctxUndoOnce($("annoArrowHead")); ctxApply((a) => { a.head = $("annoArrowHead").value; }); });
-bindToggle("btnArrowFill", (a) => { a.headFill = !a.headFill; });
+$("annoArrowHead").addEventListener("change", () => { applyShapeFormat((a) => { a.head = $("annoArrowHead").value; }, $("annoArrowHead")); });
+$("btnArrowFill").addEventListener("click", () => { applyShapeFormat((a) => { a.headFill = !a.headFill; }); });
 /* Drehen und Verschieben */
 function rotateBy(deg) {
   if (!selAnno) return;
@@ -4211,6 +4231,8 @@ function runSelfTests() {
   test("rotRectAnchor bei 90 Grad erwartbar", () => { const p = rotRectAnchor(0, 0, 10, 4, 90); assert(approx(p[0], 7) && approx(p[1], -3), "erwartet (7, -3), erhalten (" + p[0] + ", " + p[1] + ")"); });
   test("Schriftstapel für alle Schriftarten vorhanden", () => { for (const k of ["helvetica", "times", "courier", "lato", "ptsans", "ptserif"]) assert(FONT_STACKS[k], "Stapel fehlt: " + k); });
   test("Voreinstellungen für Textfelder vollständig", () => { for (const k of ["size", "font", "color", "bold", "italic", "underline", "strike", "script", "fill", "fillOp", "ocolor", "owidth"]) assert(k in textDefaults, "Feld fehlt: " + k); });
+  test("Voreinstellungen für Formen vollständig", () => { for (const k of ["color", "width", "dash", "head", "headFill", "fill", "fillOp"]) assert(k in shapeDefaults, "Feld fehlt: " + k); });
+  test("Formformat-Reiter führt alle Formwerkzeuge", () => { for (const t of SHAPE_TOOLS) assert(document.querySelector('#paneFormformat [data-tool="' + t + '"]'), "Formknopf fehlt: " + t); });
   test("Textbegrenzung ohne Box plausibel", () => { const bb = annoBBox({ type: "text", x: 10, y: 20, size: 12, text: "Hallo" }); assert(bb.x2 > bb.x1 && bb.y2 > bb.y1 && bb.x1 === 10, "Box unplausibel"); });
   test("Einzubettende Schriften vollständig definiert", () => { for (const k of Object.keys(EMBED_FONT_FILES)) { const f = EMBED_FONT_FILES[k]; for (const s of ["regular", "bold", "italic", "boldItalic"]) assert(typeof f[s] === "string" && f[s].startsWith("https://"), k + "." + s + " fehlt"); } });
   const failed = results.filter((r) => !r.ok);

@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.11**
+> Aktuelle Version: **Alpha 0.12**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -21,9 +21,10 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
 - Formen und Textfelder drehen: runde Eckgriffe, Seitenbalken zum einseitigen Ziehen, Drehgriff oben, Verschieben in Punkt-Schritten über Richtungspfeile
 - Textgebundenes Markieren, Durchstreichen und Unterstreichen direkt am Originaltext
+- Lektorieren-Reiter in „Bestehenden Text bearbeiten“ (Markieren, Durchstreichen, Unterstreichen) und „Ergänzen“ (Text, Formen, Stift, Textmarker, Auswahl) gegliedert
 - Schwärzen als Rechteck oder für markierten Text; mit Sicherheitsmodus wird die Seite beim Speichern als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird dabei tatsächlich entfernt und ist danach nicht mehr markierbar
 - Freihändiges Zeichnen mit Stift und Textmarker (Farb- und Strichstärkenwahl)
-- Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil
+- Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil; Formenauswahl, Konturfarbe, Strichstärke, Strichart, Füllung (inklusive Transparenz) und Pfeilspitzen lassen sich im Formformat-Reiter auch vor dem Zeichnen als Voreinstellung festlegen (wird gemerkt); der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs
 - Kommentaren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
 - Statusleiste unten mit Bibliothekenstatus und Seitenanzeige
@@ -60,11 +61,12 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.9 | Unterstreichungs- und Durchstreichungslinien haften nun auch bei gedrehten Textfeldern am Text (Kernkorrektur der Drehung), Unterstreichungsarten-Menü im Word-Stil mit Linienmustern und „Ohne“-Eintrag, Schriftgröße als klassisches Dropdown, eigene Farbwahl direkt im Farbwahlmenü (kein Zwischenschritt mehr), Lektorieren-Bereich einheitlich wie das Textfeld-Format gestaltet, Seitenleiste in der Breite ziehbar (150 bis 460 Pixel, wird gemerkt), Selbsttests über den Adresszusatz ?test abrufbar |
 | Alpha 0.10 | Korrektur des Darstellungsfehlers beim Zoomen und Drehen (gleichzeitige Darstellungsvorgänge für dieselbe Seite wurden race-artig abgebrochen und hinterließen eine leere oder entstellte Seite; laufende Darstellungen werden nun zuverlässig abgebrochen und neu aufgebaut), Schriftart, Schriftgröße und sämtliche Textformatierungen lassen sich vor dem Einfügen im Textfeld-Reiter als Voreinstellung festlegen (werden gemerkt und auf neue Textfelder angewendet), der Textfeld-Reiter öffnet sich automatisch beim Aktivieren des Textwerkzeugs |
 | Alpha 0.11 | Auswahlrahmen und Textdeckung bei Web-Schriftarten korrigiert: die gewählte Schriftart wird beim Wechsel sofort geladen und nach dem Laden werden alle Anmerkungen neu gezeichnet, damit Begrenzungsrahmen und Text immer übereinstimmen (Ursache für Text, der außerhalb seines Rahmens erschien) |
+| Alpha 0.12 | Lektorieren-Reiter in „Bestehenden Text bearbeiten“ und „Ergänzen“ gegliedert, Formenauswahl direkt im Formformat-Reiter (das separate Formen-Menü entfällt), Formformat mit Kontur, Strichstärke, Strichart, Füllung und Pfeilspitzen auch vor dem Zeichnen als Voreinstellung festlegbar (wird gemerkt), der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs, Auswahlwerkzeug in der Gruppe „Ergänzen“ |
 
 ## Hinweise und Grenzen
 
 - Passwortgeschützte PDFs werden nicht unterstützt.
-- Eingefügter Text wird in den Schriften Helvetica, Times New Roman oder Courier New gespeichert; der westeuropäische Zeichensatz wird unterstützt.
+- Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans oder PT Serif gespeichert (die Web-Schriftarten werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
 - LaTeX-Formeln werden beim Speichern als eingebettetes Bild abgelegt, da die PDF-Standardschriften keine mathematischen Symbole enthalten.
 - Wellige Unterstreichungen werden beim Speichern als gerade Linie angenähert; gedrehter Text wird beim Speichern an gleicher Stelle ohne Drehung abgelegt.
 - Schwärzungen ohne Sicherheitsmodus verdecken den Inhalt nur optisch; der Text bleibt in der Datei enthalten. Der Sicherheitsmodus ist daher standardmäßig aktiviert.
