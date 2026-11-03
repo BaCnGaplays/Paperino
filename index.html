@@ -1088,7 +1088,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.20</span>
+  <span class="version" id="appVersion">Alpha 0.21</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1462,22 +1462,22 @@
           <label class="rb-check" title="Schriftart">
             Art
             <select class="rb-select" id="annoFontFamily" disabled>
-              <option value="helvetica" selected>Helvetica</option>
-              <option value="times">Times New Roman</option>
-              <option value="courier">Courier New</option>
-              <option value="lato">Lato</option>
-              <option value="ptsans">PT Sans</option>
-              <option value="ptserif">PT Serif</option>
-              <option value="firasans">Fira Sans</option>
-              <option value="ubuntu">Ubuntu</option>
-              <option value="plexserif">IBM Plex Serif</option>
-              <option value="crimson">Crimson Text</option>
-              <option value="spacemono">Space Mono</option>
-              <option value="arvo">Arvo</option>
-              <option value="cantarell">Cantarell</option>
-              <option value="titillium">Titillium Web</option>
-              <option value="istokweb">Istok Web</option>
-              <option value="comicneue">Comic Neue</option>
+              <option value="arvo" style="font-family: Arvo, Georgia, serif;">Arvo</option>
+              <option value="cantarell" style="font-family: Cantarell, 'Segoe UI', sans-serif;">Cantarell</option>
+              <option value="comicneue" style="font-family: 'Comic Neue', 'Segoe UI', cursive;">Comic Neue</option>
+              <option value="courier" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
+              <option value="crimson" style="font-family: 'Crimson Text', Georgia, serif;">Crimson Text</option>
+              <option value="firasans" style="font-family: 'Fira Sans', 'Segoe UI', sans-serif;">Fira Sans</option>
+              <option value="helvetica" selected style="font-family: Helvetica, Arial, sans-serif;">Helvetica</option>
+              <option value="plexserif" style="font-family: 'IBM Plex Serif', Georgia, serif;">IBM Plex Serif</option>
+              <option value="istokweb" style="font-family: 'Istok Web', 'Segoe UI', sans-serif;">Istok Web</option>
+              <option value="lato" style="font-family: Lato, 'Segoe UI', sans-serif;">Lato</option>
+              <option value="ptsans" style="font-family: 'PT Sans', 'Segoe UI', sans-serif;">PT Sans</option>
+              <option value="ptserif" style="font-family: 'PT Serif', Georgia, serif;">PT Serif</option>
+              <option value="spacemono" style="font-family: 'Space Mono', 'Courier New', monospace;">Space Mono</option>
+              <option value="times" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+              <option value="titillium" style="font-family: 'Titillium Web', 'Segoe UI', sans-serif;">Titillium Web</option>
+              <option value="ubuntu" style="font-family: Ubuntu, 'Segoe UI', sans-serif;">Ubuntu</option>
             </select>
           </label>
           <label class="rb-check" title="Schriftgröße in Punkten auswählen">
@@ -1708,7 +1708,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.20"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.21"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -2590,7 +2590,19 @@ function layoutTextLines(a) {
   const out = [];
   src.split("\n").forEach((para) => {
     const budget = Math.max(6, avail - bulletW);
-    const words = para.split(" ");
+    /* Notfallumbruch: einzelne Wörter, die breiter als die Feldbreite sind, werden zeichenweise gebrochen, damit kein Text über die Feldkante hinausragt */
+    const splitLong = (w) => {
+      if (wpt(w) <= budget) return [w];
+      const parts = [];
+      let cur = "";
+      for (const ch of w) {
+        if (cur && wpt(cur + ch) > budget) { parts.push(cur); cur = ch; }
+        else cur += ch;
+      }
+      if (cur) parts.push(cur);
+      return parts;
+    };
+    const words = para.split(" ").flatMap(splitLong);
     const rows = [];
     let cur = "", curW = 0;
     for (const w of words) {
@@ -3368,7 +3380,7 @@ function openTextEditor(entry, anno, isNew = false) {
     ta.style.fontStyle = anno.italic ? "italic" : "";
     const deco = (anno.underline ? "underline" : "") + (anno.strike ? " line-through" : "");
     if (deco) ta.style.textDecoration = deco.trim();
-    ta.style.width = "180px";
+    ta.style.width = anno.box ? Math.max(80, anno.box.w * PT_TO_PX * zoom) + "px" : "180px";
   } else {
     ta.style.left = (q[0] / dpr + 14) + "px";
     ta.style.top = Math.max(2, q[1] / dpr - 12) + "px";
@@ -5975,6 +5987,8 @@ function runSelfTests() {
   test("Begradigen richtet senkrechte Striche aus", () => { const s = straightened([[10, 20], [10.5, 40], [10, 60]]); assert(s.length === 2 && s[0][0] === s[1][0], "Strich nicht senkrecht"); });
   test("Jede Schriftart im Auswahlmenü und eingebettet", () => { for (const k of Object.keys(FONT_STACKS)) { if (["helvetica", "times", "courier"].includes(k)) continue; assert(document.querySelector('#annoFontFamily option[value="' + k + '"]'), "Menüeintrag fehlt: " + k); assert(k in EMBED_FONT_FILES, "Einzubettende Schrift fehlt: " + k); } });
   test("Textlayout bricht innerhalb der Feldbreite um", () => { const a = { type: "text", text: "Alpha Beta Gamma Delta", x: 0, y: 0, size: 12, font: "helvetica", box: { w: 60, h: 40 } }; const L = layoutTextLines(a); assert(L.length >= 2, "Kein Zeilenumbruch erfolgt"); for (const ln of L) assert(ln.maxX <= a.box.w + 0.6, "Zeile ragt über die Feldbreite hinaus"); });
+  test("Überlange Wörter werden zeichenweise gebrochen", () => { const a = { type: "text", text: "Donaudampfschifffahrtsgesellschaftskapitän", x: 0, y: 0, size: 12, font: "helvetica", box: { w: 50, h: 60 } }; const L = layoutTextLines(a); assert(L.length >= 2, "Kein Notfallumbruch erfolgt"); for (const ln of L) assert(ln.maxX <= a.box.w + 0.6, "Notfallumbruch ragt über die Feldbreite hinaus"); });
+  test("Schriftartliste alphabetisch mit Schriftproben", () => { const opts = Array.from(document.querySelectorAll("#annoFontFamily option")); assert(opts.length >= 16, "Zu wenige Schriftarten"); for (const o of opts) assert((o.getAttribute("style") || "").includes("font-family"), "Schriftprobe fehlt: " + o.textContent); const labels = opts.map((o) => o.textContent.trim()); const sorted = labels.slice().sort((a2, b2) => a2.localeCompare(b2, "de")); assert(labels.join("|") === sorted.join("|"), "Schriftarten sind nicht alphabetisch sortiert"); });
   test("Absatzausrichtung setzt Zeilenpositionen", () => { const r = { type: "text", text: "Kurz", x: 0, y: 0, size: 12, font: "helvetica", box: { w: 200, h: 20 }, align: "right" }; const ln = layoutTextLines(r)[0]; assert(ln.segs[0].x > 100, "Rechtsbündige Zeile beginnt nicht rechts"); const c = { ...r, align: "center" }; const lc = layoutTextLines(c)[0]; assert(Math.abs(lc.segs[0].x - (200 - lc.w) / 2) < 0.6, "Zentrierte Zeile liegt nicht mittig"); });
   test("Absatzfunktionen vorhanden und abgedeckt", () => { assert(typeof layoutTextLines === "function" && typeof ensureTextBox === "function", "Layout-Funktionen fehlen"); for (const id of ["btnAlignLeft", "btnAlignCenter", "btnAlignRight", "btnAlignJustify", "btnIndentInc", "btnIndentDec", "btnBulletList", "btnQuotes"]) assert($(id), "Schaltfläche fehlt: " + id); const s = snapshotAnno({ type: "text", text: "x", x: 0, y: 0, align: "center", indent: 12, list: "bullet", quotes: true }); assert(s.align === "center" && s.indent === 12 && s.list === "bullet" && s.quotes === true, "Absatzeigenschaften fehlen im Undo-Abzug"); const b = { type: "text", text: "Durchacz", x: 0, y: 0, size: 12, font: "helvetica", list: "bullet" }; ensureTextBox(b); assert(b.box && b.box.w > 20, "Automatisches Textfeld wurde nicht angelegt"); });
   test("Aufzählungszeichen und Anführungszeichen im Layout", () => { const L = layoutTextLines({ type: "text", text: "Erster Punkt", x: 0, y: 0, size: 12, font: "helvetica", list: "bullet" }); assert(L[0].segs[0].t.indexOf("\u2022") === 0, "Aufzählungspunkt fehlt"); const Q = layoutTextLines({ type: "text", text: "Satz", x: 0, y: 0, size: 12, font: "helvetica", quotes: true }); const qt = Q.map((ln) => ln.segs.map((s) => s.t).join("")).join(" "); assert(qt.indexOf("\u201E") === 0 && qt.indexOf("\u201C") === qt.length - 1, "Anführungszeichen fehlen"); });

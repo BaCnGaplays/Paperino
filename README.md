@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.20**
+> Aktuelle Version: **Alpha 0.21**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -12,11 +12,11 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht; die Lineale liegen fest am Ansichtsbereich, und die Skala beginnt am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite
 - Seitenleiste mit vier Ansichten: Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse; die Ansicht wird über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, Cantarell, Titillium Web, Istok Web, Comic Neue) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, Cantarell, Titillium Web, Istok Web, Comic Neue) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die Liste ist alphabetisch sortiert und zeigt jeden Eintrag in seiner eigenen Schriftart; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, die unmittelbar beim Verschieben wirkt, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
-- Absatzfunktionen für Textfelder: linksbündig, zentriert, rechtsbündig, Blocksatz (letzte Zeile linksbündig), Einrücken und Ausrücken in 12-Punkt-Schritten, Aufzählungszeichen mit hängendem Einzug und deutsche Anführungszeichen um den Text; der Text bricht innerhalb des Textfelds um und bleibt in der Feldbreite; die Formatierung wird beim Speichern identisch in die Datei übernommen
+- Absatzfunktionen für Textfelder: linksbündig, zentriert, rechtsbündig, Blocksatz (letzte Zeile linksbündig), Einrücken und Ausrücken in 12-Punkt-Schritten, Aufzählungszeichen mit hängendem Einzug und deutsche Anführungszeichen um den Text; der Text bricht innerhalb des Textfelds um und bleibt in der Feldbreite (auch einzelne überlange Wörter werden zeichenweise gebrochen, die Direkteingabe folgt der Feldbreite); die Formatierung wird beim Speichern identisch in die Datei übernommen
 - LaTeX-Formeln über eine Formel-Schaltfläche mit Funktionszeichen ƒ (Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben, Symbole), beim Speichern als eingebettetes Bild abgelegt
 - Pfeile mit einstellbaren Pfeilspitzen: ohne, linke, rechte oder beide Spitzen, offen oder gefüllt
 - Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
@@ -79,6 +79,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.18 | Menüband passt sich der Fensterbreite an: Bereiche klappen bei Platzmangel zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; Doppelklick auf eine Registerkarte klappt das Menüband ganz ein und wieder aus; waagerechte Bildlaufleisten im Menüband entfallen; Formel-Schaltfläche mit Funktionszeichen ƒ; Farbwahlmenü verbreitert, Transparenz wirkt unmittelbar beim Verschieben |
 | Alpha 0.19 | Korrektur des Textfeld-Fehlers: der Text bricht nun innerhalb des Textfelds um und ragt nicht mehr über die Feldkante hinaus; neue Absatzfunktionen (linksbündig, zentriert, rechtsbündig, Blocksatz, Einrücken, Ausrücken, Aufzählungszeichen, deutsche Anführungszeichen); vier zusätzliche freie Schriftarten (Cantarell, Titillium Web, Istok Web, Comic Neue, mit allen Schnitten eingebettet) |
 | Alpha 0.20 | Registerkartenleiste bei schmalen Fenstern über Pfeile links und rechts durchblätterbar (der aktive Reiter bleibt sichtbar, keine Bildlaufleiste); Schaltflächen zeigen bei Platzmangel nur noch ihr Piktogramm (Lupe für Zoom, Blattsymbol für Seite und so weiter, Tooltips bleiben); eingeklappte Bereiche tragen ein Symbol neben der Bezeichnung; Bereichsbezeichnung „Bereiche“ bereinigt |
+| Alpha 0.21 | Notfallumbruch: einzelne Wörter, die breiter als das Textfeld sind, werden zeichenweise gebrochen, sodass kein Text über die Feldkante ragt; die Direkteingabe beim Bearbeiten folgt der Feldbreite des Textfelds; Schriftartliste alphabetisch sortiert, jeder Eintrag erscheint in seiner eigenen Schriftart |
 
 ## Hinweise und Grenzen
 
