@@ -83,7 +83,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 - Beim Export mehrerer Seiten als JPEG oder PNG lädt der Browser mehrere Dateien nacheinander herunter und fragt gegebenenfalls nach Erlaubnis.
 - Ausgefüllte Formularfelder werden beim Speichern fest in die Datei geschrieben (eingebrannt); die Felder sind danach nicht mehr änderbar.
 - Signaturen werden als Bild in die Datei eingebettet. Das Entfernen fremder Kommentare und Markierungen greift direkt in die Datei ein und lässt sich nicht rückgängig machen.
-- Die Komprimierung baut alle Seiten als JPEG-Bilder neu auf; dabei verliert der Text seine马克ierbarkeit (er ist dann Teil des Bildes), und feine Grafiken können etwas an Schärfe verlieren.
+- Die Komprimierung baut alle Seiten als JPEG-Bilder neu auf; dabei verliert der Text seine Markierbarkeit (er ist dann Teil des Bildes), und feine Grafiken können etwas an Schärfe verlieren.
 
 ## Lizenz
 
