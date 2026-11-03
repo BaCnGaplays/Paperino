@@ -217,6 +217,7 @@
   }
   .rb-btn.small { flex-direction: row; min-width: 0; padding: 6px 10px; gap: 6px; font-size: 13px; }
   .rb-btn.small svg { width: 17px; height: 17px; }
+  .rb-tgl svg { width: 20px; height: 20px; display: block; }
   .rb-field { display: flex; align-items: center; gap: 6px; }
   .rb-field input {
     width: 52px;
@@ -413,6 +414,22 @@
   @font-face { font-family: "Arvo"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/arvo/Arvo-Bold.ttf) format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
   @font-face { font-family: "Arvo"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/arvo/Arvo-Italic.ttf) format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
   @font-face { font-family: "Arvo"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/arvo/Arvo-BoldItalic.ttf) format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Cantarell"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/cantarell/Cantarell-Regular.ttf) format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Cantarell"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/cantarell/Cantarell-Bold.ttf) format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Cantarell"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/cantarell/Cantarell-Italic.ttf) format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Cantarell"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/cantarell/Cantarell-BoldItalic.ttf) format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Titillium Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/titilliumweb/TitilliumWeb-Regular.ttf) format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Titillium Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/titilliumweb/TitilliumWeb-Bold.ttf) format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Titillium Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/titilliumweb/TitilliumWeb-Italic.ttf) format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Titillium Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/titilliumweb/TitilliumWeb-BoldItalic.ttf) format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Istok Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/istokweb/IstokWeb-Regular.ttf) format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Istok Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/istokweb/IstokWeb-Bold.ttf) format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Istok Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/istokweb/IstokWeb-Italic.ttf) format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Istok Web"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/istokweb/IstokWeb-BoldItalic.ttf) format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Comic Neue"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/comicneue/ComicNeue-Regular.ttf) format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Comic Neue"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/comicneue/ComicNeue-Bold.ttf) format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Comic Neue"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/comicneue/ComicNeue-Italic.ttf) format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: "Comic Neue"; src: url(https://raw.githubusercontent.com/google/fonts/main/ofl/comicneue/ComicNeue-BoldItalic.ttf) format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
 
   /* ---------- Werkzeugmenüs (Stift, Textmarker, textgebundene Werkzeuge) ---------- */
   .tool-pop {
@@ -1039,7 +1056,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.18</span>
+  <span class="version" id="appVersion">Alpha 0.19</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1421,6 +1438,10 @@
               <option value="crimson">Crimson Text</option>
               <option value="spacemono">Space Mono</option>
               <option value="arvo">Arvo</option>
+              <option value="cantarell">Cantarell</option>
+              <option value="titillium">Titillium Web</option>
+              <option value="istokweb">Istok Web</option>
+              <option value="comicneue">Comic Neue</option>
             </select>
           </label>
           <label class="rb-check" title="Schriftgröße in Punkten auswählen">
@@ -1462,6 +1483,20 @@
           <button class="rb-tgl" id="btnTextOutline" title="Formkontur des Textfelds wählen (inklusive Strichstärke)" disabled><span class="swatch-dot" id="txtOutlineDot"></span> Kontur</button>
         </div>
         <div class="group-label">Textfeld formatieren</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <button class="rb-tgl" id="btnAlignLeft" title="Linksbündig ausrichten" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h11M3 15h18M3 20h11"/></svg></button>
+          <button class="rb-tgl" id="btnAlignCenter" title="Zentriert ausrichten" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 10h12M3 15h18M6 20h12"/></svg></button>
+          <button class="rb-tgl" id="btnAlignRight" title="Rechtsbündig ausrichten" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M10 10h11M3 15h18M10 20h11"/></svg></button>
+          <button class="rb-tgl" id="btnAlignJustify" title="Blocksatz (letzte Zeile linksbündig)" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/></svg></button>
+          <button class="rb-tgl" id="btnIndentInc" title="Einrücken (Einzug um 12 Punkte erhöhen)" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h12M3 15h18M3 20h12M14 8l3 2-3 2"/></svg></button>
+          <button class="rb-tgl" id="btnIndentDec" title="Ausrücken (Einzug um 12 Punkte verringern)" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h12M3 15h18M3 20h12M17 12l-3-2v4z"/></svg></button>
+          <button class="rb-tgl" id="btnBulletList" title="Aufzählungszeichen (Punktliste mit hängendem Einzug)" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h11M10 12h11M10 18h11"/></svg></button>
+          <button class="rb-tgl" id="btnQuotes" title="Deutsche Anführungszeichen um den Text setzen" disabled><span class="fmt-bold">&#8222;&#8220;</span></button>
+        </div>
+        <div class="group-label">Absatz</div>
       </div>
     </div>
 
@@ -1637,7 +1672,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.18"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.19"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -2379,7 +2414,11 @@ const FONT_STACKS = {
   plexserif: "'IBM Plex Serif', Georgia, serif",
   crimson: "'Crimson Text', Georgia, serif",
   spacemono: "'Space Mono', 'Courier New', monospace",
-  arvo: "Arvo, Georgia, serif"
+  arvo: "Arvo, Georgia, serif",
+  cantarell: "Cantarell, 'Segoe UI', sans-serif",
+  titillium: "'Titillium Web', 'Segoe UI', sans-serif",
+  istokweb: "'Istok Web', 'Segoe UI', sans-serif",
+  comicneue: "'Comic Neue', 'Segoe UI', cursive"
 };
 /* Eingebettete Schriftarten (TTF-Dateien des Google-Fonts-Projekts, OFL-/UFL-Lizenz) */
 const GF = "https://raw.githubusercontent.com/google/fonts/main/ofl";
@@ -2393,7 +2432,11 @@ const EMBED_FONT_FILES = {
   plexserif: { regular: GF + "/ibmplexserif/IBMPlexSerif-Regular.ttf", bold: GF + "/ibmplexserif/IBMPlexSerif-Bold.ttf", italic: GF + "/ibmplexserif/IBMPlexSerif-Italic.ttf", boldItalic: GF + "/ibmplexserif/IBMPlexSerif-BoldItalic.ttf" },
   crimson: { regular: GF + "/crimsontext/CrimsonText-Regular.ttf", bold: GF + "/crimsontext/CrimsonText-Bold.ttf", italic: GF + "/crimsontext/CrimsonText-Italic.ttf", boldItalic: GF + "/crimsontext/CrimsonText-BoldItalic.ttf" },
   spacemono: { regular: GF + "/spacemono/SpaceMono-Regular.ttf", bold: GF + "/spacemono/SpaceMono-Bold.ttf", italic: GF + "/spacemono/SpaceMono-Italic.ttf", boldItalic: GF + "/spacemono/SpaceMono-BoldItalic.ttf" },
-  arvo: { regular: GF + "/arvo/Arvo-Regular.ttf", bold: GF + "/arvo/Arvo-Bold.ttf", italic: GF + "/arvo/Arvo-Italic.ttf", boldItalic: GF + "/arvo/Arvo-BoldItalic.ttf" }
+  arvo: { regular: GF + "/arvo/Arvo-Regular.ttf", bold: GF + "/arvo/Arvo-Bold.ttf", italic: GF + "/arvo/Arvo-Italic.ttf", boldItalic: GF + "/arvo/Arvo-BoldItalic.ttf" },
+  cantarell: { regular: GF + "/cantarell/Cantarell-Regular.ttf", bold: GF + "/cantarell/Cantarell-Bold.ttf", italic: GF + "/cantarell/Cantarell-Italic.ttf", boldItalic: GF + "/cantarell/Cantarell-BoldItalic.ttf" },
+  titillium: { regular: GF + "/titilliumweb/TitilliumWeb-Regular.ttf", bold: GF + "/titilliumweb/TitilliumWeb-Bold.ttf", italic: GF + "/titilliumweb/TitilliumWeb-Italic.ttf", boldItalic: GF + "/titilliumweb/TitilliumWeb-BoldItalic.ttf" },
+  istokweb: { regular: GF + "/istokweb/IstokWeb-Regular.ttf", bold: GF + "/istokweb/IstokWeb-Bold.ttf", italic: GF + "/istokweb/IstokWeb-Italic.ttf", boldItalic: GF + "/istokweb/IstokWeb-BoldItalic.ttf" },
+  comicneue: { regular: GF + "/comicneue/ComicNeue-Regular.ttf", bold: GF + "/comicneue/ComicNeue-Bold.ttf", italic: GF + "/comicneue/ComicNeue-Italic.ttf", boldItalic: GF + "/comicneue/ComicNeue-BoldItalic.ttf" }
 };
 const fontBytesCache = new Map();
 async function fetchFontBytes(url) {
@@ -2494,23 +2537,90 @@ function shapeLocalPath(type, b) {
 }
 /* Dekorationslinien eines Textes (Unterstrich, Doppelt, Durchgestrichen) zeichnen;
    map(x, y) liefert Bildschirmpixel, damit die Linien auch bei Drehung am Text haften */
+/* Absatzlayout eines Textfelds: Zeilenumbruch innerhalb der Feldbreite, Ausrichtung (links, zentriert, rechts, Blocksatz), Einzug, Aufzählungszeichen und Anführungszeichen.
+   Liefert ein Array von Zeilen mit segmentweisem Text (x-Position relativ zum Feldursprung a.x), Zeilenbreite sowie Start- und Endposition für Unterstreichung und Durchstreichung. */
+function layoutTextLines(a) {
+  const stack = FONT_STACKS[a.font] || FONT_STACKS.helvetica;
+  const fs = a.script ? a.size * 0.65 : a.size;
+  measureCtx.font = `${a.italic ? "italic " : ""}${a.bold ? "700 " : ""}${fs * PT_TO_PX}px ${stack}`;
+  const wpt = (t) => (t ? measureCtx.measureText(t).width / PT_TO_PX : 0);
+  const spaceW = wpt(" ");
+  const indent = Math.max(0, a.indent || 0);
+  const bullet = a.list === "bullet";
+  const bulletT = "\u2022 ";
+  const bulletW = bullet ? wpt(bulletT) : 0;
+  const src = a.quotes ? "\u201E" + (a.text || "") + "\u201C" : (a.text || "");
+  const avail = a.box ? Math.max(12, a.box.w - indent) : Infinity;
+  const out = [];
+  src.split("\n").forEach((para) => {
+    const budget = Math.max(6, avail - bulletW);
+    const words = para.split(" ");
+    const rows = [];
+    let cur = "", curW = 0;
+    for (const w of words) {
+      const ww = wpt(w);
+      const add = cur ? spaceW + ww : ww;
+      if (cur && curW + add > budget) { rows.push(cur); cur = w; curW = ww; }
+      else { cur = cur ? cur + " " + w : w; curW += add; }
+    }
+    if (cur || !rows.length) rows.push(cur);
+    rows.forEach((t, j) => {
+      out.push({ t, w: wpt(t), first: j === 0, lastOfPara: j === rows.length - 1 });
+    });
+  });
+  /* x-Position je Zeile: Einzug, hängender Aufzählungseinzug und Absatzausrichtung innerhalb der Feldbreite */
+  const justifyOn = a.align === "justify" && a.box;
+  for (const ln of out) {
+    const bFirst = bullet && ln.first;
+    const blockW = (bFirst ? bulletW : 0) + ln.w;
+    const free = a.box ? Math.max(0, a.box.w - indent - blockW) : 0;
+    let bx = indent;
+    if (a.align === "center" || a.align === "right") bx = indent + free;
+    ln.segs = [];
+    if (bFirst) ln.segs.push({ t: bulletT, x: bx });
+    let tx = bx + (bFirst ? bulletW : (bullet ? bulletW : 0));
+    ln.startX = ln.segs.length ? ln.segs[0].x : tx;
+    if (justifyOn && !ln.lastOfPara && ln.t.includes(" ")) {
+      const parts = ln.t.split(" ");
+      const extra = parts.length > 1 ? free / (parts.length - 1) : 0;
+      let x = tx;
+      for (const wd of parts) {
+        if (wd) ln.segs.push({ t: wd, x });
+        x += wpt(wd) + spaceW + extra;
+      }
+    } else {
+      ln.segs.push({ t: ln.t, x: tx });
+    }
+    ln.maxX = ln.segs.reduce((m, s) => Math.max(m, s.x + wpt(s.t)), ln.startX);
+  }
+  return out;
+}
+/* Automatisch ein Textfeld um den Text legen, sobald eine Absatzfunktion genutzt wird, die eine Feldbreite benötigt */
+function ensureTextBox(a) {
+  if (!a || a.box || a.type !== "text") return;
+  const L = layoutTextLines(a);
+  let w = 40;
+  for (const ln of L) w = Math.max(w, ln.maxX);
+  a.box = { w: Math.min(600, w + 16), h: (L.length - 1) * a.size * 1.2 + a.size * 0.85 };
+}
+
 function drawTextDeco(ctx, a, scale, lines, fs, lift, map) {
   const stack = FONT_STACKS[a.font] || FONT_STACKS.helvetica;
   measureCtx.font = `${a.italic ? "italic " : ""}${a.bold ? "700 " : ""}${fs * PT_TO_PX}px ${stack}`;
   const lw = Math.max(1, a.size * 0.06 * PT_TO_PX * scale);
   const decoStyle = (u) => u === "wavy" ? "wavy" : (u === "dotted" || u === "dashed" || u === "dashdot") ? u : "solid";
   for (let i = 0; i < lines.length; i++) {
-    const t = lines[i];
-    if (!t) continue;
-    let wpt = Math.max(2, measureCtx.measureText(t).width / PT_TO_PX);
+    const ln = lines[i];
+    if (!ln.segs.some((s) => s.t)) continue;
+    let wpt = Math.max(2, ln.maxX - ln.startX);
     if (a.box && a.box.w > 0) wpt = Math.min(wpt, a.box.w);
     const by = a.y - lift - i * a.size * 1.2;
     const amp = a.size * 0.07;
-    if (a.strike) strokePdfLine(ctx, map, a.x, by + 0.28 * a.size, a.x + wpt, by + 0.28 * a.size, a.color, lw, "solid", 0);
+    if (a.strike) strokePdfLine(ctx, map, a.x + ln.startX, by + 0.28 * a.size, a.x + ln.startX + wpt, by + 0.28 * a.size, a.color, lw, "solid", 0);
     if (a.underline) {
       const uo = by - (a.script ? 0.04 : 0.12) * a.size;
-      strokePdfLine(ctx, map, a.x, uo, a.x + wpt, uo, a.color, lw, decoStyle(a.underline), amp);
-      if (a.underline === "double") strokePdfLine(ctx, map, a.x, uo - 0.14 * a.size, a.x + wpt, uo - 0.14 * a.size, a.color, lw, "solid", 0);
+      strokePdfLine(ctx, map, a.x + ln.startX, uo, a.x + ln.startX + wpt, uo, a.color, lw, decoStyle(a.underline), amp);
+      if (a.underline === "double") strokePdfLine(ctx, map, a.x + ln.startX, uo - 0.14 * a.size, a.x + ln.startX + wpt, uo - 0.14 * a.size, a.color, lw, "solid", 0);
     }
   }
 }
@@ -2590,7 +2700,7 @@ function drawAnno(ctx, a, viewport) {
         }
       }
     } else {
-      const lines = a.text.split("\n");
+      const lines = layoutTextLines(a);
       const fs = a.script ? a.size * 0.65 : a.size;
       const lift = a.script === "sup" ? a.size * 0.35 : a.script === "sub" ? -a.size * 0.22 : 0;
       const stack = FONT_STACKS[a.font] || FONT_STACKS.helvetica;
@@ -2631,19 +2741,23 @@ function drawAnno(ctx, a, viewport) {
         ctx.rotate(theta);
         ctx.font = fontPx;
         ctx.textBaseline = "alphabetic";
-        lines.forEach((t, i) => {
-          const lx = (a.x - cx) * PT_TO_PX * scale;
+        lines.forEach((ln, i) => {
           const ly = -(a.y - lift - i * a.size * 1.2 - cy) * PT_TO_PX * scale;
-          ctx.fillText(t, lx, ly);
+          for (const s of ln.segs) {
+            const lx = (a.x + s.x - cx) * PT_TO_PX * scale;
+            ctx.fillText(s.t, lx, ly);
+          }
         });
         drawTextDeco(ctx, a, scale, lines, fs, lift, localMap);
         ctx.restore();
       } else {
         ctx.font = fontPx;
         ctx.textBaseline = "alphabetic";
-        lines.forEach((t, i) => {
-          const q = viewport.convertToViewportPoint(a.x, a.y - lift - i * a.size * 1.2);
-          ctx.fillText(t, q[0], q[1]);
+        lines.forEach((ln, i) => {
+          for (const s of ln.segs) {
+            const q = viewport.convertToViewportPoint(a.x + s.x, a.y - lift - i * a.size * 1.2);
+            ctx.fillText(s.t, q[0], q[1]);
+          }
         });
         drawTextDeco(ctx, a, scale, lines, fs, lift, decoMap);
       }
@@ -2881,7 +2995,7 @@ function layoutLatex(a) {
 
 function snapshotAnno(a) {
   const s = {};
-  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "fillOp", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot", "dataUrl"]) {
+  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "fillOp", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot", "dataUrl", "align", "indent", "list", "quotes"]) {
     if (k in a) s[k] = a[k] && typeof a[k] === "object" ? JSON.parse(JSON.stringify(a[k])) : a[k];
   }
   if (a.points) s.points = a.points.map((p) => p.slice());
@@ -2913,11 +3027,9 @@ function annoBBox(a) {
       const L = layoutLatex(a);
       return { x1: a.x, y1: a.y - L.down, x2: a.x + L.w, y2: a.y + L.up };
     }
-    const lines = a.text.split("\n");
-    const stack = FONT_STACKS[a.font] || FONT_STACKS.helvetica;
-    measureCtx.font = `${a.italic ? "italic " : ""}${a.bold ? "700 " : ""}${a.size * PT_TO_PX}px ${stack}`;
+    const lines = layoutTextLines(a);
     let w = 10;
-    for (const t of lines) w = Math.max(w, measureCtx.measureText(t).width / PT_TO_PX);
+    for (const ln of lines) w = Math.max(w, ln.maxX);
     return {
       x1: a.x,
       y1: a.y - (lines.length - 1) * a.size * 1.2 - a.size * 0.25,
@@ -3471,7 +3583,7 @@ pagesColumn.addEventListener("pointerdown", (e) => {
   e.preventDefault();
   const p = pdfPointFromEvent(e, entry);
   if (tool === "text") {
-    const a = { type: "text", x: p[0], y: p[1], text: "", size: textDefaults.size, color: textDefaults.color, font: textDefaults.font, bold: textDefaults.bold, italic: textDefaults.italic, underline: textDefaults.underline, strike: textDefaults.strike, script: textDefaults.script, fill: textDefaults.fill, fillOp: textDefaults.fillOp, ocolor: textDefaults.ocolor, owidth: textDefaults.owidth };
+    const a = { type: "text", x: p[0], y: p[1], text: "", size: textDefaults.size, color: textDefaults.color, font: textDefaults.font, bold: textDefaults.bold, italic: textDefaults.italic, underline: textDefaults.underline, strike: textDefaults.strike, script: textDefaults.script, fill: textDefaults.fill, fillOp: textDefaults.fillOp, ocolor: textDefaults.ocolor, owidth: textDefaults.owidth, align: textDefaults.align || "left", indent: textDefaults.indent || 0, list: textDefaults.list || null, quotes: !!textDefaults.quotes };
     setTool("select");
     openTextEditor(entry, a, true);
     return;
@@ -3754,7 +3866,7 @@ function rgbFrom(hex) {
 }
 
 function textLines(a) {
-  return a.text.split("\n").map((t, i) => ({ t, x: a.x, y: a.y - i * a.size * 1.2 }));
+  return layoutTextLines(a).map((ln, i) => ({ t: ln.segs.map((s) => s.t).join(""), x: a.x + ln.startX, y: a.y - i * a.size * 1.2 }));
 }
 
 /* Strichart als pdf-lib-Muster */
@@ -3964,29 +4076,34 @@ async function burnAnnotations(out, page, list, fonts) {
             page.drawRectangle({ x: bx, y: by, ...bopts });
           }
         }
-        for (const ln of textLines(a)) {
-          page.drawText(ln.t, { x: ln.x, y: ln.y + lift, size: fs, font, color: rgbFrom(a.color) });
-        }
+        const L = layoutTextLines(a);
+        L.forEach((ln, i) => {
+          for (const s of ln.segs) {
+            if (!s.t) continue;
+            page.drawText(s.t, { x: a.x + s.x, y: a.y - i * a.size * 1.2 + lift, size: fs, font, color: rgbFrom(a.color) });
+          }
+        });
         /* Unterstreichung und Durchstreichung annähern */
         const decoW = Math.max(0.5, a.size * 0.06);
-        for (let i = 0; i < a.text.split("\n").length; i++) {
-          const t = a.text.split("\n")[i];
-          const by = a.y - lift - i * a.size * 1.2;
-          let wpt = t ? font.widthOfTextAtSize(t, fs) : 2;
+        L.forEach((ln, i) => {
+          if (!ln.segs.some((s) => s.t)) return;
+          let wpt = Math.max(2, ln.maxX - ln.startX);
           if (a.box && a.box.w > 0) wpt = Math.min(wpt, a.box.w);
+          const x0 = a.x + ln.startX;
+          const by = a.y - lift - i * a.size * 1.2;
           if (a.strike) {
-            page.drawLine({ start: { x: a.x, y: by + 0.28 * a.size }, end: { x: a.x + wpt, y: by + 0.28 * a.size }, thickness: decoW, color: rgbFrom(a.color) });
+            page.drawLine({ start: { x: x0, y: by + 0.28 * a.size }, end: { x: x0 + wpt, y: by + 0.28 * a.size }, thickness: decoW, color: rgbFrom(a.color) });
           }
           if (a.underline) {
             const uy = by - 0.12 * a.size;
             const style = a.underline === "double" || a.underline === "simple" ? "solid" : a.underline;
             const uda = dashPdf(style, decoW);
-            page.drawLine({ start: { x: a.x, y: uy }, end: { x: a.x + wpt, y: uy }, thickness: decoW, color: rgbFrom(a.color), ...(uda ? { dashArray: uda } : {}) });
+            page.drawLine({ start: { x: x0, y: uy }, end: { x: x0 + wpt, y: uy }, thickness: decoW, color: rgbFrom(a.color), ...(uda ? { dashArray: uda } : {}) });
             if (a.underline === "double") {
-              page.drawLine({ start: { x: a.x, y: uy - 0.14 * a.size }, end: { x: a.x + wpt, y: uy - 0.14 * a.size }, thickness: decoW, color: rgbFrom(a.color) });
+              page.drawLine({ start: { x: x0, y: uy - 0.14 * a.size }, end: { x: x0 + wpt, y: uy - 0.14 * a.size }, thickness: decoW, color: rgbFrom(a.color) });
             }
           }
-        }
+        });
       }
     }
   }
@@ -5235,6 +5352,13 @@ function refreshContextPane() {
       $("btnSup").classList.toggle("active", a.script === "sup");
       $("btnSub").classList.toggle("active", a.script === "sub");
       $("btnLatex").classList.toggle("active", !!a.latex);
+      const al = a.align || "left";
+      $("btnAlignLeft").classList.toggle("active", al === "left");
+      $("btnAlignCenter").classList.toggle("active", al === "center");
+      $("btnAlignRight").classList.toggle("active", al === "right");
+      $("btnAlignJustify").classList.toggle("active", al === "justify");
+      $("btnBulletList").classList.toggle("active", a.list === "bullet");
+      $("btnQuotes").classList.toggle("active", !!a.quotes);
       $("txtColorDot").style.background = a.color;
       $("txtFillDot").style.background = a.fill || "#ffffff";
       $("txtOutlineDot").style.background = a.ocolor || "#ffffff";
@@ -5263,6 +5387,10 @@ function refreshContextPane() {
     $("btnSup").classList.toggle("active", textDefaults.script === "sup");
     $("btnSub").classList.toggle("active", textDefaults.script === "sub");
     $("btnLatex").classList.remove("active");
+    const dal = textDefaults.align || "left";
+    ["Left", "Center", "Right", "Justify"].forEach((n) => $("btnAlign" + n).classList.toggle("active", dal === n.toLowerCase()));
+    $("btnBulletList").classList.toggle("active", textDefaults.list === "bullet");
+    $("btnQuotes").classList.toggle("active", !!textDefaults.quotes);
     $("txtColorDot").style.background = textDefaults.color;
     $("txtFillDot").style.background = textDefaults.fill || "#ffffff";
     $("txtOutlineDot").style.background = textDefaults.ocolor || "#ffffff";
@@ -5278,7 +5406,7 @@ function refreshContextPane() {
   const showTextUi = isText || !a;
   $("annoFontFamily").disabled = !showTextUi;
   $("annoFontSize").disabled = !showTextUi;
-  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor"].forEach((id) => { $(id).disabled = !showTextUi; });
+  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor", "btnAlignLeft", "btnAlignCenter", "btnAlignRight", "btnAlignJustify", "btnIndentInc", "btnIndentDec", "btnBulletList", "btnQuotes"].forEach((id) => { $(id).disabled = !showTextUi; });
   $("btnEditText").disabled = !isText;
   ["btnTextFill", "btnTextOutline"].forEach((id) => { $(id).disabled = !showTextUi; });
   /* Formformat-Reiter: bedienbar bei Formauswahl oder (für Vorgaben) ohne Auswahl */
@@ -5514,6 +5642,22 @@ bindToggle("btnStrike", (a) => { a.strike = !a.strike; });
 bindToggle("btnSup", (a) => { a.script = a.script === "sup" ? null : "sup"; });
 bindToggle("btnSub", (a) => { a.script = a.script === "sub" ? null : "sub"; });
 bindToggle("btnLatex", (a) => { a.latex = !a.latex; });
+/* Absatzfunktionen: Ausrichtung, Einzug, Aufzählungszeichen, Anführungszeichen.
+   Ohne vorhandenes Textfeld wird automatisch eines in Textgröße angelegt, damit die Ausrichtung wirken kann. */
+function paraFormat(fn, el) {
+  applyTextFormat((a) => {
+    if (a && a.type === "text" && !a.box) ensureTextBox(a);
+    fn(a);
+  }, el);
+}
+$("btnAlignLeft").addEventListener("click", () => paraFormat((a) => { a.align = "left"; }, $("btnAlignLeft")));
+$("btnAlignCenter").addEventListener("click", () => paraFormat((a) => { a.align = "center"; }, $("btnAlignCenter")));
+$("btnAlignRight").addEventListener("click", () => paraFormat((a) => { a.align = "right"; }, $("btnAlignRight")));
+$("btnAlignJustify").addEventListener("click", () => paraFormat((a) => { a.align = "justify"; }, $("btnAlignJustify")));
+$("btnIndentInc").addEventListener("click", () => paraFormat((a) => { a.indent = Math.min(400, (a.indent || 0) + 12); }, $("btnIndentInc")));
+$("btnIndentDec").addEventListener("click", () => paraFormat((a) => { a.indent = Math.max(0, (a.indent || 0) - 12); }, $("btnIndentDec")));
+$("btnBulletList").addEventListener("click", () => paraFormat((a) => { a.list = a.list === "bullet" ? null : "bullet"; }, $("btnBulletList")));
+$("btnQuotes").addEventListener("click", () => paraFormat((a) => { a.quotes = !a.quotes; }, $("btnQuotes")));
 buildColorMenu("btnTextColor", "txtColorDot", () => (selAnno ? selAnno.color : textDefaults.color), (c) => { if (selAnno) selAnno.color = c; else textDefaults.color = c; });
 buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno ? (selAnno.fill || "#ffffff") : (textDefaults.fill || "#ffffff")), (c) => { if (selAnno) selAnno.fill = c; else textDefaults.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => ((selAnno ? selAnno.fillOp : textDefaults.fillOp) != null ? (selAnno ? selAnno.fillOp : textDefaults.fillOp) : 1), setOp: (v) => { if (selAnno) selAnno.fillOp = v; else textDefaults.fillOp = v; } });
 buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno ? (selAnno.ocolor || "#000000") : (textDefaults.ocolor || "#000000")), (c) => { if (selAnno) selAnno.ocolor = c; else textDefaults.ocolor = c; }, { noneLabel: "Keine Kontur", withWidth: true, getWidth: () => ((selAnno ? selAnno.owidth : textDefaults.owidth) || 1), setWidth: (v) => { if (selAnno) selAnno.owidth = v; else textDefaults.owidth = v; } });
@@ -5732,6 +5876,10 @@ function runSelfTests() {
   test("Begradigen richtet waagerechte Striche aus", () => { const s = straightened([[10, 20], [30, 21], [50, 20.5]]); assert(s.length === 2 && s[0][1] === s[1][1], "Strich nicht waagerecht"); });
   test("Begradigen richtet senkrechte Striche aus", () => { const s = straightened([[10, 20], [10.5, 40], [10, 60]]); assert(s.length === 2 && s[0][0] === s[1][0], "Strich nicht senkrecht"); });
   test("Jede Schriftart im Auswahlmenü und eingebettet", () => { for (const k of Object.keys(FONT_STACKS)) { if (["helvetica", "times", "courier"].includes(k)) continue; assert(document.querySelector('#annoFontFamily option[value="' + k + '"]'), "Menüeintrag fehlt: " + k); assert(k in EMBED_FONT_FILES, "Einzubettende Schrift fehlt: " + k); } });
+  test("Textlayout bricht innerhalb der Feldbreite um", () => { const a = { type: "text", text: "Alpha Beta Gamma Delta", x: 0, y: 0, size: 12, font: "helvetica", box: { w: 60, h: 40 } }; const L = layoutTextLines(a); assert(L.length >= 2, "Kein Zeilenumbruch erfolgt"); for (const ln of L) assert(ln.maxX <= a.box.w + 0.6, "Zeile ragt über die Feldbreite hinaus"); });
+  test("Absatzausrichtung setzt Zeilenpositionen", () => { const r = { type: "text", text: "Kurz", x: 0, y: 0, size: 12, font: "helvetica", box: { w: 200, h: 20 }, align: "right" }; const ln = layoutTextLines(r)[0]; assert(ln.segs[0].x > 100, "Rechtsbündige Zeile beginnt nicht rechts"); const c = { ...r, align: "center" }; const lc = layoutTextLines(c)[0]; assert(Math.abs(lc.segs[0].x - (200 - lc.w) / 2) < 0.6, "Zentrierte Zeile liegt nicht mittig"); });
+  test("Absatzfunktionen vorhanden und abgedeckt", () => { assert(typeof layoutTextLines === "function" && typeof ensureTextBox === "function", "Layout-Funktionen fehlen"); for (const id of ["btnAlignLeft", "btnAlignCenter", "btnAlignRight", "btnAlignJustify", "btnIndentInc", "btnIndentDec", "btnBulletList", "btnQuotes"]) assert($(id), "Schaltfläche fehlt: " + id); const s = snapshotAnno({ type: "text", text: "x", x: 0, y: 0, align: "center", indent: 12, list: "bullet", quotes: true }); assert(s.align === "center" && s.indent === 12 && s.list === "bullet" && s.quotes === true, "Absatzeigenschaften fehlen im Undo-Abzug"); const b = { type: "text", text: "Durchacz", x: 0, y: 0, size: 12, font: "helvetica", list: "bullet" }; ensureTextBox(b); assert(b.box && b.box.w > 20, "Automatisches Textfeld wurde nicht angelegt"); });
+  test("Aufzählungszeichen und Anführungszeichen im Layout", () => { const L = layoutTextLines({ type: "text", text: "Erster Punkt", x: 0, y: 0, size: 12, font: "helvetica", list: "bullet" }); assert(L[0].segs[0].t.indexOf("\u2022") === 0, "Aufzählungspunkt fehlt"); const Q = layoutTextLines({ type: "text", text: "Satz", x: 0, y: 0, size: 12, font: "helvetica", quotes: true }); const qt = Q.map((ln) => ln.segs.map((s) => s.t).join("")).join(" "); assert(qt.indexOf("\u201E") === 0 && qt.indexOf("\u201C") === qt.length - 1, "Anführungszeichen fehlen"); });
   test("Wiederholen: Spiegelaktion und Rückspiegel stimmen", () => { const a1 = mirrorAction({ kind: "annoAdd", orig: 0, anno: { type: "draw" } }); assert(a1 && a1.kind === "annoRemove", "Spiegel von annoAdd"); const a2 = mirrorAction(a1); assert(a2 && a2.kind === "annoAdd", "Rückspiegel von annoRemove"); const r1 = mirrorAction({ kind: "rot", orig: 3, prev: 90 }); assert(r1 && r1.kind === "rot" && r1.orig === 3, "Spiegel von rot"); });
   test("Dateimenü führt alle Einträge", () => { for (const id of ["mnuOpen", "mnuSave", "mnuSaveAs", "mnuCompress", "mnuPrint", "mnuClose", "mnuOptions", "mnuLicense"]) assert($(id), "Menüeintrag fehlt: " + id); });
   test("Extrahieren bietet PDF, JPEG und PNG", () => { for (const v of ["pdf", "jpg", "png"]) assert(document.querySelector('#extractFormat option[value="' + v + '"]'), "Format fehlt: " + v); });

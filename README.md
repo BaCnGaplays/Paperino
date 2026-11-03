@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.18**
+> Aktuelle Version: **Alpha 0.19**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -12,10 +12,11 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht; die Lineale liegen fest am Ansichtsbereich, und die Skala beginnt am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite
 - Seitenleiste mit vier Ansichten: Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse; die Ansicht wird über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, Cantarell, Titillium Web, Istok Web, Comic Neue) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, die unmittelbar beim Verschieben wirkt, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
+- Absatzfunktionen für Textfelder: linksbündig, zentriert, rechtsbündig, Blocksatz (letzte Zeile linksbündig), Einrücken und Ausrücken in 12-Punkt-Schritten, Aufzählungszeichen mit hängendem Einzug und deutsche Anführungszeichen um den Text; der Text bricht innerhalb des Textfelds um und bleibt in der Feldbreite; die Formatierung wird beim Speichern identisch in die Datei übernommen
 - LaTeX-Formeln über eine Formel-Schaltfläche mit Funktionszeichen ƒ (Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben, Symbole), beim Speichern als eingebettetes Bild abgelegt
 - Pfeile mit einstellbaren Pfeilspitzen: ohne, linke, rechte oder beide Spitzen, offen oder gefüllt
 - Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
@@ -76,11 +77,12 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.16 | Korrektur der Lineale: die Skalen liegen nun fest am Ansichtsbereich und beginnen am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite; Suchtreffer erscheinen in einem eigenen Seitenleisten-Reiter „Suchen”; Korrektur des Optionsfensters (die Hell-/Dunkel-Auswahl ließ sich zuvor nicht öffnen) |
 | Alpha 0.17 | Seitenleiste als Auswahlleiste: die Ansichten Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse werden über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Kommentarleiste in der Breite frei ziehbar (wird gemerkt); Ansichtsbereich bereinigt (die Umschalter für Lesezeichenleiste, Inhaltsverzeichnis und Lesezeichen hinzufügen entfallen, da die Seitenleiste diese Auswahl übernimmt) |
 | Alpha 0.18 | Menüband passt sich der Fensterbreite an: Bereiche klappen bei Platzmangel zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; Doppelklick auf eine Registerkarte klappt das Menüband ganz ein und wieder aus; waagerechte Bildlaufleisten im Menüband entfallen; Formel-Schaltfläche mit Funktionszeichen ƒ; Farbwahlmenü verbreitert, Transparenz wirkt unmittelbar beim Verschieben |
+| Alpha 0.19 | Korrektur des Textfeld-Fehlers: der Text bricht nun innerhalb des Textfelds um und ragt nicht mehr über die Feldkante hinaus; neue Absatzfunktionen (linksbündig, zentriert, rechtsbündig, Blocksatz, Einrücken, Ausrücken, Aufzählungszeichen, deutsche Anführungszeichen); vier zusätzliche freie Schriftarten (Cantarell, Titillium Web, Istok Web, Comic Neue, mit allen Schnitten eingebettet) |
 
 ## Hinweise und Grenzen
 
 - Passwortgeschützte PDFs werden nicht unterstützt.
-- Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono oder Arvo gespeichert (die freien Schriften werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
+- Eingefügter Text wird in den Schriften Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, Cantarell, Titillium Web, Istok Web oder Comic Neue gespeichert (die freien Schriften werden beim Speichern in die Datei eingebettet); der westeuropäische Zeichensatz wird unterstützt.
 - LaTeX-Formeln werden beim Speichern als eingebettetes Bild abgelegt, da die PDF-Standardschriften keine mathematischen Symbole enthalten.
 - Wellige Unterstreichungen werden beim Speichern als gerade Linie angenähert; gedrehter Text wird beim Speichern an gleicher Stelle ohne Drehung abgelegt.
 - Schwärzungen ohne Sicherheitsmodus verdecken den Inhalt nur optisch; der Text bleibt in der Datei enthalten. Der Sicherheitsmodus ist daher standardmäßig aktiviert. Beim Bild-Export (JPEG/PNG) sind geschwärzte Bereiche im Bild abgedeckt.
