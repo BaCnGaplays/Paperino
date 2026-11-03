@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.19**
+> Aktuelle Version: **Alpha 0.20**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -34,7 +34,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Anonymisieren: fremde Kommentare und Markierungen, die bereits in der Datei enthalten sind, je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage; dieser Schritt lässt sich nicht rückgängig machen, Formularfelder und Verknüpfungen bleiben erhalten)
 - Komprimieren: alle Seiten werden als JPEG-Bilder neu aufgebaut, wodurch die Dateigröße in der Regel deutlich sinkt; die Größenabweichung wird angezeigt
 - Statusleiste unten mit Bibliothekenstatus und Seitenanzeige
-- Anpassungsfähiges Menüband: bei schmalen Fenstern klappen einzelne Bereiche zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; per Doppelklick auf eine Registerkarte lässt sich das Menüband ganz ein- und ausklappen; waagerechte Bildlaufleisten im Menüband entstehen dadurch nicht
+- Anpassungsfähiges Menüband: bei schmalen Fenstern zeigen die Schaltflächen nur noch ihr Piktogramm (Beschriftung entfällt, Tooltips bleiben), danach klappen einzelne Bereiche zusammen und tragen ein Symbol neben ihrer Bezeichnung, per Klick öffnen sie sich als Fenster mit vollständiger Beschriftung; die Registerkartenleiste wird bei schmalen Fenstern über Pfeile links und rechts durchgeblättert, der aktive Reiter bleibt dabei sichtbar (Bildlaufleisten entstehen dadurch nicht); per Doppelklick auf eine Registerkarte lässt sich das Menüband ganz ein- und ausklappen
 - Dateimenü mit Öffnen, Speichern, Speichern unter, Komprimieren, Drucken, Schließen, Optionen (Darstellung Hell oder Dunkel, wird gemerkt) und Lizenz- und Urheberrechtshinweis; in der Ecke liegen nur Rückgängig und Wiederholen
 - Rückgängig und Wiederholen für alle Aktionen, mehrfach hintereinander (Strg+Z und Strg+Y sowie Knöpfe)
 - Speichern und Speichern unter (freier Dateiname), Drucken der bearbeiteten Datei über den Druckdialog des Browsers
@@ -78,6 +78,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.17 | Seitenleiste als Auswahlleiste: die Ansichten Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse werden über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Kommentarleiste in der Breite frei ziehbar (wird gemerkt); Ansichtsbereich bereinigt (die Umschalter für Lesezeichenleiste, Inhaltsverzeichnis und Lesezeichen hinzufügen entfallen, da die Seitenleiste diese Auswahl übernimmt) |
 | Alpha 0.18 | Menüband passt sich der Fensterbreite an: Bereiche klappen bei Platzmangel zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; Doppelklick auf eine Registerkarte klappt das Menüband ganz ein und wieder aus; waagerechte Bildlaufleisten im Menüband entfallen; Formel-Schaltfläche mit Funktionszeichen ƒ; Farbwahlmenü verbreitert, Transparenz wirkt unmittelbar beim Verschieben |
 | Alpha 0.19 | Korrektur des Textfeld-Fehlers: der Text bricht nun innerhalb des Textfelds um und ragt nicht mehr über die Feldkante hinaus; neue Absatzfunktionen (linksbündig, zentriert, rechtsbündig, Blocksatz, Einrücken, Ausrücken, Aufzählungszeichen, deutsche Anführungszeichen); vier zusätzliche freie Schriftarten (Cantarell, Titillium Web, Istok Web, Comic Neue, mit allen Schnitten eingebettet) |
+| Alpha 0.20 | Registerkartenleiste bei schmalen Fenstern über Pfeile links und rechts durchblätterbar (der aktive Reiter bleibt sichtbar, keine Bildlaufleiste); Schaltflächen zeigen bei Platzmangel nur noch ihr Piktogramm (Lupe für Zoom, Blattsymbol für Seite und so weiter, Tooltips bleiben); eingeklappte Bereiche tragen ein Symbol neben der Bezeichnung; Bereichsbezeichnung „Bereiche“ bereinigt |
 
 ## Hinweise und Grenzen
 
