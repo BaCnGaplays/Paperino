@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="de">
 <head>
@@ -80,6 +81,7 @@
     gap: 2px;
     padding: 6px 10px 0;
     border-bottom: 1px solid #d4d4d8;
+    overflow-x: auto;
   }
   .tab {
     border: 1px solid transparent;
@@ -93,6 +95,7 @@
     cursor: pointer;
     position: relative;
     top: 1px;
+    white-space: nowrap;
   }
   .tab:hover { color: var(--ink); }
   .tab.active {
@@ -101,7 +104,7 @@
     color: #2b579a;
     font-weight: 600;
   }
-  .ribbon-body { padding: 8px 12px 4px; display: flex; }
+  .ribbon-body { padding: 8px 12px 4px; display: flex; overflow-x: auto; }
   .pane { display: flex; align-items: stretch; flex-wrap: nowrap; }
   .pane[hidden] { display: none; }
   .group {
@@ -110,6 +113,7 @@
     align-items: center;
     padding: 2px 14px 4px;
     border-right: 1px solid var(--line);
+    flex-shrink: 0;
   }
   .group:last-child { border-right: none; }
   .group-buttons { display: flex; align-items: center; gap: 2px; flex: 1; }
@@ -134,6 +138,11 @@
   .rb-btn svg { width: 22px; height: 22px; }
   .rb-btn:hover:not(:disabled) { background: #e2ecfd; color: #1e3a8a; }
   .rb-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+  .rb-btn.active {
+    background: #dbe7fd;
+    color: #1e3a8a;
+    box-shadow: inset 0 0 0 1px #93b4f7;
+  }
   .rb-btn.small { flex-direction: row; min-width: 0; padding: 6px 10px; gap: 6px; font-size: 13px; }
   .rb-btn.small svg { width: 17px; height: 17px; }
   .rb-field { display: flex; align-items: center; gap: 6px; }
@@ -149,11 +158,6 @@
   }
   #zoomLabel { min-width: 48px; text-align: center; font-size: 13px; color: var(--ink); }
   #pageCount { color: var(--muted); font-size: 13px; }
-  .rb-btn.active {
-    background: #dbe7fd;
-    color: #1e3a8a;
-    box-shadow: inset 0 0 0 1px #93b4f7;
-  }
   .rb-check {
     display: flex;
     align-items: center;
@@ -188,6 +192,36 @@
     line-height: 1.45;
   }
 
+  /* ---------- Formen-Galerie ---------- */
+  .shape-menu {
+    position: fixed;
+    background: var(--panel);
+    border: 1px solid #d4d4d8;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    padding: 10px;
+    z-index: 60;
+    display: none;
+    grid-template-columns: repeat(4, 38px);
+    gap: 6px;
+  }
+  .shape-menu.open { display: grid; }
+  .shape-menu button {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .shape-menu button:hover { border-color: var(--accent); color: var(--accent); }
+  .shape-menu button.active { border-color: #2b579a; background: #dbe7fd; color: #1e3a8a; }
+  .shape-menu button svg { width: 22px; height: 22px; }
+
   /* ---------- Statusleiste ---------- */
   #statusbar {
     display: flex;
@@ -207,8 +241,8 @@
   /* ---------- Hauptbereich ---------- */
   main { flex: 1; display: flex; min-height: 0; }
 
-  /* ---------- Seitenleiste ---------- */
-  aside {
+  /* ---------- Seitennavigation (Miniaturansichten) ---------- */
+  aside#thumbPanel {
     width: 170px;
     min-width: 170px;
     background: var(--panel);
@@ -276,22 +310,48 @@
     border-radius: 4px;
   }
 
-  /* ---------- Ansichtsbereich ---------- */
+  /* ---------- Ansichtsbereich (scrollbarer Seitenlauf) ---------- */
   #viewer {
     flex: 1;
     overflow: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
     padding: 24px;
-  }
-  #pageWrap {
     position: relative;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-    max-width: 100%;
   }
-  #pageCanvas { display: block; background: #fff; }
-  #overlayCanvas { position: absolute; inset: 0; touch-action: none; }
+  #pagesColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .page-entry {
+    position: relative;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .page-entry canvas.page-canvas { display: block; }
+  .overlay-canvas {
+    position: absolute;
+    inset: 0;
+    touch-action: none;
+    pointer-events: none;
+  }
+  .overlay-canvas.tool-active { pointer-events: auto; cursor: crosshair; }
+  .textLayer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    line-height: 1;
+    text-size-adjust: none;
+    forced-color-adjust: none;
+  }
+  .textLayer span {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: inherit;
+    transform-origin: 0% 0%;
+  }
+  .textLayer ::selection { background: rgba(2, 132, 199, 0.3); }
   #dropzone {
     margin: auto;
     text-align: center;
@@ -303,6 +363,50 @@
   }
   #dropzone strong { color: var(--ink); }
   body.filehover #dropzone, body.filehover #viewer { outline: 3px dashed var(--accent); outline-offset: -8px; }
+
+  /* ---------- Kommentarliste ---------- */
+  aside#commentPanel {
+    width: 250px;
+    min-width: 250px;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+  }
+  #commentList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .comment-item {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
+    background: #fbfdff;
+  }
+  .comment-item .ci-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-size: 11px;
+  }
+  .comment-item .ci-head button {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 5px;
+    padding: 1px 7px;
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .comment-item .ci-head button:hover { color: var(--danger); border-color: var(--danger); }
+  .comment-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 20px 8px; }
 
   #toast {
     position: fixed;
@@ -336,7 +440,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       Öffnen
     </button>
-    <button id="btnUndo" title="Rückgängig (Strg+Z)" disabled>
+    <button id="btnUndo" title="Rückgängig – genau ein Schritt (Strg+Z)" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-4"/></svg>
       Rückgängig
     </button>
@@ -350,9 +454,11 @@
 <div id="ribbon">
   <div class="tabs">
     <button class="tab active" data-tab="paneStart">Start</button>
+    <button class="tab" data-tab="paneView">Ansicht</button>
     <button class="tab" data-tab="paneMod">Modifizieren</button>
     <button class="tab" data-tab="paneAnon">Anonymisieren</button>
     <button class="tab" data-tab="paneEdit">Lektorieren</button>
+    <button class="tab" data-tab="paneComment">Kommentieren</button>
   </div>
   <div class="ribbon-body">
 
@@ -392,6 +498,24 @@
           </button>
         </div>
         <div class="group-label">Seite</div>
+      </div>
+    </div>
+
+    <div class="pane" id="paneView" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <label class="rb-check" title="Alle Seiten untereinander anzeigen und durch das gesamte Dokument scrollen">
+            <input type="checkbox" id="chkContinuous" checked />
+            Fortlaufender Seitenlauf
+          </label>
+        </div>
+        <div class="group-label">Anzeige</div>
+      </div>
+      <div class="group">
+        <div class="group-buttons">
+          <span class="group-note">Beim fortlaufenden Seitenlauf werden alle Seiten untereinander angezeigt und erst beim Scrollen nachgeladen. Bei deaktivierter Option wird nur die aktuelle Seite angezeigt.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
       </div>
     </div>
 
@@ -464,8 +588,8 @@
 
       <div class="group">
         <div class="group-buttons">
-          <label class="rb-check" title="Beim Speichern wird die Seite als Bild neu aufgebaut; der Inhalt unter den Schwärzungen wird dabei gelöscht">
-            <input type="checkbox" id="chkSecure" />
+          <label class="rb-check" title="Beim Speichern wird die Seite als Bild neu aufgebaut; der Inhalt unter den Schwärzungen wird dabei gelöscht und ist danach nicht mehr markierbar">
+            <input type="checkbox" id="chkSecure" checked />
             Sicherheitsmodus
           </label>
         </div>
@@ -474,7 +598,7 @@
 
       <div class="group">
         <div class="group-buttons">
-          <span class="group-note">Ohne Sicherheitsmodus wird der Text unter der Schwärzung beim Speichern nur verdeckt, bleibt jedoch in der Datei enthalten. Mit Sicherheitsmodus wird die Seite als Bild gespeichert und der Inhalt wird tatsächlich gelöscht.</span>
+          <span class="group-note">Der Sicherheitsmodus ist standardmäßig aktiviert: Beim Speichern wird jede geschwärzte Seite als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird gelöscht und ist danach nicht mehr markierbar.</span>
         </div>
         <div class="group-label">Hinweis</div>
       </div>
@@ -483,7 +607,7 @@
     <div class="pane" id="paneEdit" hidden>
       <div class="group">
         <div class="group-buttons">
-          <button id="toolSelect" class="rb-btn active" data-tool="select" title="Normale Ansicht ohne Zeichenwerkzeug">
+          <button id="toolSelect" class="rb-btn active" data-tool="select" title="Normale Ansicht ohne Zeichenwerkzeug; Text kann markiert werden">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 1.5L11 20z"/></svg>
             <span>Auswahl</span>
           </button>
@@ -491,17 +615,25 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14"/><path d="M12 5v14"/></svg>
             <span>Text</span>
           </button>
-          <button id="toolHighlight" class="rb-btn" data-tool="highlight" title="Bereich markieren: halbtransparentes Rechteck aufziehen">
+          <button id="toolHighlight" class="rb-btn" data-tool="highlight" title="Textgebundene Markierung: Werkzeug aktiv lassen und Text auf der Seite markieren">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M4 21h16"/></svg>
             <span>Markieren</span>
           </button>
-          <button id="toolStrike" class="rb-btn" data-tool="strike" title="Durchstreichen: Rechteck über den Text aufziehen">
+          <button id="toolStrike" class="rb-btn" data-tool="strike" title="Textgebundenes Durchstreichen: Werkzeug aktiv lassen und Text markieren">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7h8"/><path d="M12 7v10"/><path d="M4 12h16"/></svg>
             <span>Durchstreichen</span>
           </button>
-          <button id="toolDraw" class="rb-btn" data-tool="draw" title="Freihändig zeichnen: gedrückt halten und ziehen">
+          <button id="toolUnderline" class="rb-btn" data-tool="underline" title="Textgebundenes Unterstreichen: Werkzeug aktiv lassen und Text markieren">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M5 20h14"/></svg>
+            <span>Unterstreichen</span>
+          </button>
+          <button id="toolDraw" class="rb-btn" data-tool="draw" title="Stift: freihändig zeichnen, gedrückt halten und ziehen">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4L8 20l-5 1 1-5z"/></svg>
-            <span>Zeichnen</span>
+            <span>Stift</span>
+          </button>
+          <button id="toolMarker" class="rb-btn" data-tool="marker" title="Textmarker: freihändige, halbtransparente Markierung ziehen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 4-4 4 4-4 4z"/><path d="M12 15v3"/><path d="M4 21h16"/></svg>
+            <span>Textmarker</span>
           </button>
         </div>
         <div class="group-label">Werkzeug</div>
@@ -509,7 +641,17 @@
 
       <div class="group">
         <div class="group-buttons">
-          <label class="rb-check" title="Farbe für Text, Markierung, Durchstreichen und Zeichnen">
+          <button id="btnShapes" class="rb-btn" title="Formen einfügen (Rechteck, Ellipse, Dreieck, Raute, Stern, Linie, Pfeil)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><circle cx="17" cy="17" r="4"/><path d="M17 3l2.9 6h-5.8z"/></svg>
+            <span>Formen</span>
+          </button>
+        </div>
+        <div class="group-label">Formen</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <label class="rb-check" title="Farbe für alle Zeichnungs- und Textwerkzeuge">
             Farbe
             <input type="color" id="inputColor" value="#dc2626" />
           </label>
@@ -527,16 +669,41 @@
 
       <div class="group">
         <div class="group-buttons">
-          <button id="btnAnnoUndo" class="rb-btn" title="Letzte Anmerkung auf dieser Seite entfernen" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-4"/></svg>
-            <span>Letzte entfernen</span>
-          </button>
-          <button id="btnAnnoClear" class="rb-btn" title="Alle Anmerkungen auf dieser Seite löschen" disabled>
+          <button id="btnAnnoClear" class="rb-btn" title="Alle Anmerkungen auf der aktuellen Seite löschen (rückgängig machbar)" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg>
             <span>Seite leeren</span>
           </button>
         </div>
         <div class="group-label">Anmerkungen</div>
+      </div>
+    </div>
+
+    <div class="pane" id="paneComment" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <button id="toolComment" class="rb-btn" data-tool="comment" title="Kommentar hinzufügen: Text auf der Seite markieren und klicken, oder nur klicken für Kommentar an einer Stelle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Kommentar</span>
+          </button>
+        </div>
+        <div class="group-label">Werkzeug</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <button id="btnCommentList" class="rb-btn" title="Kommentarliste am rechten Rand ein- und ausblenden" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+            <span id="btnCommentListLabel">Liste anzeigen</span>
+          </button>
+        </div>
+        <div class="group-label">Übersicht</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <span class="group-note">Kommentare werden beim Speichern als echte PDF-Notizen abgelegt und erscheinen anschließend auch in Adobe Acrobat und anderen PDF-Programmen.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
       </div>
     </div>
 
@@ -550,7 +717,7 @@
 </div>
 
 <main>
-  <aside>
+  <aside id="thumbPanel">
     <div class="side-title">Seiten</div>
     <div id="thumbs"></div>
   </aside>
@@ -558,15 +725,29 @@
   <section id="viewer">
     <div id="dropzone">
       <strong>Kein Dokument geöffnet</strong><br /><br />
-      Bitte klicken Sie auf „PDF öffnen“ oder ziehen Sie eine PDF-Datei in dieses Fenster.<br /><br />
+      Bitte klicken Sie auf „Öffnen“ oder ziehen Sie eine PDF-Datei in dieses Fenster.<br /><br />
       <span style="font-size:12px;">Alle Verarbeitungsschritte laufen ausschließlich lokal in Ihrem Browser. Die Datei wird nicht hochgeladen.</span>
     </div>
-    <div id="pageWrap" hidden>
-      <canvas id="pageCanvas"></canvas>
-      <canvas id="overlayCanvas"></canvas>
+    <div id="scrollWrap" hidden>
+      <div id="pagesColumn"></div>
     </div>
   </section>
+
+  <aside id="commentPanel" hidden>
+    <div class="side-title">Kommentare</div>
+    <div id="commentList"></div>
+  </aside>
 </main>
+
+<div class="shape-menu" id="shapeMenu">
+  <button data-tool="rect" title="Rechteck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="1"/></svg></button>
+  <button data-tool="ellipse" title="Ellipse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="8" ry="6.5"/></svg></button>
+  <button data-tool="triangle" title="Dreieck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 4l8 15H4z"/></svg></button>
+  <button data-tool="diamond" title="Raute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 9-8 9-8-9z"/></svg></button>
+  <button data-tool="star" title="Stern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.4 6.2 6.6.4-5.1 4.2 1.7 6.4L12 16.6 6.4 20.2l1.7-6.4L3 9.6l6.6-.4z"/></svg></button>
+  <button data-tool="line" title="Linie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19 19 5"/></svg></button>
+  <button data-tool="arrow" title="Pfeil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 19 5"/><path d="M12 5h7v7"/></svg></button>
+</div>
 
 <div id="toast"></div>
 
@@ -574,24 +755,40 @@
 "use strict";
 
 /* =========================================================
-   Paperino – clientseitiger PDF-Seiten-Editor
-   Bibliotheken: PDF.js (Rendern), pdf-lib (Seitenoperationen)
+   Paperino – clientseitiger PDF-Editor
+   Bibliotheken: PDF.js (Rendern), pdf-lib (Dateiaufbau)
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
 const APP_VERSION = "Alpha 0.2"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
-let fileName = "dokument";     // Basisname der geladenen Datei
-let pdfBytes = null;           // Ursprüngliche Dateibytes (ArrayBuffer)
-let doc = null;                // PDF.js-Dokument
-let pageOrder = [];            // Aktuelle Reihenfolge: orig. Seitenindizes (0-basiert)
-let rotDelta = {};             // origIndex -> zusätzliche Drehung in Grad
-let history = [];              // Rückgängig-Stapel (Schnappschüsse von pageOrder)
-let selected = new Set();      // Auswahl: orig. Seitenindizes
-let currentPage = 0;          // Aktuelle Position in pageOrder
-let zoom = 1.0;                // Zoomfaktor
-const thumbCache = new Map();  // origIndex -> { url, w, h }
+let fileName = "dokument";      // Basisname der geladenen Datei
+let pdfBytes = null;            // Ursprüngliche Dateibytes (ArrayBuffer)
+let doc = null;                 // PDF.js-Dokument
+let pageOrder = [];             // Aktuelle Reihenfolge: orig. Seitenindizes (0-basiert)
+let rotDelta = {};              // origIndex -> zusätzliche Drehung in Grad
+let selected = new Set();       // Auswahl: orig. Seitenindizes
+let currentPage = 0;            // Aktuelle Position in pageOrder
+let zoom = 1.0;                 // Zoomfaktor
+let continuous = true;          // Fortlaufender Seitenlauf
+let secureMode = true;          // Geschwärzte Seiten beim Speichern rastern
+const thumbCache = new Map();   // origIndex -> { url, w, h }
+const entries = [];             // Positionen -> Seiteneintrag (DOM und Viewport)
+let entryObserver = null;       // Sichtbarkeitsbeobachter fuer Seitenlauf
+
+/* Anmerkungen */
+let tool = "select";            // Aktives Werkzeug
+let annos = new Map();          // origIndex -> Array von Anmerkungen
+let annoColor = "#dc2626";      // Aktuelle Farbe
+let penWidth = 2;               // Strichstärke in Punkten
+let liveAnno = null;            // Anmerkung in Entstehung
+let liveEntry = null;           // Seiteneintrag der laufenden Anmerkung
+let redactHintShown = false;
+
+/* Ein-Schritt-Rueckgaengig-Stapel */
+const undoStack = [];
+
 const $ = (id) => document.getElementById(id);
 
 /* ---------- Meldungen ---------- */
@@ -601,7 +798,7 @@ function toast(msg, isError = false) {
   t.textContent = msg;
   t.className = isError ? "show error" : "show";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = ""; }, 3500);
+  toastTimer = setTimeout(() => { t.className = ""; }, 3800);
 }
 function setStatus(id, ok, text) {
   const el = $(id);
@@ -609,7 +806,7 @@ function setStatus(id, ok, text) {
   el.className = ok ? "lib-ok" : "lib-missing";
 }
 
-/* ---------- Bibliotheken laden (CDN) ---------- */
+/* ---------- Bibliotheken laden (CDN mit Ersatzquellen) ---------- */
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const s = document.createElement("script");
@@ -621,7 +818,6 @@ function loadScript(src) {
 }
 
 async function loadLibraries() {
-  // 1) PDF.js zum Rendern: Hauptquelle cdnjs, Ersatzquelle jsDelivr
   const pdfJsSources = [
     {
       lib: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
@@ -648,7 +844,6 @@ async function loadLibraries() {
       }
     }
   }
-  // 2) pdf-lib für Seitenoperationen und Export: Hauptquelle unpkg, Ersatzquelle jsDelivr
   const pdfLibSources = [
     "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js",
     "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"
@@ -688,27 +883,27 @@ async function openFile(file) {
   }
   try {
     const buf = await file.arrayBuffer();
-    pdfBytes = buf; // Ursprüngliche Bytes bleiben im Hauptspeicher erhalten
-    // PDF.js kann den übergebenen Puffer in den Web Worker übertragen (detach),
-    // daher wird hier eine Kopie übergeben:
+    pdfBytes = buf;
     const loaded = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
     doc = loaded;
     fileName = file.name.replace(/\.pdf$/i, "");
     pageOrder = Array.from({ length: doc.numPages }, (_, i) => i);
     rotDelta = {};
-    history = [];
+    undoStack.length = 0;
     annos = new Map();
     selected.clear();
-    setTool("select");
-    thumbCache.clear();
     currentPage = 0;
     zoom = 1.0;
+    thumbCache.clear();
     $("docInfo").textContent = `${fileName}.pdf – ${doc.numPages} Seite(n)`;
     $("dropzone").hidden = true;
-    $("pageWrap").hidden = false;
+    $("scrollWrap").hidden = false;
+    setTool("select");
+    buildEntries();
+    updateView();
+    rebuildThumbs();
+    refreshComments();
     updateUi();
-    await renderCurrent();
-    await rebuildThumbs();
     toast(`„${fileName}.pdf“ mit ${doc.numPages} Seite(n) geöffnet.`);
   } catch (err) {
     if (err && err.name === "PasswordException") {
@@ -719,41 +914,894 @@ async function openFile(file) {
   }
 }
 
-/* ---------- Renderlogik ---------- */
-async function renderCurrent() {
-  if (!doc || pageOrder.length === 0) return;
-  currentPage = Math.min(currentPage, pageOrder.length - 1);
-  const orig = pageOrder[currentPage];
+/* =========================================================
+   Seiteneinträge: Aufbau, Layout und Rendering
+   ========================================================= */
+function buildEntries() {
+  const column = $("pagesColumn");
+  column.innerHTML = "";
+  entries.length = 0;
+  for (let pos = 0; pos < pageOrder.length; pos++) {
+    const orig = pageOrder[pos];
+    const wrap = document.createElement("div");
+    wrap.className = "page-entry";
+    wrap.dataset.pos = pos;
+    const canvas = document.createElement("canvas");
+    canvas.className = "page-canvas";
+    const overlay = document.createElement("canvas");
+    overlay.className = "overlay-canvas";
+    const textLayer = document.createElement("div");
+    textLayer.className = "textLayer";
+    textLayer.dataset.pos = pos;
+    textLayer.style.cursor = tool === "comment" ? "crosshair" : "text";
+    wrap.append(canvas, overlay, textLayer);
+    column.appendChild(wrap);
+    entries.push({ orig, pos, wrap, canvas, overlay, textLayer, viewport: null, rendered: false });
+    overlay.classList.toggle("tool-active", DRAW_TOOLS.includes(tool));
+    overlay.style.cursor = CURSORS[tool] || "default";
+  }
+}
+
+function layoutEntries() {
+  for (const e of entries) {
+    e.wrap.style.display = (continuous || e.pos === currentPage) ? "" : "none";
+  }
+}
+
+async function renderEntry(entry, force = false) {
+  if (!doc || (entry.rendered && !force)) return;
+  const orig = entry.orig;
   const page = await doc.getPage(orig + 1);
   const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
   const dpr = window.devicePixelRatio || 1;
   const viewport = page.getViewport({ scale: zoom * dpr, rotation: rot });
-  activeViewport = viewport;
-  const canvas = $("pageCanvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  canvas.style.width = viewport.width / dpr + "px";
-  canvas.style.height = viewport.height / dpr + "px";
-  // Overlay-Leinwand exakt über der Seite positionieren
-  const overlay = $("overlayCanvas");
-  overlay.width = viewport.width;
-  overlay.height = viewport.height;
-  overlay.style.width = canvas.style.width;
-  overlay.style.height = canvas.style.height;
-  await page.render({ canvasContext: ctx, viewport }).promise;
-  renderOverlay();
-  $("pageInput").value = currentPage + 1;
-  $("pageCount").textContent = `/ ${pageOrder.length}`;
+  entry.canvas.width = viewport.width;
+  entry.canvas.height = viewport.height;
+  entry.canvas.style.width = viewport.width / dpr + "px";
+  entry.canvas.style.height = viewport.height / dpr + "px";
+  entry.overlay.width = viewport.width;
+  entry.overlay.height = viewport.height;
+  entry.overlay.style.width = entry.canvas.style.width;
+  entry.overlay.style.height = entry.canvas.style.height;
+  entry.viewport = viewport;
+  await page.render({ canvasContext: entry.canvas.getContext("2d"), viewport }).promise;
+  renderOverlayFor(entry);
+  // Textebene fuer textgebundene Werkzeuge (CSS-Pixel-Massstab)
+  try {
+    const tv = page.getViewport({ scale: zoom, rotation: rot });
+    entry.textLayer.style.width = tv.width + "px";
+    entry.textLayer.style.height = tv.height + "px";
+    const tc = await page.getTextContent();
+    if (entry.textLayer.childElementCount > 0) entry.textLayer.innerHTML = "";
+    pdfjsLib.renderTextLayer({ textContentSource: tc, container: entry.textLayer, viewport: tv });
+  } catch (e) {
+    /* Textebene ist optional: bei Fehlern weitermachen */
+  }
+  entry.rendered = true;
+}
+
+function invalidateEntries() {
+  for (const e of entries) { e.rendered = false; }
+}
+
+function observeEntries() {
+  if (entryObserver) entryObserver.disconnect();
+  entryObserver = new IntersectionObserver((items) => {
+    for (const it of items) {
+      if (it.isIntersecting) {
+        const pos = parseInt(it.target.dataset.pos, 10);
+        renderEntry(entries[pos]);
+      }
+    }
+  }, { root: $("viewer"), rootMargin: "700px 0px" });
+  for (const e of entries) entryObserver.observe(e.wrap);
+}
+
+function renderVisible() {
+  const vr = $("viewer").getBoundingClientRect();
+  for (const e of entries) {
+    const r = e.wrap.getBoundingClientRect();
+    if (r.height > 0 && r.bottom > vr.top - 700 && r.top < vr.bottom + 700) renderEntry(e);
+  }
+}
+
+function updateView() {
+  layoutEntries();
+  if (continuous) {
+    observeEntries();
+    renderVisible();
+  } else {
+    if (entryObserver) entryObserver.disconnect();
+    renderEntry(entries[currentPage]);
+  }
+}
+
+function goTo(pos) {
+  currentPage = Math.min(Math.max(pos, 0), Math.max(0, pageOrder.length - 1));
+  updateUi();
+  if (continuous) {
+    entries[currentPage].wrap.scrollIntoView({ block: "start" });
+  } else {
+    layoutEntries();
+  }
+  renderEntry(entries[currentPage]);
+  highlightThumb(currentPage);
+}
+
+function setZoom(newZoom) {
+  zoom = Math.max(0.25, Math.min(4, newZoom));
+  invalidateEntries();
+  updateUi();
+  updateView();
+}
+
+/* =========================================================
+   Werkzeuge und Anmerkungen
+   ========================================================= */
+const DRAW_TOOLS = ["text", "draw", "marker", "rect", "ellipse", "triangle", "diamond", "star", "line", "arrow", "redact"];
+const TEXT_TOOLS = ["highlight", "strike", "underline"];
+const SHAPE_TOOLS = ["rect", "ellipse", "triangle", "diamond", "star", "line", "arrow"];
+const CURSORS = { select: "default", text: "text", comment: "crosshair" };
+
+function setTool(t) {
+  tool = t;
+  document.querySelectorAll("[data-tool]").forEach((b) => {
+    b.classList.toggle("active", b.dataset.tool === t);
+  });
+  $("btnShapes").classList.toggle("active", SHAPE_TOOLS.includes(t));
+  for (const e of entries) {
+    e.overlay.classList.toggle("tool-active", DRAW_TOOLS.includes(t));
+    e.overlay.style.cursor = CURSORS[t] || "crosshair";
+    e.textLayer.style.cursor = t === "comment" ? "crosshair" : "text";
+  }
+  closeShapeMenu();
+}
+
+function pageAnnos(orig) {
+  if (!annos.has(orig)) annos.set(orig, []);
+  return annos.get(orig);
+}
+
+function annoAdd(entry, a) {
+  pageAnnos(entry.orig).push(a);
+  pushUndo({ kind: "annoAdd", orig: entry.orig, anno: a });
+  renderOverlayFor(entry);
+  updateUi();
+  if (a.type === "comment") refreshComments();
+}
+
+/* ---------- Koordinatenumrechnung ---------- */
+function pdfPointFromEvent(e, entry) {
+  const ov = entry.overlay;
+  const r = ov.getBoundingClientRect();
+  const cx = (e.clientX - r.left) * ov.width / r.width;
+  const cy = (e.clientY - r.top) * ov.height / r.height;
+  return entry.viewport.convertToPdfPoint(cx, cy);
+}
+
+function clientRectToPdf(entry, r) {
+  const ov = entry.overlay;
+  const orb = ov.getBoundingClientRect();
+  const sx = ov.width / orb.width;
+  const sy = ov.height / orb.height;
+  const p1 = entry.viewport.convertToPdfPoint((r.left - orb.left) * sx, (r.top - orb.top) * sy);
+  const p2 = entry.viewport.convertToPdfPoint((r.right - orb.left) * sx, (r.bottom - orb.top) * sy);
+  return { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1] };
+}
+
+/* ---------- Sternpfad (Einheitsquadrat, y nach unten) ---------- */
+function starPathUnit() {
+  const pts = [];
+  for (let i = 0; i < 10; i++) {
+    const ang = (-90 + i * 36) * Math.PI / 180;
+    const r = i % 2 === 0 ? 0.5 : 0.21;
+    pts.push([0.5 + r * Math.cos(ang), 0.5 + r * Math.sin(ang)]);
+  }
+  return "M " + pts.map((p) => p[0].toFixed(3) + " " + p[1].toFixed(3)).join(" L ") + " Z";
+}
+
+/* ---------- Anmerkung auf Kontext zeichnen ---------- */
+function drawAnno(ctx, a, viewport) {
+  const scale = viewport.scale / (window.devicePixelRatio || 1);
+  if (a.type === "draw" || a.type === "marker") {
+    ctx.strokeStyle = a.color;
+    ctx.lineWidth = a.width * (a.type === "marker" ? 4 : 1) * scale;
+    if (a.type === "marker") ctx.globalAlpha = 0.4;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    a.points.forEach((pt, i) => {
+      const q = viewport.convertToViewportPoint(pt[0], pt[1]);
+      if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]);
+    });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  } else if (a.type === "line" || a.type === "arrow") {
+    const p1 = viewport.convertToViewportPoint(a.x1, a.y1);
+    const p2 = viewport.convertToViewportPoint(a.x2, a.y2);
+    ctx.strokeStyle = a.color;
+    ctx.lineWidth = a.width * scale;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(p1[0], p1[1]);
+    ctx.lineTo(p2[0], p2[1]);
+    ctx.stroke();
+    if (a.type === "arrow") {
+      const ang = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+      const hl = Math.max(8 * scale, 0.2 * Math.hypot(p2[0] - p1[0], p2[1] - p1[1]));
+      ctx.beginPath();
+      ctx.moveTo(p2[0], p2[1]);
+      ctx.lineTo(p2[0] - hl * Math.cos(ang - 0.4), p2[1] - hl * Math.sin(ang - 0.4));
+      ctx.moveTo(p2[0], p2[1]);
+      ctx.lineTo(p2[0] - hl * Math.cos(ang + 0.4), p2[1] - hl * Math.sin(ang + 0.4));
+      ctx.stroke();
+    }
+  } else if (a.type === "text") {
+    const lines = a.text.split("\n");
+    ctx.fillStyle = a.color;
+    ctx.font = `${a.size * scale}px Helvetica, sans-serif`;
+    ctx.textBaseline = "alphabetic";
+    lines.forEach((t, i) => {
+      const q = viewport.convertToViewportPoint(a.x, a.y - i * a.size * 1.2);
+      ctx.fillText(t, q[0], q[1]);
+    });
+  } else if (a.type === "comment") {
+    const p = viewport.convertToViewportPoint(a.x, a.y);
+    const r = 9 * scale;
+    ctx.fillStyle = "#f59e0b";
+    ctx.strokeStyle = "#b45309";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.arc(p[0], p[1], r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `600 ${11 * scale}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(a.num || "!"), p[0], p[1] + 0.5);
+    ctx.textAlign = "start";
+  } else {
+    // Rechteck-foermige Anmerkungen
+    const q1 = viewport.convertToViewportPoint(a.x1, a.y1);
+    const q2 = viewport.convertToViewportPoint(a.x2, a.y2);
+    const x = Math.min(q1[0], q2[0]);
+    const y = Math.min(q1[1], q2[1]);
+    const w = Math.abs(q2[0] - q1[0]);
+    const h = Math.abs(q2[1] - q1[1]);
+    if (a.type === "highlight") {
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = a.color;
+      ctx.fillRect(x, y, w, h);
+      ctx.globalAlpha = 1;
+    } else if (a.type === "redact") {
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(x, y, w, h);
+    } else if (a.type === "strike") {
+      const midY = y + h / 2;
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = Math.max(1.5, a.width * scale);
+      ctx.beginPath();
+      ctx.moveTo(x, midY);
+      ctx.lineTo(x + w, midY);
+      ctx.stroke();
+    } else if (a.type === "underline") {
+      const ly = y + h - Math.max(1.5, h * 0.18);
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = Math.max(1.5, a.width * scale);
+      ctx.beginPath();
+      ctx.moveTo(x, ly);
+      ctx.lineTo(x + w, ly);
+      ctx.stroke();
+    } else if (a.type === "rect") {
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = a.width * scale;
+      ctx.strokeRect(x, y, w, h);
+    } else if (a.type === "ellipse") {
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = a.width * scale;
+      ctx.beginPath();
+      ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (a.type === "triangle") {
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = a.width * scale;
+      ctx.beginPath();
+      ctx.moveTo(x + w / 2, y);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.closePath();
+      ctx.stroke();
+    } else if (a.type === "diamond") {
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = a.width * scale;
+      ctx.beginPath();
+      ctx.moveTo(x + w / 2, y);
+      ctx.lineTo(x + w, y + h / 2);
+      ctx.lineTo(x + w / 2, y + h);
+      ctx.lineTo(x, y + h / 2);
+      ctx.closePath();
+      ctx.stroke();
+    } else if (a.type === "star") {
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = a.width * scale;
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const ang = (-90 + i * 36) * Math.PI / 180;
+        const r = i % 2 === 0 ? 0.5 : 0.21;
+        const px = x + w / 2 + r * w * Math.cos(ang);
+        const py = y + h / 2 + r * h * Math.sin(ang);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}
+
+function renderOverlayFor(entry) {
+  if (!entry || !entry.viewport) return;
+  const ctx = entry.overlay.getContext("2d");
+  ctx.clearRect(0, 0, entry.overlay.width, entry.overlay.height);
+  const list = pageAnnos(entry.orig);
+  // Kommentar-Nummern pro Seite vergeben
+  let n = 0;
+  for (const a of list) if (a.type === "comment") a.num = ++n;
+  for (const a of list) drawAnno(ctx, a, entry.viewport);
+  if (liveAnno && liveEntry === entry) drawAnno(ctx, liveAnno, entry.viewport);
+}
+
+function refreshEntryByOrig(orig) {
+  for (const e of entries) if (e.orig === orig) renderOverlayFor(e);
+}
+
+/* ---------- Ein-Schritt-Rueckgaengig ---------- */
+function pushUndo(action) {
+  undoStack.push(action);
+  if (undoStack.length > 200) undoStack.shift();
+  $("btnUndo").disabled = false;
+}
+
+async function undoOne() {
+  const a = undoStack.pop();
+  if (!a) { updateUi(); return; }
+  if (a.kind === "order") {
+    pageOrder = a.prev;
+    currentPage = Math.min(currentPage, pageOrder.length - 1);
+    buildEntries();
+    updateView();
+    rebuildThumbs();
+    toast("Seitenoperation zurückgenommen.");
+  } else if (a.kind === "annoAdd") {
+    const l = pageAnnos(a.orig);
+    const i = l.indexOf(a.anno);
+    if (i > -1) l.splice(i, 1);
+    refreshEntryByOrig(a.orig);
+    refreshComments();
+    toast("Anmerkung entfernt.");
+  } else if (a.kind === "annoRemove") {
+    pageAnnos(a.orig).push(a.anno);
+    refreshEntryByOrig(a.orig);
+    refreshComments();
+    toast("Kommentar wiederhergestellt.");
+  } else if (a.kind === "annosAdd") {
+    const l = pageAnnos(a.orig);
+    for (const x of a.annos) {
+      const i = l.indexOf(x);
+      if (i > -1) l.splice(i, 1);
+    }
+    refreshEntryByOrig(a.orig);
+    toast("Textanmerkung entfernt.");
+  } else if (a.kind === "annosClear") {
+    annos.set(a.orig, a.prev.slice());
+    refreshEntryByOrig(a.orig);
+    toast("Anmerkungen wiederhergestellt.");
+  } else if (a.kind === "rot") {
+    rotDelta[a.orig] = a.prev;
+    thumbCache.delete(a.orig);
+    for (const e of entries) if (e.orig === a.orig) { e.rendered = false; }
+    updateView();
+    rebuildThumbs();
+    toast("Drehung zurückgenommen.");
+  }
   updateUi();
 }
 
+/* ---------- Textauswahl (textgebundene Werkzeuge) ---------- */
+function selectionAnchor() {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || sel.rangeCount === 0) return null;
+  const range = sel.getRangeAt(0);
+  const node = range.startContainer.nodeType === 3 ? range.startContainer.parentElement : range.startContainer;
+  const tl = node && node.closest ? node.closest(".textLayer") : null;
+  if (!tl) return null;
+  const pos = parseInt(tl.dataset.pos, 10);
+  const entry = entries[pos];
+  if (!entry || !entry.viewport) return null;
+  const rects = Array.from(range.getClientRects()).filter((r) => r.width > 1 && r.height > 1);
+  if (rects.length === 0) return null;
+  const converted = rects.map((r) => clientRectToPdf(entry, r));
+  const xs = converted.flatMap((c) => [c.x1, c.x2]);
+  const ys = converted.flatMap((c) => [c.y1, c.y2]);
+  return {
+    entry,
+    rects: converted,
+    bounds: { x1: Math.min(...xs), y1: Math.min(...ys), x2: Math.max(...xs), y2: Math.max(...ys) }
+  };
+}
+
+document.addEventListener("mouseup", () => {
+  if (!TEXT_TOOLS.includes(tool)) return;
+  const anchor = selectionAnchor();
+  if (!anchor) return;
+  const added = [];
+  for (const c of anchor.rects) {
+    const a = { type: tool, color: annoColor, width: penWidth, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2 };
+    pageAnnos(anchor.entry.orig).push(a);
+    added.push(a);
+  }
+  pushUndo({ kind: "annosAdd", orig: anchor.entry.orig, annos: added });
+  window.getSelection().removeAllRanges();
+  renderOverlayFor(anchor.entry);
+  updateUi();
+});
+
+/* Kommentarwerkzeug: Text markieren oder Stelle anklicken */
+document.addEventListener("mouseup", (e) => {
+  if (!doc || tool !== "comment") return;
+  const anchor = selectionAnchor();
+  let entry, px, py, promptText;
+  if (anchor) {
+    entry = anchor.entry;
+    px = anchor.bounds.x2;
+    py = anchor.bounds.y2;
+    promptText = "Kommentar zur Textmarkierung:";
+  } else {
+    const wrap = e.target && e.target.closest ? e.target.closest(".page-entry") : null;
+    if (!wrap) return;
+    entry = entries[parseInt(wrap.dataset.pos, 10)];
+    if (!entry || !entry.viewport) return;
+    const p = pdfPointFromEvent(e, entry);
+    px = p[0];
+    py = p[1];
+    promptText = "Kommentar an dieser Stelle:";
+  }
+  const text = prompt(promptText);
+  if (text === null || text.trim() === "") return;
+  annoAdd(entry, { type: "comment", x: px, y: py, text: text });
+});
+
+/* ---------- Zeichnen (Overlay-Eingabe) ---------- */
+const pagesColumn = $("pagesColumn");
+pagesColumn.addEventListener("pointerdown", (e) => {
+  if (!doc || tool === "select" || tool === "comment" || TEXT_TOOLS.includes(tool)) return;
+  const wrap = e.target.closest(".page-entry");
+  if (!wrap) return;
+  const pos = parseInt(wrap.dataset.pos, 10);
+  const entry = entries[pos];
+  if (!entry.viewport) return;
+  e.preventDefault();
+  entry.overlay.setPointerCapture(e.pointerId);
+  const p = entry.viewport ? pdfPointFromEvent(e, entry) : null;
+  if (!p) return;
+  if (tool === "text") {
+    const input = prompt("Bitte geben Sie den einzufügenden Text ein:");
+    if (input === null || input.trim() === "") return;
+    annoAdd(entry, { type: "text", x: p[0], y: p[1], text: input, size: 12, color: annoColor });
+    return;
+  }
+  if (tool === "draw" || tool === "marker") {
+    liveAnno = { type: tool, color: annoColor, width: penWidth, points: [p] };
+  } else {
+    liveAnno = { type: tool, color: annoColor, width: penWidth, x1: p[0], y1: p[1], x2: p[0], y2: p[1] };
+  }
+  liveEntry = entry;
+});
+
+document.addEventListener("pointermove", (e) => {
+  if (!liveAnno || !liveEntry || !liveEntry.viewport) return;
+  const p = pdfPointFromEvent(e, liveEntry);
+  if (liveAnno.points) liveAnno.points.push(p);
+  else { liveAnno.x2 = p[0]; liveAnno.y2 = p[1]; }
+  renderOverlayFor(liveEntry);
+});
+
+document.addEventListener("pointerup", () => {
+  if (!liveAnno || !liveEntry) return;
+  const entry = liveEntry;
+  const a = liveAnno;
+  const tiny = a.points
+    ? a.points.length < 2
+    : (["line", "arrow"].includes(a.type)
+      ? Math.hypot(a.x2 - a.x1, a.y2 - a.y1) < 2
+      : (Math.abs(a.x2 - a.x1) < 1 || Math.abs(a.y2 - a.y1) < 1));
+  liveAnno = null;
+  liveEntry = null;
+  if (tiny) { renderOverlayFor(entry); return; }
+  if (a.type === "redact" && !redactHintShown) {
+    redactHintShown = true;
+    toast("Der Sicherheitsmodus ist aktiv: Der Inhalt unter der Schwärzung wird beim Speichern gelöscht.");
+  }
+  pageAnnos(entry.orig).push(a);
+  pushUndo({ kind: "annoAdd", orig: entry.orig, anno: a });
+  renderOverlayFor(entry);
+  updateUi();
+});
+
+/* ---------- Kommentarliste ---------- */
+function refreshComments() {
+  const box = $("commentList");
+  if (!box) return;
+  box.innerHTML = "";
+  let count = 0;
+  pageOrder.forEach((orig, pos) => {
+    const list = (annos.get(orig) || []).filter((a) => a.type === "comment");
+    list.forEach((a) => {
+      count++;
+      const item = document.createElement("div");
+      item.className = "comment-item";
+      const head = document.createElement("div");
+      head.className = "ci-head";
+      const where = document.createElement("span");
+      where.textContent = `Seite ${pos + 1}`;
+      const del = document.createElement("button");
+      del.textContent = "Löschen";
+      del.addEventListener("click", () => {
+        const l = pageAnnos(orig);
+        const i = l.indexOf(a);
+        if (i > -1) l.splice(i, 1);
+        pushUndo({ kind: "annoRemove", orig, anno: a });
+        refreshEntryByOrig(orig);
+        refreshComments();
+        updateUi();
+      });
+      head.append(where, del);
+      const body = document.createElement("div");
+      body.textContent = a.text;
+      item.append(head, body);
+      item.addEventListener("click", (e) => {
+        if (e.target === del) return;
+        goTo(pos);
+      });
+      box.appendChild(item);
+    });
+  });
+  if (count === 0) {
+    const empty = document.createElement("div");
+    empty.className = "comment-empty";
+    empty.textContent = "Noch keine Kommentare.";
+    box.appendChild(empty);
+  }
+}
+
+/* =========================================================
+   Seitenoperationen (Modifizieren)
+   ========================================================= */
+function requirePdfLib() {
+  if (!hasPdfLib) {
+    toast("pdf-lib ist nicht verfügbar. Bitte Datei lokal im Browser öffnen.", true);
+    return false;
+  }
+  return true;
+}
+
+function selectedPositions() {
+  const positions = [];
+  pageOrder.forEach((orig, pos) => { if (selected.has(orig)) positions.push(pos); });
+  return positions;
+}
+
+async function deleteSelected() {
+  const positions = selectedPositions();
+  if (positions.length === 0) return;
+  if (!confirm(`${positions.length} Seite(n) entfernen?\n(Die Änderung wird erst beim Speichern in die Datei geschrieben.)`)) return;
+  pushUndo({ kind: "order", prev: pageOrder.slice() });
+  pageOrder = pageOrder.filter((orig) => !selected.has(orig));
+  selected.clear();
+  currentPage = Math.min(currentPage, pageOrder.length - 1);
+  buildEntries();
+  updateView();
+  rebuildThumbs();
+  updateUi();
+  toast(`${positions.length} Seite(n) gelöscht.`);
+}
+
+async function extractSelected(removeAfter) {
+  const positions = selectedPositions();
+  if (positions.length === 0 || !requirePdfLib()) return;
+  try {
+    const indices = positions.map((p) => pageOrder[p]);
+    await buildPdf(indices, `${fileName}_extrahiert.pdf`,
+      `${positions.length} Seite(n) als neue PDF-Datei extrahiert.`);
+    if (removeAfter) {
+      pushUndo({ kind: "order", prev: pageOrder.slice() });
+      pageOrder = pageOrder.filter((orig) => !selected.has(orig));
+      selected.clear();
+      currentPage = Math.min(currentPage, pageOrder.length - 1);
+      buildEntries();
+      updateView();
+      rebuildThumbs();
+      updateUi();
+    }
+  } catch (err) {
+    if (err && /encrypted/i.test(err.message || "")) {
+      toast("Die Datei ist verschlüsselt und kann von pdf-lib nicht verarbeitet werden.", true);
+    } else {
+      toast("Extrahieren fehlgeschlagen: " + (err.message || err), true);
+    }
+  }
+}
+
+async function extractCurrentPage() {
+  if (pageOrder.length === 0 || !requirePdfLib()) return;
+  const keep = selected;
+  selected = new Set([pageOrder[currentPage]]);
+  await extractSelected(false);
+  selected = keep;
+  updateUi();
+}
+
+async function moveSelected(dir) {
+  const positions = selectedPositions();
+  if (positions.length === 0) return;
+  pushUndo({ kind: "order", prev: pageOrder.slice() });
+  if (dir === -1) {
+    for (const pos of positions) {
+      if (pos > 0 && !selected.has(pageOrder[pos - 1])) {
+        [pageOrder[pos - 1], pageOrder[pos]] = [pageOrder[pos], pageOrder[pos - 1]];
+      }
+    }
+  } else {
+    for (let i = positions.length - 1; i >= 0; i--) {
+      const pos = positions[i];
+      if (pos < pageOrder.length - 1 && !selected.has(pageOrder[pos + 1])) {
+        [pageOrder[pos + 1], pageOrder[pos]] = [pageOrder[pos], pageOrder[pos + 1]];
+      }
+    }
+  }
+  buildEntries();
+  updateView();
+  rebuildThumbs();
+  updateUi();
+  toast("Auswahl verschoben.");
+}
+
+/* ---------- Rotation ---------- */
+async function rotateCurrent(delta) {
+  if (pageOrder.length === 0) return;
+  const orig = pageOrder[currentPage];
+  pushUndo({ kind: "rot", orig, prev: rotDelta[orig] || 0 });
+  rotDelta[orig] = ((rotDelta[orig] || 0) + delta) % 360;
+  thumbCache.delete(orig);
+  for (const e of entries) if (e.orig === orig) e.rendered = false;
+  updateView();
+  rebuildThumbs();
+  toast(`Seite ${orig + 1} gedreht.`);
+}
+
+function applyRotation(copiedPage, origIndex) {
+  const delta = rotDelta[origIndex] || 0;
+  if (delta) {
+    const current = copiedPage.getRotation().angle;
+    copiedPage.setRotation(PDFLib.degrees((current + delta) % 360));
+  }
+}
+
+/* =========================================================
+   Speichern: Anmerkungen einbrennen und PDF aufbauen
+   ========================================================= */
+function rgbFrom(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return PDFLib.rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
+}
+
+function textLines(a) {
+  return a.text.split("\n").map((t, i) => ({ t, x: a.x, y: a.y - i * a.size * 1.2 }));
+}
+
+async function burnAnnotations(page, list, font) {
+  for (const a of list) {
+    if (a.type === "draw" || a.type === "marker") {
+      for (let i = 0; i + 1 < a.points.length; i++) {
+        page.drawLine({
+          start: { x: a.points[i][0], y: a.points[i][1] },
+          end: { x: a.points[i + 1][0], y: a.points[i + 1][1] },
+          thickness: a.width * (a.type === "marker" ? 4 : 1),
+          color: rgbFrom(a.color),
+          opacity: a.type === "marker" ? 0.4 : 1
+        });
+      }
+    } else if (a.type === "line" || a.type === "arrow") {
+      page.drawLine({ start: { x: a.x1, y: a.y1 }, end: { x: a.x2, y: a.y2 }, thickness: a.width, color: rgbFrom(a.color) });
+      if (a.type === "arrow") {
+        const dx = a.x2 - a.x1, dy = a.y2 - a.y1;
+        const len = Math.hypot(dx, dy);
+        const hl = Math.max(4, len * 0.2);
+        const ang = Math.atan2(dy, dx);
+        page.drawLine({
+          start: { x: a.x2, y: a.y2 },
+          end: { x: a.x2 - hl * Math.cos(ang - 0.4), y: a.y2 - hl * Math.sin(ang - 0.4) },
+          thickness: a.width, color: rgbFrom(a.color)
+        });
+        page.drawLine({
+          start: { x: a.x2, y: a.y2 },
+          end: { x: a.x2 - hl * Math.cos(ang + 0.4), y: a.y2 - hl * Math.sin(ang + 0.4) },
+          thickness: a.width, color: rgbFrom(a.color)
+        });
+      }
+    } else if (a.type === "highlight") {
+      page.drawRectangle({
+        x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
+        width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
+        color: rgbFrom(a.color), opacity: 0.35
+      });
+    } else if (a.type === "redact") {
+      page.drawRectangle({
+        x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
+        width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
+        color: PDFLib.rgb(0, 0, 0), opacity: 1
+      });
+    } else if (a.type === "strike") {
+      const midY = (a.y1 + a.y2) / 2;
+      page.drawLine({
+        start: { x: Math.min(a.x1, a.x2), y: midY },
+        end: { x: Math.max(a.x1, a.x2), y: midY },
+        thickness: Math.max(1, Math.abs(a.y2 - a.y1) * 0.12),
+        color: rgbFrom(a.color)
+      });
+    } else if (a.type === "underline") {
+      const y = Math.min(a.y1, a.y2) + Math.max(1, Math.abs(a.y2 - a.y1) * 0.2);
+      page.drawLine({
+        start: { x: Math.min(a.x1, a.x2), y },
+        end: { x: Math.max(a.x1, a.x2), y },
+        thickness: Math.max(1, a.width), color: rgbFrom(a.color)
+      });
+    } else if (a.type === "rect") {
+      page.drawRectangle({
+        x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
+        width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+      });
+    } else if (a.type === "ellipse") {
+      const cx = (a.x1 + a.x2) / 2, cy = (a.y1 + a.y2) / 2;
+      page.drawEllipse({
+        x: cx, y: cy,
+        xScale: Math.abs(a.x2 - a.x1) / 2, yScale: Math.abs(a.y2 - a.y1) / 2,
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+      });
+    } else if (a.type === "triangle") {
+      page.drawSvgPath("M 0.5 0 L 1 1 L 0 1 Z", {
+        x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
+        scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+      });
+    } else if (a.type === "diamond") {
+      page.drawSvgPath("M 0.5 0 L 1 0.5 L 0.5 1 L 0 0.5 Z", {
+        x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
+        scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+      });
+    } else if (a.type === "star") {
+      page.drawSvgPath(starPathUnit(), {
+        x: Math.min(a.x1, a.x2), y: Math.max(a.y1, a.y2),
+        scale: [Math.abs(a.x2 - a.x1), Math.abs(a.y2 - a.y1)],
+        borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width)
+      });
+    } else if (a.type === "text") {
+      for (const ln of textLines(a)) {
+        page.drawText(ln.t, { x: ln.x, y: ln.y, size: a.size, font, color: rgbFrom(a.color) });
+      }
+    }
+  }
+}
+
+/* Seite als Bild neu aufbauen (Sicherheitsmodus): Inhalt wird entfernt */
+async function addRasterizedPage(out, orig, visualList) {
+  const page = await doc.getPage(orig + 1);
+  const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
+  const base = page.getViewport({ scale: 1, rotation: rot });
+  const scale = 2;
+  const viewport = page.getViewport({ scale, rotation: rot });
+  const c = document.createElement("canvas");
+  c.width = viewport.width;
+  c.height = viewport.height;
+  const cx = c.getContext("2d");
+  await page.render({ canvasContext: cx, viewport }).promise;
+  for (const a of visualList) drawAnno(cx, a, viewport);
+  const png = await out.embedPng(c.toDataURL("image/png"));
+  const p = out.addPage([base.width, base.height]);
+  p.drawImage(png, { x: 0, y: 0, width: base.width, height: base.height });
+  return p;
+}
+
+/* Kommentare als echte PDF-Notizen ablegen (wie im Acrobat Reader sichtbar) */
+function addPdfComments(out, page, comments) {
+  if (!comments.length) return;
+  try {
+    const key = PDFLib.PDFName.of("Annots");
+    let annots = null;
+    try { annots = page.node.lookupMaybe(key, PDFLib.PDFArray); } catch (e) { annots = null; }
+    if (!annots) {
+      annots = out.context.obj([]);
+      page.node.set(key, annots);
+    }
+    comments.forEach((c) => {
+      const r = 8;
+      const dict = out.context.obj({
+        Type: "Annot",
+        Subtype: "Text",
+        Rect: [c.x - r, c.y - r, c.x + r, c.y + r],
+        C: [0.96, 0.63, 0.02],
+        F: 4
+      });
+      dict.set(PDFLib.PDFName.of("Contents"), PDFLib.PDFString.of(c.text));
+      dict.set(PDFLib.PDFName.of("T"), PDFLib.PDFString.of("Paperino"));
+      annots.push(out.context.register(dict));
+    });
+  } catch (e) {
+    toast("Kommentare konnten nicht als PDF-Notizen gespeichert werden: " + (e.message || e), true);
+  }
+}
+
+/* Neue PDF-Datei aus einer Liste orig. Seitenindizes aufbauen */
+async function buildPdf(indices, name, successMsg) {
+  const src = await PDFLib.PDFDocument.load(pdfBytes);
+  const out = await PDFLib.PDFDocument.create();
+  const font = await out.embedFont(PDFLib.StandardFonts.Helvetica);
+  for (const orig of indices) {
+    const list = annos.get(orig) || [];
+    const visual = list.filter((a) => a.type !== "comment");
+    const comments = list.filter((a) => a.type === "comment");
+    const needsRaster = secureMode && list.some((a) => a.type === "redact");
+    let p;
+    if (needsRaster) {
+      p = await addRasterizedPage(out, orig, visual);
+    } else {
+      const [cp] = await out.copyPages(src, [orig]);
+      applyRotation(cp, orig);
+      out.addPage(cp);
+      p = cp;
+      if (visual.length) await burnAnnotations(p, visual, font);
+    }
+    if (comments.length) addPdfComments(out, p, comments);
+  }
+  const bytes = await out.save();
+  downloadBlob(new Blob([bytes], { type: "application/pdf" }), name);
+  toast(successMsg);
+}
+
+async function savePdf() {
+  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
+  try {
+    await buildPdf(pageOrder, `${fileName}_bearbeitet.pdf`,
+      "Datei gespeichert. Der Download wurde gestartet.");
+  } catch (err) {
+    if (err && /encrypted/i.test(err.message || "")) {
+      toast("Die Datei ist verschlüsselt und kann von pdf-lib nicht verarbeitet werden.", true);
+    } else {
+      toast("Speichern fehlgeschlagen: " + (err.message || err), true);
+    }
+  }
+}
+
+function downloadBlob(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+/* =========================================================
+   Miniaturansichten
+   ========================================================= */
 async function getThumb(orig) {
   if (thumbCache.has(orig)) return thumbCache.get(orig);
   const page = await doc.getPage(orig + 1);
   const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
   const base = page.getViewport({ scale: 1, rotation: rot });
-  const targetW = 130 * 2; // 2-fach für scharfe Darstellung
+  const targetW = 130 * 2;
   const viewport = page.getViewport({ scale: targetW / base.width, rotation: rot });
   const c = document.createElement("canvas");
   c.width = viewport.width;
@@ -797,9 +1845,7 @@ async function rebuildThumbs() {
       badge.textContent = "+" + rotDelta[orig] + "°";
       div.appendChild(badge);
     }
-    // Klick: Seite anzeigen
-    div.addEventListener("click", () => { currentPage = pos; renderCurrent(); rebuildThumbs(); });
-    // Drag & Drop zum Umsortieren
+    div.addEventListener("click", () => goTo(pos));
     div.addEventListener("dragstart", (e) => {
       div.classList.add("dragging");
       e.dataTransfer.setData("text/plain", String(pos));
@@ -814,12 +1860,14 @@ async function rebuildThumbs() {
       const from = parseInt(e.dataTransfer.getData("text/plain"), 10);
       const to = pos;
       if (isNaN(from) || from === to) return;
-      pushHistory();
+      pushUndo({ kind: "order", prev: pageOrder.slice() });
       const [moved] = pageOrder.splice(from, 1);
       pageOrder.splice(to, 0, moved);
       currentPage = to;
-      await renderCurrent();
-      await rebuildThumbs();
+      buildEntries();
+      updateView();
+      rebuildThumbs();
+      updateUi();
       toast("Seite verschoben.");
     });
     box.appendChild(div);
@@ -827,390 +1875,60 @@ async function rebuildThumbs() {
   updateUi();
 }
 
-/* ---------- Rückgängig-Funktion ---------- */
-function pushHistory() {
-  history.push(pageOrder.slice());
-  $("btnUndo").disabled = history.length === 0;
-}
-async function undo() {
-  if (history.length === 0) return;
-  pageOrder = history.pop();
-  selected.clear();
-  currentPage = Math.min(currentPage, pageOrder.length - 1);
-  await renderCurrent();
-  await rebuildThumbs();
-  toast("Letzte Seitenoperation zurückgenommen.");
-}
-
-/* ---------- Seitenoperationen ---------- */
-function requirePdfLib() {
-  if (!hasPdfLib) {
-    toast("pdf-lib ist nicht verfügbar. Bitte Datei lokal im Browser öffnen.", true);
-    return false;
-  }
-  return true;
-}
-
-function selectedPositions() {
-  const positions = [];
-  pageOrder.forEach((orig, pos) => { if (selected.has(orig)) positions.push(pos); });
-  return positions;
-}
-
-async function deleteSelected() {
-  const positions = selectedPositions();
-  if (positions.length === 0) return;
-  if (!confirm(`${positions.length} Seite(n) endgültig aus der Ansicht entfernen?\n(Hinweis: Gelöschte Seiten werden erst beim Speichern tatsächlich entfernt.)`)) return;
-  pushHistory();
-  pageOrder = pageOrder.filter((orig) => !selected.has(orig));
-  selected.clear();
-  currentPage = Math.min(currentPage, pageOrder.length - 1);
-  await renderCurrent();
-  await rebuildThumbs();
-  toast(`${positions.length} Seite(n) gelöscht. „Speichern“ schreibt die Änderung in die Datei.`);
-}
-
-async function extractSelected(removeAfter) {
-  const positions = selectedPositions();
-  if (positions.length === 0 || !requirePdfLib()) return;
-  try {
-    const indices = positions.map((p) => pageOrder[p]);
-    await buildPdf(indices, `${fileName}_extrahiert.pdf`,
-      `${positions.length} Seite(n) als neue PDF-Datei extrahiert.`);
-    if (removeAfter) {
-      pushHistory();
-      pageOrder = pageOrder.filter((orig) => !selected.has(orig));
-      selected.clear();
-      currentPage = Math.min(currentPage, pageOrder.length - 1);
-      await renderCurrent();
-      await rebuildThumbs();
-    }
-  } catch (err) {
-    if (err && /encrypted/i.test(err.message || "")) {
-      toast("Die Datei ist verschlüsselt und kann von pdf-lib nicht verarbeitet werden.", true);
-    } else {
-      toast("Extrahieren fehlgeschlagen: " + (err.message || err), true);
-    }
-  }
-}
-
-async function extractCurrentPage() {
-  if (pageOrder.length === 0 || !requirePdfLib()) return;
-  const positions = [currentPage];
-  const origSel = new Set(selected);
-  selected = new Set([pageOrder[currentPage]]);
-  await extractSelected(false);
-  selected = origSel;
-}
-
-async function moveSelected(dir) {
-  const positions = selectedPositions();
-  if (positions.length === 0) return;
-  pushHistory();
-  if (dir === -1) {
-    for (const pos of positions) {
-      if (pos > 0 && !selected.has(pageOrder[pos - 1])) {
-        [pageOrder[pos - 1], pageOrder[pos]] = [pageOrder[pos], pageOrder[pos - 1]];
-      }
-    }
-  } else {
-    for (let i = positions.length - 1; i >= 0; i--) {
-      const pos = positions[i];
-      if (pos < pageOrder.length - 1 && !selected.has(pageOrder[pos + 1])) {
-        [pageOrder[pos + 1], pageOrder[pos]] = [pageOrder[pos], pageOrder[pos + 1]];
-      }
-    }
-  }
-  await rebuildThumbs();
-  toast("Auswahl verschoben.");
-}
-
-/* ---------- Rotation ---------- */
-async function rotateCurrent(delta) {
-  if (pageOrder.length === 0) return;
-  const orig = pageOrder[currentPage];
-  rotDelta[orig] = ((rotDelta[orig] || 0) + delta) % 360;
-  thumbCache.delete(orig); // Miniaturansicht neu rendern
-  await renderCurrent();
-  await rebuildThumbs();
-  toast(`Seite ${orig + 1} um ${delta > 0 ? delta : 360 + delta}° gedreht.`);
-}
-
-function applyRotation(copiedPage, origIndex) {
-  const delta = rotDelta[origIndex] || 0;
-  if (delta) {
-    const current = copiedPage.getRotation().angle;
-    copiedPage.setRotation(PDFLib.degrees((current + delta) % 360));
-  }
+function highlightThumb(pos) {
+  document.querySelectorAll(".thumb").forEach((t, i) => {
+    t.classList.toggle("current", i === pos);
+  });
 }
 
 /* =========================================================
-   Anmerkungen (Lektorieren und Anonymisieren)
-   Koordinaten werden im PDF-Benutzerraum (Punkt, Ursprung
-   unten links) gespeichert und bei Bedarf in die Datei
-   eingebrannt. Der Sicherheitsmodus rastert geschwärzte
-   Seiten als Bild, damit der Inhalt tatsächlich entfernt wird.
+   Oberfläche aktualisieren
    ========================================================= */
-let tool = "select";          // Aktives Werkzeug: select | text | highlight | strike | draw | redact
-let annos = new Map();        // origIndex -> Array von Anmerkungen
-let annoColor = "#dc2626";    // Aktuelle Farbe
-let penWidth = 2;             // Strichstärke in Punkten
-let secureMode = false;        // Geschwärzte Seiten beim Speichern rastern
-let activeViewport = null;     // Viewport der aktuell angezeigten Seite
-let liveAnno = null;           // Anmerkung, die gerade aufgezogen wird
-let redactHintShown = false;   // Sicherheits-Hinweis nur einmal anzeigen
-
-function pageAnnos(orig) {
-  if (!annos.has(orig)) annos.set(orig, []);
-  return annos.get(orig);
-}
-
-function setTool(t) {
-  tool = t;
-  document.querySelectorAll("[data-tool]").forEach((b) => {
-    b.classList.toggle("active", b.dataset.tool === t);
-  });
-  const ov = $("overlayCanvas");
-  if (ov) ov.style.cursor = t === "select" ? "default" : (t === "text" ? "text" : "crosshair");
-}
-
-function canvasPoint(e) {
-  const ov = $("overlayCanvas");
-  const r = ov.getBoundingClientRect();
-  return [
-    (e.clientX - r.left) * ov.width / r.width,
-    (e.clientY - r.top) * ov.height / r.height
-  ];
-}
-
-/* Mehrzeiligen Text in einzelne Zeilen mit Position aufschlüsseln */
-function textLines(a) {
-  return a.text.split("\n").map((t, i) => ({ t, x: a.x, y: a.y - i * a.size * 1.2 }));
-}
-
-/* Eine Anmerkung auf einen Kontext (Overlay oder Rasterung) zeichnen */
-function drawAnno(ctx, a, viewport) {
-  if (a.type === "draw") {
-    ctx.strokeStyle = a.color;
-    ctx.lineWidth = a.width * viewport.scale;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    a.points.forEach((pt, i) => {
-      const q = viewport.convertToViewportPoint(pt[0], pt[1]);
-      if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]);
-    });
-    ctx.stroke();
-  } else if (a.type === "highlight" || a.type === "strike" || a.type === "redact") {
-    const p1 = viewport.convertToViewportPoint(a.x1, a.y1);
-    const p2 = viewport.convertToViewportPoint(a.x2, a.y2);
-    const x = Math.min(p1[0], p2[0]);
-    const w = Math.abs(p2[0] - p1[0]);
-    if (a.type === "highlight") {
-      ctx.globalAlpha = 0.35;
-      ctx.fillStyle = a.color;
-      ctx.fillRect(x, Math.min(p1[1], p2[1]), w, Math.abs(p2[1] - p1[1]));
-      ctx.globalAlpha = 1;
-    } else if (a.type === "redact") {
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(x, Math.min(p1[1], p2[1]), w, Math.abs(p2[1] - p1[1]));
-    } else {
-      const midY = (p1[1] + p2[1]) / 2;
-      ctx.strokeStyle = a.color;
-      ctx.lineWidth = Math.max(1.5, a.width * viewport.scale);
-      ctx.beginPath();
-      ctx.moveTo(Math.min(p1[0], p2[0]), midY);
-      ctx.lineTo(Math.max(p1[0], p2[0]), midY);
-      ctx.stroke();
-    }
-  } else if (a.type === "text") {
-    ctx.fillStyle = a.color;
-    ctx.textBaseline = "alphabetic";
-    ctx.font = `${a.size * viewport.scale}px sans-serif`;
-    for (const ln of textLines(a)) {
-      const p = viewport.convertToViewportPoint(ln.x, ln.y);
-      ctx.fillText(ln.t, p[0], p[1]);
-    }
-  }
-}
-
-function renderOverlay() {
-  const ov = $("overlayCanvas");
-  const ctx = ov.getContext("2d");
-  ctx.clearRect(0, 0, ov.width, ov.height);
-  if (!activeViewport || !doc || pageOrder.length === 0) return;
-  const orig = pageOrder[currentPage];
-  for (const a of pageAnnos(orig)) drawAnno(ctx, a, activeViewport);
-  if (liveAnno) drawAnno(ctx, liveAnno, activeViewport);
-}
-
-function annoAdd(a) {
-  pageAnnos(pageOrder[currentPage]).push(a);
-  renderOverlay();
-  updateUi();
-}
-
-/* Hex-Farbe in pdf-lib-Farbe umwandeln */
-function rgbFrom(hex) {
-  const n = parseInt(hex.slice(1), 16);
-  return PDFLib.rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
-}
-
-/* Anmerkungen einer Seite mit pdf-lib in die Seite einbrennen */
-async function burnAnnotations(page, list, font) {
-  for (const a of list) {
-    if (a.type === "draw") {
-      for (let i = 0; i + 1 < a.points.length; i++) {
-        page.drawLine({
-          start: { x: a.points[i][0], y: a.points[i][1] },
-          end: { x: a.points[i + 1][0], y: a.points[i + 1][1] },
-          thickness: a.width,
-          color: rgbFrom(a.color)
-        });
-      }
-    } else if (a.type === "highlight") {
-      page.drawRectangle({
-        x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
-        width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
-        color: rgbFrom(a.color), opacity: 0.35
-      });
-    } else if (a.type === "redact") {
-      page.drawRectangle({
-        x: Math.min(a.x1, a.x2), y: Math.min(a.y1, a.y2),
-        width: Math.abs(a.x2 - a.x1), height: Math.abs(a.y2 - a.y1),
-        color: PDFLib.rgb(0, 0, 0), opacity: 1
-      });
-    } else if (a.type === "strike") {
-      const midY = (a.y1 + a.y2) / 2;
-      page.drawLine({
-        start: { x: Math.min(a.x1, a.x2), y: midY },
-        end: { x: Math.max(a.x1, a.x2), y: midY },
-        thickness: Math.max(1, Math.abs(a.y2 - a.y1) * 0.12),
-        color: rgbFrom(a.color)
-      });
-    } else if (a.type === "text") {
-      for (const ln of textLines(a)) {
-        page.drawText(ln.t, { x: ln.x, y: ln.y, size: a.size, font, color: rgbFrom(a.color) });
-      }
-    }
-  }
-}
-
-/* Seite inklusive Anmerkungen als Bild neu aufbauen (Sicherheitsmodus) */
-async function addRasterizedPage(out, orig, list) {
-  const page = await doc.getPage(orig + 1);
-  const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
-  const base = page.getViewport({ scale: 1, rotation: rot });
-  const scale = 2;
-  const viewport = page.getViewport({ scale, rotation: rot });
-  const c = document.createElement("canvas");
-  c.width = viewport.width;
-  c.height = viewport.height;
-  const cx = c.getContext("2d");
-  await page.render({ canvasContext: cx, viewport }).promise;
-  for (const a of list) drawAnno(cx, a, viewport); // Anmerkungen inkl. Schwärzung einbrennen
-  const png = await out.embedPng(c.toDataURL("image/png"));
-  const p = out.addPage([base.width, base.height]);
-  p.drawImage(png, { x: 0, y: 0, width: base.width, height: base.height });
-}
-
-/* Neue PDF-Datei aus einer Liste orig. Seitenindizes aufbauen */
-async function buildPdf(indices, name, successMsg) {
-  const src = await PDFLib.PDFDocument.load(pdfBytes);
-  const out = await PDFLib.PDFDocument.create();
-  const font = await out.embedFont(PDFLib.StandardFonts.Helvetica);
-  for (const orig of indices) {
-    const list = annos.get(orig) || [];
-    const needsRaster = secureMode && list.some((a) => a.type === "redact");
-    if (needsRaster) {
-      await addRasterizedPage(out, orig, list);
-    } else {
-      const [p] = await out.copyPages(src, [orig]);
-      applyRotation(p, orig);
-      out.addPage(p);
-      if (list.length) await burnAnnotations(p, list, font);
-    }
-  }
-  const bytes = await out.save();
-  downloadBlob(new Blob([bytes], { type: "application/pdf" }), name);
-  toast(successMsg);
-}
-
-/* ---------- Speichern ---------- */
-async function savePdf() {
-  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
-  try {
-    await buildPdf(pageOrder, `${fileName}_bearbeitet.pdf`,
-      "Datei gespeichert. Der Download wurde gestartet.");
-  } catch (err) {
-    if (err && /encrypted/i.test(err.message || "")) {
-      toast("Die Datei ist verschlüsselt und kann von pdf-lib nicht verarbeitet werden.", true);
-    } else {
-      toast("Speichern fehlgeschlagen: " + (err.message || err), true);
-    }
-  }
-}
-
-function downloadBlob(blob, name) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-}
-
-/* ---------- Oberfläche aktualisieren ---------- */
 function updateUi() {
   const hasDoc = !!doc && pageOrder.length > 0;
-  const selCount = selectedPositions().length;
+  const selCount = hasDoc ? selectedPositions().length : 0;
+  const annoCount = (hasDoc ? (annos.get(pageOrder[currentPage]) || []).length : 0);
   $("btnPrev").disabled = !hasDoc || currentPage === 0;
   $("btnNext").disabled = !hasDoc || currentPage >= pageOrder.length - 1;
   $("pageInput").disabled = !hasDoc;
+  $("pageInput").value = hasDoc ? currentPage + 1 : 1;
+  $("pageCount").textContent = hasDoc ? `/ ${pageOrder.length}` : "";
   $("btnZoomIn").disabled = !hasDoc;
   $("btnZoomOut").disabled = !hasDoc;
   $("btnFitWidth").disabled = !hasDoc;
-  $("btnRotL").disabled = !hasDoc;
-  $("btnRotR").disabled = !hasDoc;
   $("btnSave").disabled = !hasDoc;
   $("btnExtractPage").disabled = !hasDoc;
-  $("btnUndo").disabled = history.length === 0;
+  $("btnUndo").disabled = undoStack.length === 0;
   $("btnDeleteSel").disabled = selCount === 0;
   $("btnExtractSel").disabled = selCount === 0;
   $("btnCutSel").disabled = selCount === 0;
-  $("btnClearSel").disabled = selCount > 0;
+  $("btnClearSel").disabled = selCount === 0;
   $("btnMoveUp").disabled = selCount === 0;
   $("btnMoveDown").disabled = selCount === 0;
-  const annoCount = (hasDoc ? (annos.get(pageOrder[currentPage]) || []).length : 0);
-  $("btnAnnoUndo").disabled = annoCount === 0;
+  $("btnRotL").disabled = !hasDoc;
+  $("btnRotR").disabled = !hasDoc;
   $("btnAnnoClear").disabled = annoCount === 0;
+  $("btnCommentList").disabled = !hasDoc;
   $("zoomLabel").textContent = Math.round(zoom * 100) + "%";
-  if (selCount > 0) {
-    $("hint").textContent = `${selCount} Seite(n) ausgewählt.`;
-  } else {
-    $("hint").textContent = "";
-  }
+  $("hint").textContent = selCount > 0 ? `${selCount} Seite(n) ausgewählt.` : "";
 }
 
-/* ---------- Ereignishandler ---------- */
+/* =========================================================
+   Ereignishandler
+   ========================================================= */
 $("btnOpen").addEventListener("click", () => $("fileInput").click());
 $("fileInput").addEventListener("change", (e) => openFile(e.target.files[0]));
 
-$("btnPrev").addEventListener("click", () => { if (currentPage > 0) { currentPage--; renderCurrent(); rebuildThumbs(); } });
-$("btnNext").addEventListener("click", () => { if (currentPage < pageOrder.length - 1) { currentPage++; renderCurrent(); rebuildThumbs(); } });
+$("btnPrev").addEventListener("click", () => goTo(currentPage - 1));
+$("btnNext").addEventListener("click", () => goTo(currentPage + 1));
 $("pageInput").addEventListener("change", (e) => {
   const v = parseInt(e.target.value, 10);
-  if (!isNaN(v) && v >= 1 && v <= pageOrder.length) {
-    currentPage = v - 1;
-    renderCurrent();
-    rebuildThumbs();
-  } else {
-    e.target.value = currentPage + 1;
-  }
+  if (!isNaN(v) && v >= 1 && v <= pageOrder.length) goTo(v - 1);
+  else e.target.value = currentPage + 1;
 });
 
-$("btnZoomIn").addEventListener("click", () => { zoom = Math.min(4, zoom * 1.25); renderCurrent(); });
-$("btnZoomOut").addEventListener("click", () => { zoom = Math.max(0.25, zoom / 1.25); renderCurrent(); });
+$("btnZoomIn").addEventListener("click", () => setZoom(zoom * 1.25));
+$("btnZoomOut").addEventListener("click", () => setZoom(zoom / 1.25));
 $("btnFitWidth").addEventListener("click", async () => {
   if (!doc || pageOrder.length === 0) return;
   const orig = pageOrder[currentPage];
@@ -1218,14 +1936,32 @@ $("btnFitWidth").addEventListener("click", async () => {
   const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
   const base = page.getViewport({ scale: 1, rotation: rot });
   const avail = $("viewer").clientWidth - 48;
-  zoom = Math.max(0.1, Math.min(4, avail / base.width));
-  renderCurrent();
+  setZoom(Math.max(0.25, Math.min(4, avail / base.width)));
+});
+
+$("chkContinuous").addEventListener("change", async (e) => {
+  continuous = e.target.checked;
+  if (!doc) return;
+  invalidateEntries();
+  updateView();
+  goTo(currentPage);
+  rebuildThumbs();
+  toast(continuous
+    ? "Fortlaufender Seitenlauf aktiviert: Sie können durch das gesamte Dokument scrollen."
+    : "Einzelseitenansicht aktiviert.");
+});
+
+$("chkSecure").addEventListener("change", (e) => {
+  secureMode = e.target.checked;
+  toast(secureMode
+    ? "Sicherheitsmodus aktiviert: Geschwärzte Seiten werden beim Speichern als Bild neu aufgebaut, der Inhalt wird gelöscht und ist nicht mehr markierbar."
+    : "Achtung: Ohne Sicherheitsmodus verdecken Schwärzungen den Inhalt nur optisch, der Text bleibt in der Datei enthalten und markierbar.", !secureMode);
 });
 
 $("btnRotL").addEventListener("click", () => rotateCurrent(-90));
 $("btnRotR").addEventListener("click", () => rotateCurrent(90));
 
-$("btnUndo").addEventListener("click", undo);
+$("btnUndo").addEventListener("click", undoOne);
 $("btnDeleteSel").addEventListener("click", deleteSelected);
 $("btnExtractSel").addEventListener("click", () => extractSelected(false));
 $("btnCutSel").addEventListener("click", () => extractSelected(true));
@@ -1235,7 +1971,81 @@ $("btnMoveDown").addEventListener("click", () => moveSelected(1));
 $("btnExtractPage").addEventListener("click", extractCurrentPage);
 $("btnSave").addEventListener("click", savePdf);
 
-/* Drag & Drop von Dateien auf das Fenster */
+$("btnAnnoClear").addEventListener("click", () => {
+  const orig = pageOrder[currentPage];
+  if (!annos.has(orig) || annos.get(orig).length === 0) return;
+  if (!confirm("Alle Anmerkungen auf dieser Seite entfernen?")) return;
+  pushUndo({ kind: "annosClear", orig, prev: pageAnnos(orig).slice() });
+  annos.set(orig, []);
+  refreshEntryByOrig(orig);
+  refreshComments();
+  updateUi();
+});
+
+/* Werkzeuge */
+document.querySelectorAll("[data-tool]").forEach((b) => {
+  b.addEventListener("click", () => setTool(b.dataset.tool));
+});
+$("inputColor").addEventListener("input", (e) => { annoColor = e.target.value; });
+$("penWidth").addEventListener("change", (e) => { penWidth = parseFloat(e.target.value) || 2; });
+
+/* Formen-Galerie */
+const shapeMenu = $("shapeMenu");
+function closeShapeMenu() { shapeMenu.classList.remove("open"); }
+$("btnShapes").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const r = $("btnShapes").getBoundingClientRect();
+  shapeMenu.style.left = r.left + "px";
+  shapeMenu.style.top = (r.bottom + 4) + "px";
+  shapeMenu.classList.toggle("open");
+});
+document.addEventListener("click", (e) => {
+  if (!shapeMenu.contains(e.target) && e.target.closest("#btnShapes") === null) closeShapeMenu();
+});
+
+/* Kommentarliste */
+$("btnCommentList").addEventListener("click", () => {
+  const panel = $("commentPanel");
+  panel.hidden = !panel.hidden;
+  $("btnCommentListLabel").textContent = panel.hidden ? "Liste anzeigen" : "Liste ausblenden";
+  refreshComments();
+});
+
+/* Seitenlauf: aktuelle Seite beim Scrollen bestimmen */
+let scrollTimer = null;
+$("viewer").addEventListener("scroll", () => {
+  if (!continuous || entries.length === 0) return;
+  if (scrollTimer) return;
+  scrollTimer = requestAnimationFrame(() => {
+    scrollTimer = null;
+    const top = $("viewer").scrollTop;
+    let best = 0;
+    let bestDist = Infinity;
+    for (const e of entries) {
+      if (e.wrap.style.display === "none") continue;
+      const d = Math.abs(e.wrap.offsetTop - top);
+      if (d < bestDist) { bestDist = d; best = e.pos; }
+    }
+    if (best !== currentPage) {
+      currentPage = best;
+      updateUi();
+      highlightThumb(currentPage);
+    }
+  });
+});
+
+/* Registerkarten des Menübands */
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelectorAll(".pane").forEach((p) => {
+      p.hidden = p.id !== tab.dataset.tab;
+    });
+  });
+});
+
+/* Drag & Drop von Dateien */
 window.addEventListener("dragover", (e) => { e.preventDefault(); document.body.classList.add("filehover"); });
 window.addEventListener("dragleave", (e) => { if (e.relatedTarget === null) document.body.classList.remove("filehover"); });
 window.addEventListener("drop", (e) => {
@@ -1245,102 +2055,17 @@ window.addEventListener("drop", (e) => {
   if (file) openFile(file);
 });
 
-/* Tastaturkürzel */
+/* Tastatur */
 window.addEventListener("keydown", (e) => {
-  if (!doc || ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
-  if (e.key === "Escape") { setTool("select"); }
-  if (e.key === "ArrowLeft" && currentPage > 0) { currentPage--; renderCurrent(); rebuildThumbs(); }
-  if (e.key === "ArrowRight" && currentPage < pageOrder.length - 1) { currentPage++; renderCurrent(); rebuildThumbs(); }
-  if (e.key === "+" || e.key === "=") { zoom = Math.min(4, zoom * 1.25); renderCurrent(); }
-  if (e.key === "-") { zoom = Math.max(0.25, zoom / 1.25); renderCurrent(); }
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
+  if (e.key === "Escape") { setTool("select"); return; }
+  if (!doc) return;
+  if (e.key === "ArrowLeft") goTo(currentPage - 1);
+  if (e.key === "ArrowRight") goTo(currentPage + 1);
+  if (e.key === "+" || e.key === "=") setZoom(zoom * 1.25);
+  if (e.key === "-") setZoom(zoom / 1.25);
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undoOne(); }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); savePdf(); }
-});
-
-/* Werkzeuge, Anmerkungen und Overlay-Eingabe */
-document.querySelectorAll("[data-tool]").forEach((b) => {
-  b.addEventListener("click", () => setTool(b.dataset.tool));
-});
-$("inputColor").addEventListener("input", (e) => { annoColor = e.target.value; });
-$("penWidth").addEventListener("change", (e) => { penWidth = parseFloat(e.target.value) || 2; });
-$("chkSecure").addEventListener("change", (e) => {
-  secureMode = e.target.checked;
-  toast(secureMode
-    ? "Sicherheitsmodus aktiviert: Seiten mit Schwärzungen werden beim Speichern als Bild neu aufgebaut. Der Inhalt unter den Schwärzungen wird dabei gelöscht."
-    : "Sicherheitsmodus deaktiviert: Schwärzungen verdecken den Inhalt nur optisch, der Text darunter bleibt in der Datei enthalten.", !secureMode);
-});
-$("btnAnnoUndo").addEventListener("click", () => {
-  const list = annos.get(pageOrder[currentPage]);
-  if (!list || list.length === 0) return;
-  list.pop();
-  renderOverlay();
-  updateUi();
-});
-$("btnAnnoClear").addEventListener("click", () => {
-  const orig = pageOrder[currentPage];
-  if (!annos.has(orig) || annos.get(orig).length === 0) return;
-  if (!confirm("Alle Anmerkungen auf dieser Seite entfernen?")) return;
-  annos.set(orig, []);
-  renderOverlay();
-  updateUi();
-});
-
-const overlay = $("overlayCanvas");
-overlay.addEventListener("pointerdown", (e) => {
-  if (!doc || pageOrder.length === 0 || !activeViewport || tool === "select") return;
-  e.preventDefault();
-  overlay.setPointerCapture(e.pointerId);
-  const c = canvasPoint(e);
-  const p = activeViewport.convertToPdfPoint(c[0], c[1]);
-  if (tool === "text") {
-    const input = prompt("Bitte geben Sie den einzufügenden Text ein:");
-    if (input === null || input.trim() === "") return;
-    annoAdd({ type: "text", x: p[0], y: p[1], text: input, size: 12, color: annoColor });
-    return;
-  }
-  if (tool === "draw") {
-    liveAnno = { type: "draw", color: annoColor, width: penWidth, points: [p] };
-  } else {
-    liveAnno = { type: tool, x1: p[0], y1: p[1], x2: p[0], y2: p[1], color: annoColor, width: penWidth };
-  }
-});
-overlay.addEventListener("pointermove", (e) => {
-  if (!liveAnno || !activeViewport) return;
-  const c = canvasPoint(e);
-  const p = activeViewport.convertToPdfPoint(c[0], c[1]);
-  if (liveAnno.type === "draw") liveAnno.points.push(p);
-  else { liveAnno.x2 = p[0]; liveAnno.y2 = p[1]; }
-  renderOverlay();
-});
-overlay.addEventListener("pointerup", () => {
-  if (!liveAnno) return;
-  if (liveAnno.type === "draw") {
-    if (liveAnno.points.length < 2) { liveAnno = null; renderOverlay(); return; }
-  } else {
-    if (Math.abs(liveAnno.x2 - liveAnno.x1) < 1 || Math.abs(liveAnno.y2 - liveAnno.y1) < 1) {
-      liveAnno = null;
-      renderOverlay();
-      return;
-    }
-    if (liveAnno.type === "redact" && !redactHintShown) {
-      redactHintShown = true;
-      toast("Hinweis: Aktivieren Sie den Sicherheitsmodus im Reiter Anonymisieren, damit der Inhalt unter der Schwärzung beim Speichern gelöscht wird.");
-    }
-  }
-  const finished = liveAnno;
-  liveAnno = null;
-  annoAdd(finished);
-});
-
-/* Registerkarten des Menübands umschalten */
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-    document.querySelectorAll(".pane").forEach((p) => {
-      p.hidden = p.id !== tab.dataset.tab;
-    });
-  });
 });
 
 /* ---------- Start ---------- */
