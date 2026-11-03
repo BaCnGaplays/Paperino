@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.3**
+> Aktuelle Version: **Alpha 0.4**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -44,6 +44,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.1 | Erste Veröffentlichung: Seitenverwaltung, Lektorieren, Anonymisieren |
 | Alpha 0.2 | Fortlaufender Seitenlauf, textgebundene Werkzeuge, Formen, Stift und Textmarker, Kommentieren mit PDF-Notizen, Ein-Schritt-Rückgängig, Sicherheitsmodus standardmäßig aktiv |
 | Alpha 0.3 | Interaktive Elemente: verschieben und Größe ändern, direkte Texteingabe im Dokument, textgebundenes Schwärzen, Einmal-Aktivierung der Werkzeuge |
+| Alpha 0.4 | Farbschema an der Grundfarbe #6F003C (Bordeauxrot) ausgerichtet |
 
 ## Hinweise und Grenzen
 

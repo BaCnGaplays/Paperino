@@ -12,7 +12,7 @@
     --ink: #0f172a;
     --muted: #64748b;
     --line: #e2e8f0;
-    --accent: #2563eb;
+    --accent: #6F003C;
     --accent-ink: #ffffff;
     --danger: #dc2626;
     --ok: #16a34a;
@@ -34,7 +34,7 @@
     align-items: center;
     gap: 12px;
     padding: 8px 14px;
-    background: #2b579a;
+    background: #6F003C;
     color: #ffffff;
   }
   #titlebar .brand { font-weight: 700; white-space: nowrap; }
@@ -71,8 +71,8 @@
   .qat button svg { width: 16px; height: 16px; }
   .qat button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.28); }
   .qat button:disabled { opacity: 0.4; cursor: not-allowed; }
-  .qat button.qat-save { background: #ffffff; color: #2b579a; font-weight: 600; }
-  .qat button.qat-save:hover:not(:disabled) { background: #e2ecfd; }
+  .qat button.qat-save { background: #ffffff; color: #6F003C; font-weight: 600; }
+  .qat button.qat-save:hover:not(:disabled) { background: #f5e3eb; }
 
   /* ---------- Menüband mit Registerkarten (wie in Word) ---------- */
   #ribbon { background: #f8fafc; border-bottom: 1px solid #d4d4d8; user-select: none; }
@@ -101,7 +101,7 @@
   .tab.active {
     background: var(--panel);
     border-color: #d4d4d8;
-    color: #2b579a;
+    color: #6F003C;
     font-weight: 600;
   }
   .ribbon-body { padding: 8px 12px 4px; display: flex; overflow-x: auto; }
@@ -136,12 +136,12 @@
     white-space: nowrap;
   }
   .rb-btn svg { width: 22px; height: 22px; }
-  .rb-btn:hover:not(:disabled) { background: #e2ecfd; color: #1e3a8a; }
+  .rb-btn:hover:not(:disabled) { background: #f5e3eb; color: #4A0028; }
   .rb-btn:disabled { opacity: 0.38; cursor: not-allowed; }
   .rb-btn.active {
-    background: #dbe7fd;
-    color: #1e3a8a;
-    box-shadow: inset 0 0 0 1px #93b4f7;
+    background: #edd3e0;
+    color: #4A0028;
+    box-shadow: inset 0 0 0 1px #be8ca7;
   }
   .rb-btn.small { flex-direction: row; min-width: 0; padding: 6px 10px; gap: 6px; font-size: 13px; }
   .rb-btn.small svg { width: 17px; height: 17px; }
@@ -167,7 +167,7 @@
     padding: 0 6px;
     white-space: nowrap;
   }
-  .rb-check input[type="checkbox"] { accent-color: #2b579a; width: 15px; height: 15px; }
+  .rb-check input[type="checkbox"] { accent-color: #6F003C; width: 15px; height: 15px; }
   .rb-check input[type="color"] {
     width: 26px;
     height: 26px;
@@ -219,7 +219,7 @@
     color: var(--ink);
   }
   .shape-menu button:hover { border-color: var(--accent); color: var(--accent); }
-  .shape-menu button.active { border-color: #2b579a; background: #dbe7fd; color: #1e3a8a; }
+  .shape-menu button.active { border-color: #6F003C; background: #edd3e0; color: #4A0028; }
   .shape-menu button svg { width: 22px; height: 22px; }
 
   /* ---------- Statusleiste ---------- */
@@ -303,7 +303,7 @@
     position: absolute;
     top: 6px;
     right: 6px;
-    background: rgba(37, 99, 235, 0.9);
+    background: rgba(111, 0, 60, 0.9);
     color: #fff;
     font-size: 10px;
     padding: 1px 4px;
@@ -350,14 +350,14 @@
     cursor: inherit;
     transform-origin: 0% 0%;
   }
-  .textLayer ::selection { background: rgba(2, 132, 199, 0.3); }
+  .textLayer ::selection { background: rgba(111, 0, 60, 0.25); }
 
   /* ---------- Direkteingabe im Dokument (Textfeld/Kommentar) ---------- */
   .inline-edit {
     position: absolute;
     z-index: 30;
     background: rgba(255, 255, 255, 0.94);
-    border: 1px dashed #2563eb;
+    border: 1px dashed #6F003C;
     border-radius: 4px;
     padding: 2px 4px;
     font-family: Helvetica, Arial, sans-serif;
@@ -453,7 +453,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.3</span>
+  <span class="version" id="appVersion">Alpha 0.4</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -792,7 +792,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.3"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.4"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1381,7 +1381,7 @@ function drawSelection(ctx, a, viewport) {
   const w = Math.abs(p2[0] - p1[0]);
   const h = Math.abs(p2[1] - p1[1]);
   ctx.save();
-  ctx.strokeStyle = "#2563eb";
+  ctx.strokeStyle = "#6F003C";
   ctx.lineWidth = 1.5;
   ctx.setLineDash([5, 3]);
   ctx.strokeRect(x, y, w, h);
