@@ -192,6 +192,69 @@
     max-width: 250px;
     line-height: 1.45;
   }
+  /* Versteckte Elemente verlässlich ausblenden (auch bei display:flex) */
+  [hidden] { display: none !important; }
+  /* Gruppen umbrechen lassen: zweite Zeile statt endloser Breite */
+  .group-buttons { flex-wrap: wrap; }
+  /* Format-Schaltflächen mit selbsterklärenden Schriftproben */
+  .rb-tgl .fmt-bold { font-weight: 700; }
+  .rb-tgl .fmt-italic { font-style: italic; }
+  .rb-tgl .fmt-u { text-decoration: underline; }
+  .rb-tgl .fmt-strike { text-decoration: line-through; }
+  .rb-tgl .fmt-sup { vertical-align: super; font-size: smaller; }
+  .rb-tgl .fmt-sub { vertical-align: sub; font-size: smaller; }
+  /* Geteilter Button: Schaltfläche mit zugehörigem Dropdown */
+  .seg { display: inline-flex; align-items: stretch; }
+  .seg > .rb-tgl { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .seg > select.rb-select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    min-width: 30px;
+    max-width: 34px;
+    padding: 4px 2px;
+  }
+  /* Farbwahl: Kachel für „keine Farbe“ */
+  .color-pop button.swatch.none {
+    background: #ffffff
+      repeating-linear-gradient(45deg, transparent 0 4px, transparent 4px);
+    position: relative;
+  }
+  .color-pop button.swatch.none::after {
+    content: "";
+    position: absolute;
+    left: 2px; right: 2px; top: 50%;
+    border-top: 2px solid #d43b3b;
+    transform: rotate(-45deg);
+  }
+  .color-more-btn {
+    grid-column: 1 / -1;
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    font: inherit;
+    font-size: 12px;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+  }
+  .color-more-btn:hover { background: #f5e3eb; }
+  .color-custom {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .color-custom input[type="color"] { width: 100%; height: 30px; border: 1px solid var(--line); border-radius: 4px; padding: 1px; background: var(--panel); cursor: pointer; }
+  .color-custom .op-row { display: flex; align-items: center; gap: 6px; }
+  .color-custom .op-row input[type="range"] { flex: 1; accent-color: #6F003C; }
+  .color-custom .w-row { display: flex; align-items: center; gap: 6px; }
+  .color-custom .w-row select { flex: 1; }
 
   /* ---------- Formen-Galerie ---------- */
   .shape-menu {
@@ -338,19 +401,10 @@
     padding: 0;
   }
   .color-pop button.swatch:hover { outline: 2px solid #6F003C; }
-  .color-more {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--ink);
-    padding-top: 4px;
-  }
-  .color-more input[type="color"] { width: 30px; height: 24px; border: 1px solid var(--line); border-radius: 4px; padding: 1px; background: var(--panel); cursor: pointer; }
-  .color-more input[type="text"] { width: 76px; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; font: inherit; font-size: 12px; }
+  .color-pop .pick-row { display: flex; margin-bottom: 6px; }
   /* Seitenleisten-Reiter (Seiten / Inhaltsverzeichnis / Lesezeichen) */
   .side-tabs { display: flex; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+  .side-tabs #btnAddBookmarkSide { margin-left: auto; }
   .side-tab {
     flex: 1;
     border: none;
@@ -621,7 +675,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.6</span>
+  <span class="version" id="appVersion">Alpha 0.7</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -696,18 +750,23 @@
       <div class="group">
         <div class="group-buttons">
           <button id="btnView100" class="rb-btn small" title="Seiten auf 100 Prozent Originalgröße stellen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M9 10h6v4H9z" fill="currentColor" stroke="none"/></svg>
             <span>100 %</span>
           </button>
           <button id="btnViewFit" class="rb-btn small" title="Seiten auf Fensterbreite einpassen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18"/><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/></svg>
             <span>Fensterbreite</span>
           </button>
           <button id="btnViewOne" class="rb-btn small active" title="Nur eine Seite anzeigen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="16" rx="1"/></svg>
             <span>Eine Seite</span>
           </button>
           <button id="btnViewTwo" class="rb-btn small" title="Zwei Seiten nebeneinander anzeigen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="8" height="14" rx="1"/><rect x="13" y="5" width="8" height="14" rx="1"/></svg>
             <span>Zwei Seiten</span>
           </button>
           <button id="btnViewContinuous" class="rb-btn small active" title="Fortlaufenden Bildlauf ein- und ausschalten">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="3" width="14" height="10" rx="1"/><path d="M5 17h14"/><path d="M7 21h10"/></svg>
             <span>Fortlaufend</span>
           </button>
         </div>
@@ -716,9 +775,11 @@
       <div class="group">
         <div class="group-buttons">
           <button id="btnRulers" class="rb-btn small" title="Lineale über den Seiten ein- und ausblenden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="9" width="18" height="7" rx="1"/><path d="M7 9v3"/><path d="M11 9v3"/><path d="M15 9v3"/></svg>
             <span>Lineale</span>
           </button>
           <button id="btnGrid" class="rb-btn small" title="Gitternetzlinien auf den Seiten ein- und ausblenden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4z"/><path d="M9.3 4v16M14.6 4v16M4 9.3h16M4 14.6h16"/></svg>
             <span>Gitternetz</span>
           </button>
         </div>
@@ -742,23 +803,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
             <span>Inhaltsverzeichnis</span>
           </button>
-        </div>
-        <div class="group-label">Bereiche</div>
-      </div>
-      <div class="group">
-        <div class="group-buttons">
           <button id="btnAddBookmark" class="rb-btn small" title="Lesezeichen für die aktuelle Seite anlegen" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
             <span>Lesezeichen hinzufügen</span>
           </button>
         </div>
-        <div class="group-label">Lesezeichen</div>
-      </div>
-      <div class="group">
-        <div class="group-buttons">
-          <span class="group-note">Die Ansicht bietet Zoomstufen, Ein- und Doppelseitendarstellung, fortlaufenden Bildlauf sowie Lineale und Gitternetzlinien als Ausrichtungshilfe.</span>
-        </div>
-        <div class="group-label">Hinweis</div>
+        <div class="group-label">Bereiche</div>
       </div>
     </div>
 
@@ -836,18 +886,11 @@
       <div class="group">
         <div class="group-buttons">
           <label class="rb-check" title="Beim Speichern wird die Seite als Bild neu aufgebaut; der Inhalt unter den Schwärzungen wird dabei gelöscht und ist danach nicht mehr markierbar">
-            <input type="checkbox" id="chkSecure" checked />
+            <input type="checkbox" id="chkSecure" checked title="Sicherheitsmodus: Beim Speichern wird jede geschwärzte Seite als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird gelöscht und ist danach nicht mehr markierbar." />
             Sicherheitsmodus
           </label>
         </div>
         <div class="group-label">Inhalt entfernen</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons">
-          <span class="group-note">Der Sicherheitsmodus ist standardmäßig aktiviert: Beim Speichern wird jede geschwärzte Seite als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird gelöscht und ist danach nicht mehr markierbar.</span>
-        </div>
-        <div class="group-label">Hinweis</div>
       </div>
     </div>
 
@@ -922,13 +965,6 @@
 
       <div class="group">
         <div class="group-buttons">
-          <span class="group-note">Jedes Werkzeug erstellt genau ein Element und schaltet danach auf Auswahl zurück. Erstellte Elemente lassen sich anklicken, verschieben und in der Größe ändern; Doppelklick bearbeitet Textfelder und Kommentare.</span>
-        </div>
-        <div class="group-label">Hinweis</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons">
           <button id="btnAnnoClear" class="rb-btn" title="Alle Anmerkungen auf der aktuellen Seite löschen (rückgängig machbar)" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg>
             <span>Seite leeren</span>
@@ -978,9 +1014,9 @@
               <option value="courier">Courier New</option>
             </select>
           </label>
-          <label class="rb-check" title="Schriftgröße in Punkten (auswählen oder eingeben)">
+          <label class="rb-check" title="Schriftgröße in Punkten (Liste oder eigene Zahl)">
             Größe
-            <input class="rb-select" type="number" id="annoFontSize" min="4" max="96" step="0.5" value="12" list="fontSizeList" style="width:58px;" disabled />
+            <input class="rb-select" type="number" id="annoFontSize" min="4" max="96" step="0.5" value="12" list="fontSizeList" style="width:64px;" disabled />
           </label>
           <datalist id="fontSizeList">
             <option value="8"></option><option value="9"></option><option value="10"></option>
@@ -990,74 +1026,40 @@
             <option value="28"></option><option value="36"></option><option value="48"></option>
             <option value="72"></option>
           </datalist>
-          <button class="rb-tgl" id="btnFontSmaller" title="Schriftgröße auf den nächsten vorgefertigten Wert verkleinern" disabled>A↓</button>
-          <button class="rb-tgl" id="btnFontBigger" title="Schriftgröße auf den nächsten vorgefertigten Wert vergrößern" disabled>A↑</button>
+          <button class="rb-tgl" id="btnTextColor" title="Schriftfarbe wählen" disabled><span class="swatch-dot" id="txtColorDot"></span></button>
+          <button class="rb-tgl" id="btnEditText" title="Text bearbeiten (auch per Doppelklick im Dokument)" disabled><span class="fmt-bold">Bearbeiten</span></button>
         </div>
         <div class="group-label">Schrift</div>
       </div>
 
       <div class="group">
-        <div class="group-buttons ctx-row">
-          <button class="rb-tgl" id="btnBold" title="Fett" disabled>F</button>
-          <button class="rb-tgl" id="btnItalic" title="Kursiv" disabled>K</button>
-          <button class="rb-tgl" id="btnUnderline" title="Unterstrichen" disabled>U</button>
-          <select class="rb-select" id="annoUnderlineStyle" title="Art der Unterstreichung" disabled>
-            <option value="simple" selected>Einfach</option>
-            <option value="double">Doppelt</option>
-            <option value="dotted">Gepunktet</option>
-            <option value="dashed">Gestrichelt</option>
-            <option value="wavy">Wellig</option>
-          </select>
-          <button class="rb-tgl" id="btnStrike" title="Durchgestrichen" disabled>S</button>
-          <button class="rb-tgl" id="btnSup" title="Hochstellen (hochgestellte Zeichen)" disabled>x²</button>
-          <button class="rb-tgl" id="btnSub" title="Tiefstellen (tiefgestellte Zeichen)" disabled>x₂</button>
+        <div class="group-buttons">
+          <button class="rb-tgl" id="btnBold" title="Fett" disabled><span class="fmt-bold">F</span></button>
+          <button class="rb-tgl" id="btnItalic" title="Kursiv" disabled><span class="fmt-italic">K</span></button>
+          <span class="seg">
+            <button class="rb-tgl" id="btnUnderline" title="Unterstrichen" disabled><span class="fmt-u">U</span></button>
+            <select class="rb-select" id="annoUnderlineStyle" title="Art der Unterstreichung" disabled>
+              <option value="simple" selected title="Einfach">A̲</option>
+              <option value="double" title="Doppelt">A̳</option>
+              <option value="dotted" title="Gepunktet">Ạ</option>
+              <option value="dashed" title="Gestrichelt">A̷</option>
+              <option value="wavy" title="Wellig">A̰</option>
+            </select>
+          </span>
+          <button class="rb-tgl" id="btnStrike" title="Durchgestrichen" disabled><span class="fmt-strike">ab</span></button>
+          <button class="rb-tgl" id="btnSup" title="Hochstellen (hochgestellte Zeichen)" disabled>x<span class="fmt-sup">2</span></button>
+          <button class="rb-tgl" id="btnSub" title="Tiefstellen (tiefgestellte Zeichen)" disabled>x<span class="fmt-sub">2</span></button>
+          <button class="rb-tgl" id="btnLatex" title="Formel einfügen: LaTeX-Quelltext rendern, z. B. \frac{a}{b}, x^2 oder \sqrt{x}; unterstützt Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben (\alpha, \pi …) und Symbole (\times, \leq, \infty …)" disabled>x</button>
         </div>
         <div class="group-label">Format</div>
       </div>
 
       <div class="group">
-        <div class="group-buttons ctx-row">
-          <label class="rb-check" title="Groß- und Kleinschreibung des Textes umwandeln">
-            Schreibweise
-            <select class="rb-select" id="annoCase" disabled>
-              <option value="none" selected>—</option>
-              <option value="sentence">Ersten Buchstaben im Satz großschreiben</option>
-              <option value="lower">alles kleinbuchstaben</option>
-              <option value="upper">ALLES GROSSBUCHSTABEN</option>
-            </select>
-          </label>
-          <button class="rb-tgl" id="btnLatex" title="Inhalt als LaTeX-Formel rendern, z. B. \frac{a}{b}, x^2 oder \sqrt{x}" disabled>Formel</button>
-          <button class="rb-tgl" id="btnTextColor" title="Schriftfarbe wählen" disabled><span class="swatch-dot" id="txtColorDot"></span></button>
-          <button class="rb-tgl" id="btnEditText" title="Text bearbeiten (auch per Doppelklick im Dokument)" disabled>Bearbeiten</button>
-        </div>
-        <div class="group-label">Inhalt und Farbe</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons ctx-row">
-          <button class="rb-tgl" id="btnTextFill" title="Füllfarbe des Textfelds wählen" disabled><span class="swatch-dot" id="txtFillDot"></span> Füllung</button>
-          <button class="rb-tgl active" id="btnTextNoFill" title="Füllung des Textfelds entfernen" disabled>Keine Füllung</button>
-          <button class="rb-tgl" id="btnTextOutline" title="Formkontur des Textfelds wählen" disabled><span class="swatch-dot" id="txtOutlineDot"></span> Kontur</button>
-          <select class="rb-select" id="annoOutlineWidth" title="Konturstärke in Punkten" disabled>
-            <option value="0.25">¼ Pt</option>
-            <option value="0.5">½ Pt</option>
-            <option value="0.75">¾ Pt</option>
-            <option value="1" selected>1 Pt</option>
-            <option value="1.5">1½ Pt</option>
-            <option value="2.25">2¼ Pt</option>
-            <option value="3">3 Pt</option>
-            <option value="4.5">4½ Pt</option>
-            <option value="6">6 Pt</option>
-          </select>
+        <div class="group-buttons">
+          <button class="rb-tgl" id="btnTextFill" title="Fülleffekt des Textfelds wählen (inklusive Transparenz)" disabled><span class="swatch-dot" id="txtFillDot"></span> Füllung</button>
+          <button class="rb-tgl" id="btnTextOutline" title="Formkontur des Textfelds wählen (inklusive Strichstärke)" disabled><span class="swatch-dot" id="txtOutlineDot"></span> Kontur</button>
         </div>
         <div class="group-label">Textfeld formatieren</div>
-      </div>
-
-      <div class="group">
-        <div class="group-buttons">
-          <span class="group-note">Formeln unterstützen Brüche (\frac{}{}), Wurzeln (\sqrt{}), Hoch- und Tiefstellen (^ und _), griechische Buchstaben (\alpha, \pi …) sowie Symbole (\times, \leq, \infty …). Beispiel: E=m\,c^2 oder \frac{-b\pm\sqrt{b^2-4ac}}{2a}.</span>
-        </div>
-        <div class="group-label">Hinweis</div>
       </div>
     </div>
 
@@ -1082,16 +1084,15 @@
           <label class="rb-check" title="Strichart">
             Strichart
             <select class="rb-select" id="annoShapeDash" disabled>
-              <option value="solid" selected>Unilinie</option>
-              <option value="dotr">Runder Punkt</option>
-              <option value="dots">Viereckiger Punkt</option>
-              <option value="dash">Gestrichelt</option>
-              <option value="dashdot">Strichpunktmuster</option>
-              <option value="long">Langer Strich</option>
+              <option value="solid" selected title="Unilinie">―――</option>
+              <option value="dotr" title="Runder Punkt">· · ·</option>
+              <option value="dots" title="Viereckiger Punkt">▪ ▪ ▪</option>
+              <option value="dash" title="Gestrichelt">— — —</option>
+              <option value="dashdot" title="Strichpunktmuster">— · — ·</option>
+              <option value="long" title="Langer Strich">―― ――</option>
             </select>
           </label>
-          <button class="rb-tgl" id="btnShapeFill" title="Fülleffekt (Füllfarbe) wählen" disabled><span class="swatch-dot" id="shpFillDot"></span> Füllung</button>
-          <button class="rb-tgl active" id="annoNoFill" title="Füllung deaktivieren" disabled>Keine Füllung</button>
+          <button class="rb-tgl" id="btnShapeFill" title="Fülleffekt (Füllfarbe) wählen (inklusive Transparenz und ‚keine Füllung’)" disabled><span class="swatch-dot" id="shpFillDot"></span> Füllung</button>
         </div>
         <div class="group-label">Kontur und Fülleffekt</div>
       </div>
@@ -1134,13 +1135,6 @@
         </div>
         <div class="group-label">Element</div>
       </div>
-
-      <div class="group">
-        <div class="group-buttons">
-          <span class="group-note">Füllung und Kontur wirken bei geschlossenen Formen; Linien und Pfeile nutzen Kontur, Strichstärke und Strichart. Schwärzungen bleiben aus Gründen der Nachvollziehbarkeit immer schwarz. Geschlossene Formen und Textfelder lassen sich zusätzlich über den Drehgriff oben drehen.</span>
-        </div>
-        <div class="group-label">Hinweis</div>
-      </div>
     </div>
 
   </div>
@@ -1152,10 +1146,7 @@
       <button class="side-tab active" id="stabPages" title="Seitenliste anzeigen">Seiten</button>
       <button class="side-tab" id="stabOutline" title="Inhaltsverzeichnis des Dokuments anzeigen">Inhalt</button>
       <button class="side-tab" id="stabBookmarks" title="Lesezeichen anzeigen">Lesezeichen</button>
-    </div>
-    <div class="side-title">
-      <span class="t-label">Seiten</span>
-      <button class="t-btn" id="btnAddBookmarkSide" title="Lesezeichen für die aktuelle Seite anlegen" disabled>+</button>
+      <button class="t-btn" id="btnAddBookmarkSide" title="Lesezeichen für die aktuelle Seite anlegen" disabled hidden>+</button>
     </div>
     <div id="thumbs" class="panel-body"></div>
     <div id="outlineList" class="panel-body" hidden></div>
@@ -1211,7 +1202,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.6"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.7"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1561,7 +1552,6 @@ const FONT_STACKS = {
   times: "'Times New Roman', Times, serif",
   courier: "'Courier New', Courier, monospace"
 };
-const SIZE_LADDER = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 const ROTATABLE = ["rect", "ellipse", "triangle", "diamond", "star"];
 const FILLABLE = ["rect", "ellipse", "triangle", "diamond", "star"];
 
@@ -1746,7 +1736,7 @@ function drawAnno(ctx, a, viewport) {
         ctx.beginPath();
         corners.forEach((q, i) => { if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]); });
         ctx.closePath();
-        if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
+        if (a.fill) { ctx.globalAlpha = a.fillOp == null ? 1 : a.fillOp; ctx.fillStyle = a.fill; ctx.fill(); ctx.globalAlpha = 1; }
         if (a.ocolor) {
           ctx.strokeStyle = a.ocolor;
           ctx.lineWidth = (a.owidth || 1) * scale;
@@ -1840,7 +1830,7 @@ function drawAnno(ctx, a, viewport) {
         Math.hypot(ey[0] - c[0], ey[1] - c[1]),
         Math.atan2(ex[1] - c[1], ex[0] - c[0]), 0, Math.PI * 2
       );
-      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
+      if (a.fill) { ctx.globalAlpha = a.fillOp == null ? 1 : a.fillOp; ctx.fillStyle = a.fill; ctx.fill(); ctx.globalAlpha = 1; }
       ctx.stroke();
       ctx.setLineDash([]);
     } else {
@@ -1854,7 +1844,7 @@ function drawAnno(ctx, a, viewport) {
         if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]);
       });
       ctx.closePath();
-      if (a.fill) { ctx.fillStyle = a.fill; ctx.fill(); }
+      if (a.fill) { ctx.globalAlpha = a.fillOp == null ? 1 : a.fillOp; ctx.fillStyle = a.fill; ctx.fill(); ctx.globalAlpha = 1; }
       ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -2017,7 +2007,7 @@ function layoutLatex(a) {
 
 function snapshotAnno(a) {
   const s = {};
-  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot"]) {
+  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "fillOp", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot"]) {
     if (k in a) s[k] = a[k] && typeof a[k] === "object" ? JSON.parse(JSON.stringify(a[k])) : a[k];
   }
   if (a.points) s.points = a.points.map((p) => p.slice());
@@ -2915,7 +2905,7 @@ async function burnAnnotations(out, page, list, fonts) {
       const da = dashPdf(a.dash, a.width);
       const opts = {
         width: w, height: h,
-        ...(a.fill ? { color: rgbFrom(a.fill) } : {}),
+        ...(a.fill ? { color: rgbFrom(a.fill), ...(a.fillOp != null ? { opacity: a.fillOp } : {}) } : {}),
         ...(da ? { dashArray: da } : {})
       };
       if (a.ocolor === undefined && a.color) { opts.borderColor = rgbFrom(a.color); opts.borderWidth = Math.max(0.5, a.width); }
@@ -2932,7 +2922,7 @@ async function burnAnnotations(out, page, list, fonts) {
       const opts = {
         x: cx, y: cy, xScale: rx, yScale: ry,
         borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
-        ...(a.fill ? { color: rgbFrom(a.fill) } : {}),
+        ...(a.fill ? { color: rgbFrom(a.fill), ...(a.fillOp != null ? { opacity: a.fillOp } : {}) } : {}),
         ...(da ? { dashArray: da } : {})
       };
       if (isRot(a)) {
@@ -2949,7 +2939,7 @@ async function burnAnnotations(out, page, list, fonts) {
       const opts = {
         scale: [w, h],
         borderColor: rgbFrom(a.color), borderWidth: Math.max(0.5, a.width),
-        ...(a.fill ? { color: rgbFrom(a.fill) } : {}),
+        ...(a.fill ? { color: rgbFrom(a.fill), ...(a.fillOp != null ? { opacity: a.fillOp } : {}) } : {}),
         ...(da ? { dashArray: da } : {})
       };
       if (isRot(a)) {
@@ -3002,7 +2992,7 @@ async function burnAnnotations(out, page, list, fonts) {
           const bw = a.box.w, bh = a.box.h;
           const bopts = {
             width: bw, height: bh,
-            ...(a.fill ? { color: rgbFrom(a.fill) } : {})
+            ...(a.fill ? { color: rgbFrom(a.fill), ...(a.fillOp != null ? { opacity: a.fillOp } : {}) } : {})
           };
           if (a.ocolor) {
             bopts.borderColor = rgbFrom(a.ocolor);
@@ -3461,6 +3451,7 @@ function setSideMode(mode) {
   $("thumbs").hidden = mode !== "pages";
   $("outlineList").hidden = mode !== "outline";
   $("bookmarkList").hidden = mode !== "bookmarks";
+  $("btnAddBookmarkSide").hidden = mode !== "bookmarks";
 }
 
 function setThumbsPanel(open, mode) {
@@ -3683,9 +3674,7 @@ function refreshContextPane() {
       $("btnLatex").classList.toggle("active", !!a.latex);
       $("txtColorDot").style.background = a.color;
       $("txtFillDot").style.background = a.fill || "#ffffff";
-      $("txtOutlineDot").style.background = a.ocolor || "#000000";
-      $("btnTextNoFill").classList.toggle("active", !a.fill);
-      $("annoOutlineWidth").value = String(a.owidth || 1);
+      $("txtOutlineDot").style.background = a.ocolor || "#ffffff";
       $("annoRot").value = rotOf(a);
       $("btnRotL").disabled = false;
       $("btnRotR").disabled = false;
@@ -3695,7 +3684,6 @@ function refreshContextPane() {
       $("annoShapeWidth").value = String(a.width || 2);
       $("annoShapeDash").value = a.dash || "solid";
       $("shpFillDot").style.background = a.fill || "#ffffff";
-      $("annoNoFill").classList.toggle("active", !a.fill);
       $("annoArrowHead").value = a.head || "end";
       $("btnArrowFill").classList.toggle("active", !!a.headFill);
       $("annoRot").value = rotOf(a);
@@ -3704,16 +3692,13 @@ function refreshContextPane() {
   /* Textfeld-Reiter */
   $("annoFontFamily").disabled = !isText;
   $("annoFontSize").disabled = !isText;
-  $("btnFontSmaller").disabled = !isText;
-  $("btnFontBigger").disabled = !isText;
-  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "annoCase", "btnLatex", "btnTextColor", "btnEditText"].forEach((id) => { $(id).disabled = !isText; });
-  ["btnTextFill", "btnTextNoFill", "btnTextOutline", "annoOutlineWidth"].forEach((id) => { $(id).disabled = !isText; });
+  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor", "btnEditText"].forEach((id) => { $(id).disabled = !isText; });
+  ["btnTextFill", "btnTextOutline"].forEach((id) => { $(id).disabled = !isText; });
   /* Formformat-Reiter */
   $("btnShapeColor").disabled = !isForm || isRedact;
   $("annoShapeWidth").disabled = !isForm || isRedact;
   $("annoShapeDash").disabled = !isForm || isRedact;
   $("btnShapeFill").disabled = !isForm || !FILLABLE.includes(a && a.type);
-  $("annoNoFill").disabled = !isForm || !FILLABLE.includes(a && a.type);
   $("annoArrowHead").disabled = !isArrow;
   $("btnArrowFill").disabled = !isArrow;
   const nudge = ["btnNudgeLeft", "btnNudgeUp", "btnNudgeDown", "btnNudgeRight", "btnRotL", "btnRotR", "annoRot"];
@@ -3748,54 +3733,104 @@ const STD_COLORS = [
   "#006680", "#0070c0", "#00b0f0", "#5b9bd5", "#dbeef3",
   "#330099", "#7030a0", "#9900ff", "#b4a7d6", "#eae4f2"
 ];
-function buildColorMenu(btnId, dotId, getCur, setColor) {
+function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
+  opts = opts || {};
   const btn = $(btnId);
   let pop = null;
   const close = () => { if (pop) { pop.remove(); pop = null; } };
+  const apply = (fn) => { ctxUndoOnce(btn); ctxApply(fn); };
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (pop) { close(); return; }
     pop = document.createElement("div");
     pop.className = "color-pop";
+    const setDot = (c) => { if (dotId) $(dotId).style.background = c; };
+    if (opts.noneLabel) {
+      const none = document.createElement("button");
+      none.className = "swatch none";
+      none.title = opts.noneLabel;
+      none.addEventListener("click", () => { apply(() => setColor(null)); setDot("#ffffff"); close(); });
+      pop.appendChild(none);
+    }
     for (const c of STD_COLORS) {
       const sw = document.createElement("button");
       sw.className = "swatch";
       sw.style.background = c;
       sw.title = c;
-      sw.addEventListener("click", () => {
-        ctxUndoOnce(btn);
-        ctxApply(() => setColor(c));
-        if (dotId) $(dotId).style.background = c;
-        close();
-      });
+      sw.addEventListener("click", () => { apply(() => setColor(c)); setDot(c); close(); });
       pop.appendChild(sw);
     }
-    const more = document.createElement("label");
-    more.className = "color-more";
-    const inp = document.createElement("input");
-    inp.type = "color";
-    inp.value = getCur() || "#000000";
-    const hex = document.createElement("input");
-    hex.type = "text";
-    hex.value = inp.value;
-    inp.addEventListener("input", () => { hex.value = inp.value; });
-    hex.addEventListener("change", () => {
-      if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) inp.value = hex.value;
-      else hex.value = inp.value;
+    const moreBtn = document.createElement("button");
+    moreBtn.type = "button";
+    moreBtn.className = "color-more-btn";
+    moreBtn.textContent = "Weitere Farben …";
+    moreBtn.addEventListener("click", (e2) => {
+      e2.stopPropagation();
+      if (pop.querySelector(".color-custom")) return;
+      const cust = document.createElement("div");
+      cust.className = "color-custom";
+      const row = document.createElement("div");
+      row.className = "pick-row";
+      const inp = document.createElement("input");
+      inp.type = "color";
+      inp.value = getCur() || "#000000";
+      row.appendChild(inp);
+      cust.appendChild(row);
+      let okBtn = null;
+      const commit = () => {
+        apply(() => setColor(inp.value));
+        setDot(inp.value);
+        close();
+      };
+      inp.addEventListener("change", commit);
+      if (opts.withOpacity) {
+        const opRow = document.createElement("div");
+        opRow.className = "op-row";
+        const opLbl = document.createElement("span");
+        opLbl.textContent = "Transparenz";
+        const opIn = document.createElement("input");
+        opIn.type = "range";
+        opIn.min = "0";
+        opIn.max = "100";
+        opIn.step = "5";
+        const curOp = opts.getOp();
+        opIn.value = String(Math.round((curOp == null ? 1 : curOp) * 100));
+        const opVal = document.createElement("span");
+        opVal.textContent = opIn.value + " %";
+        opIn.addEventListener("input", () => { opVal.textContent = opIn.value + " %"; });
+        opIn.addEventListener("change", () => { apply(() => opts.setOp(parseFloat(opIn.value) / 100)); });
+        opRow.append(opLbl, opIn, opVal);
+        cust.appendChild(opRow);
+      }
+      if (opts.withWidth) {
+        const wRow = document.createElement("div");
+        wRow.className = "w-row";
+        const wLbl = document.createElement("span");
+        wLbl.textContent = "Strichstärke (pt)";
+        const wSel = document.createElement("select");
+        for (const w of [0.25, 0.5, 0.75, 1, 1.5, 2.25, 3, 4.5, 6]) {
+          const o = document.createElement("option");
+          o.value = String(w);
+          o.textContent = String(w).replace(".", ",");
+          wSel.appendChild(o);
+        }
+        wSel.value = String(opts.getWidth() || 1);
+        wSel.addEventListener("change", () => { apply(() => opts.setWidth(parseFloat(wSel.value) || 1); });
+        wRow.append(wLbl, wSel);
+        cust.appendChild(wRow);
+      }
+      okBtn = document.createElement("button");
+      okBtn.type = "button";
+      okBtn.className = "color-more-btn";
+      okBtn.textContent = "Übernehmen";
+      okBtn.addEventListener("click", (e3) => { e3.stopPropagation(); commit(); });
+      cust.appendChild(okBtn);
+      pop.appendChild(cust);
     });
-    inp.addEventListener("change", () => {
-      ctxUndoOnce(btn);
-      ctxApply(() => setColor(inp.value));
-      if (dotId) $(dotId).style.background = inp.value;
-      close();
-    });
-    const lbl = document.createElement("span");
-    lbl.textContent = "Weitere Farben …";
-    more.append(inp, hex, lbl);
-    pop.appendChild(more);
+    pop.appendChild(moreBtn);
     document.body.appendChild(pop);
     const r = btn.getBoundingClientRect();
-    pop.style.left = Math.min(r.left, window.innerWidth - 200) + "px";
+    pop.style.left = Math.min(r.left, window.innerWidth - 220) + "px";
     pop.style.top = (r.bottom + 4) + "px";
   });
   document.addEventListener("click", (e) => {
@@ -3806,8 +3841,6 @@ function buildColorMenu(btnId, dotId, getCur, setColor) {
 /* Steuerelemente binden */
 armOnFocus($("annoFontSize"));
 $("annoFontSize").addEventListener("input", () => { ctxUndoOnce($("annoFontSize")); ctxApply((a) => { a.size = Math.max(4, Math.min(96, parseFloat($("annoFontSize").value) || 12)); }); });
-$("btnFontBigger").addEventListener("click", () => { if (!selAnno) return; pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) }); ctxApply((a) => { const next = SIZE_LADDER.find((s) => s > a.size + 0.01) || SIZE_LADDER[SIZE_LADDER.length - 1]; a.size = next; }); });
-$("btnFontSmaller").addEventListener("click", () => { if (!selAnno) return; pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) }); ctxApply((a) => { const prev = [...SIZE_LADDER].reverse().find((s) => s < a.size - 0.01) || SIZE_LADDER[0]; a.size = prev; }); });
 armOnFocus($("annoFontFamily"));
 $("annoFontFamily").addEventListener("change", () => { ctxUndoOnce($("annoFontFamily")); ctxApply((a) => { a.font = $("annoFontFamily").value; }); });
 armOnFocus($("annoUnderlineStyle"));
@@ -3826,15 +3859,11 @@ bindToggle("btnStrike", (a) => { a.strike = !a.strike; });
 bindToggle("btnSup", (a) => { a.script = a.script === "sup" ? null : "sup"; });
 bindToggle("btnSub", (a) => { a.script = a.script === "sub" ? null : "sub"; });
 bindToggle("btnLatex", (a) => { a.latex = !a.latex; });
-bindToggle("btnTextNoFill", (a) => { a.fill = a.fill ? null : "#ffffff"; });
-bindToggle("annoNoFill", (a) => { a.fill = a.fill ? null : "#ffe08a"; });
 buildColorMenu("btnTextColor", "txtColorDot", () => (selAnno ? selAnno.color : "#000000"), (c) => { selAnno.color = c; });
-buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; });
-buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno && selAnno.ocolor ? selAnno.ocolor : "#000000"), (c) => { selAnno.ocolor = c; });
+buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno && selAnno.fillOp != null ? selAnno.fillOp : 1), setOp: (v) => { selAnno.fillOp = v; } });
+buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno && selAnno.ocolor ? selAnno.ocolor : "#000000"), (c) => { selAnno.ocolor = c; }, { noneLabel: "Keine Kontur", withWidth: true, getWidth: () => (selAnno ? selAnno.owidth || 1 : 1), setWidth: (v) => { selAnno.owidth = v; } });
 buildColorMenu("btnShapeColor", "shpColorDot", () => (selAnno ? selAnno.color : "#000000"), (c) => { selAnno.color = c; });
-buildColorMenu("btnShapeFill", "shpFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; });
-armOnFocus($("annoOutlineWidth"));
-$("annoOutlineWidth").addEventListener("change", () => { ctxUndoOnce($("annoOutlineWidth")); ctxApply((a) => { a.owidth = parseFloat($("annoOutlineWidth").value) || 1; }); });
+buildColorMenu("btnShapeFill", "shpFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno && selAnno.fillOp != null ? selAnno.fillOp : 1), setOp: (v) => { selAnno.fillOp = v; } });
 armOnFocus($("annoShapeWidth"));
 $("annoShapeWidth").addEventListener("change", () => { ctxUndoOnce($("annoShapeWidth")); ctxApply((a) => { a.width = parseFloat($("annoShapeWidth").value) || 2; }); });
 armOnFocus($("annoShapeDash"));
@@ -3842,21 +3871,6 @@ $("annoShapeDash").addEventListener("change", () => { ctxUndoOnce($("annoShapeDa
 armOnFocus($("annoArrowHead"));
 $("annoArrowHead").addEventListener("change", () => { ctxUndoOnce($("annoArrowHead")); ctxApply((a) => { a.head = $("annoArrowHead").value; }); });
 bindToggle("btnArrowFill", (a) => { a.headFill = !a.headFill; });
-/* Groß- und Kleinschreibung umwandeln (einmalig, mit Rückgängig) */
-armOnFocus($("annoCase"));
-$("annoCase").addEventListener("change", () => {
-  const mode = $("annoCase").value;
-  if (!selAnno || mode === "none") return;
-  pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) });
-  const t = selAnno.text;
-  if (mode === "lower") selAnno.text = t.toLowerCase();
-  else if (mode === "upper") selAnno.text = t.toUpperCase();
-  else if (mode === "sentence") {
-    selAnno.text = t.toLowerCase().replace(/(^\s*|[.!?]\s+)(\p{L})/gu, (m, p1, p2) => p1 + p2.toUpperCase());
-  }
-  $("annoCase").value = "none";
-  refreshEntryByOrig(selOrig);
-});
 /* Drehen und Verschieben */
 function rotateBy(deg) {
   if (!selAnno) return;

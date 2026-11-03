@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.6**
+> Aktuelle Version: **Alpha 0.7**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -10,21 +10,21 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 
 - PDFs öffnen, anzeigen und navigieren (Zoom, Seitenbreite, 100-Prozent-Ansicht, Ein- und Doppelseitenansicht, fortlaufender Bildlauf, Tastaturkürzel, Miniaturansichten)
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
-- Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen
+- Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New), Schriftgrößenliste (8 bis 72 Punkt, auch frei eingebbar) und Größenwippen
-- Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, wellig), Durchgestrichen, Hoch- und Tiefstellen, Umwandlung der Groß- und Kleinschreibung (Satzanfang, klein, GROSS)
-- Farbwahlmenü mit Standardfarben und eigenen Farben (RGB, HSL und Hex über die Farbauswahl des Browsers)
-- Textfelder mit Fülleffekt und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New) und Schriftgröße als Dropdown mit frei eingebbarem Wert (8 bis 72 Punkt)
+- Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, wellig), Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
+- Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und einem eigenen Bereich „Weitere Farben“ (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
+- Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
 - LaTeX-Formeln über eine Formel-Schaltfläche (Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben, Symbole), beim Speichern als eingebettetes Bild abgelegt
 - Pfeile mit einstellbaren Pfeilspitzen: ohne, linke, rechte oder beide Spitzen, offen oder gefüllt
-- Strichstärken in Punkten (¼ bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
+- Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
 - Formen und Textfelder drehen: runde Eckgriffe, Seitenbalken zum einseitigen Ziehen, Drehgriff oben, Verschieben in Punkt-Schritten über Richtungspfeile
 - Textgebundenes Markieren, Durchstreichen und Unterstreichen direkt am Originaltext
 - Schwärzen als Rechteck oder für markierten Text; mit Sicherheitsmodus wird die Seite beim Speichern als Bild neu aufgebaut, der Inhalt unter der Schwärzung wird dabei tatsächlich entfernt und ist danach nicht mehr markierbar
 - Freihändiges Zeichnen mit Stift und Textmarker (Farb- und Strichstärkenwahl)
 - Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil
-- Kommentieren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
+- Kommentaren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
 - Statusleiste unten mit Bibliothekenstatus und Seitenanzeige
 - Ein-Schritt-Rückgängig für alle Aktionen und Speichern der bearbeiteten Datei als Download
@@ -55,6 +55,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.4 | Farbschema an der Grundfarbe #6F003C (Bordeauxrot) ausgerichtet |
 | Alpha 0.5 | Kontextreiter „Textfeld“ (Schriftgröße, Farbe, Fett, Kursiv, LaTeX-Formeln) und „Formformat“ (Kontur, Strichstärke, Füllung), ein- und ausklappbare Fenster für Seiten und Kommentare, Lesezeichen, Statusleiste unten, Korrektur der Textdarstellung bei Drehung und Zoom, präzisere Textauswahl |
 | Alpha 0.6 | Textfeldformatierung im Stil einer Textverarbeitung (Schriftarten, Unterstreichungsarten, Durchstreichen, Hoch- und Tiefstellen, Groß-/Kleinschreibung, Farbwahlmenü), Formeln über Schaltfläche, Textfelder mit Fülleffekt und Kontur, Größenänderung ohne Schriftskalierung, Pfeilspitzen, Strichstärken in Punkt und Stricharten, Drehgriff und Seitenbalken, korrigierte Darstellung von Anmerkungen bei Zoom und hohen Auflösungen, Kommentarleiste automatisch, Seitenleiste mit Inhaltsverzeichnis, Ansichtsbuttons, Lineale und Gitternetz |
+| Alpha 0.7 | Korrektur der ein- und ausblendbaren Leisten (Seitenleiste und Kommentarleiste lassen sich nun tatsächlich schließen, Kommentarleiste standardmäßig ausgeblendet), Farbwahlmenü neu aufgebaut (Standardfarben-Kacheln, „Keine Füllung“/„Keine Kontur“ als Kachel, „Weitere Farben“ als eigener Bereich mit Transparenz bei Füllung und Strichstärkenwahl bei Konturen), Formatleiste zweizeilig mit Piktogrammen und Schriftproben, Schriftgröße als Dropdown mit frei eingebbarem Wert, Schreibweise-Umwandlung und Größenwippen entfernt, Hinweise auf Tooltips umgestellt |
 
 ## Hinweise und Grenzen
 
