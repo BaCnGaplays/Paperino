@@ -46,7 +46,7 @@
   body.dark .ul-pop .ul-row.active { background: #342030; }
   body.dark .outline-item:hover { background: #342030; }
   body.dark .side-tab:hover, body.dark .side-tab.active { color: #f2c7d8; }
-  body.dark #rulerBar { background: #191d2b; }
+  body.dark #rulerTop, body.dark #rulerLeft, body.dark #rulerRight { background: #191d2b; }
   body.dark .side-title .t-btn:hover { color: #f2c7d8; border-color: #8a5570; }
   body.dark .license-card button { background: #342030; color: #f2c7d8; border-color: var(--line); }
   body.dark .license-card a { color: #f2c7d8; }
@@ -648,8 +648,13 @@
   .outline-item.l2 { padding-left: 18px; }
   .outline-item.l3 { padding-left: 32px; font-size: 11.5px; color: var(--muted); }
   /* Lineal, Gitternetz und Doppelseitenansicht */
-  #rulerBar { height: 20px; margin: 0 auto; position: sticky; top: 0; background: #fbfdff; border-bottom: 1px solid var(--line); overflow: hidden; z-index: 5; }
-  #rulerBar.hidden-ruler { display: none; }
+  #rulerTop, #rulerLeft, #rulerRight { position: fixed; background: #fbfdff; z-index: 30; pointer-events: none; }
+  #rulerTop { top: 0; left: 0; height: 20px; border-bottom: 1px solid var(--line); }
+  #rulerLeft { top: 0; left: 0; width: 20px; border-right: 1px solid var(--line); }
+  #rulerRight { top: 0; right: 0; width: 20px; border-left: 1px solid var(--line); }
+  #rulerTop.hidden-ruler, #rulerLeft.hidden-ruler, #rulerRight.hidden-ruler { display: none; }
+  body.show-rulers #viewer { padding-top: 44px; padding-left: 44px; }
+  body.show-rulers.two-page #viewer { padding-right: 44px; }
   .page-entry { position: relative; }
   .grid-layer { position: absolute; inset: 0; pointer-events: none; display: none; }
   body.show-grid .grid-layer {
@@ -800,7 +805,7 @@
     background: var(--panel);
     color: var(--ink);
   }
-  #searchResults { margin-top: 6px; max-height: 180px; overflow: auto; width: 100%; }
+  #searchSide .search-res { width: 100%; box-sizing: border-box; }
   .search-res {
     display: block;
     width: 100%;
@@ -974,7 +979,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.15</span>
+  <span class="version" id="appVersion">Alpha 0.16</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1021,8 +1026,7 @@
           </button>
           <span id="searchInfo" class="group-note"></span>
         </div>
-        <div id="searchResults"></div>
-        <div class="group-label">Suchen</div>
+        <div class="group-label">Suchen (Trefferliste in der Seitenleiste)</div>
       </div>
 
       <div class="group">
@@ -1531,11 +1535,13 @@
       <button class="side-tab active" id="stabPages" title="Seitenliste anzeigen">Seiten</button>
       <button class="side-tab" id="stabOutline" title="Inhaltsverzeichnis des Dokuments anzeigen">Inhalt</button>
       <button class="side-tab" id="stabBookmarks" title="Lesezeichen anzeigen">Lesezeichen</button>
+      <button class="side-tab" id="stabSearch" title="Suchtreffer anzeigen" disabled>Suchen</button>
       <button class="t-btn" id="btnAddBookmarkSide" title="Lesezeichen für die aktuelle Seite anlegen" disabled hidden>+</button>
     </div>
     <div id="thumbs" class="panel-body"></div>
     <div id="outlineList" class="panel-body" hidden></div>
     <div id="bookmarkList" class="panel-body" hidden></div>
+    <div id="searchSide" class="panel-body" hidden></div>
   </aside>
 
   <section id="viewer">
@@ -1545,9 +1551,11 @@
       <span style="font-size:12px;">Alle Verarbeitungsschritte laufen ausschließlich lokal in Ihrem Browser. Die Datei wird nicht hochgeladen.</span>
     </div>
     <div id="scrollWrap" hidden>
-      <canvas id="rulerBar" class="hidden-ruler" width="600" height="20"></canvas>
       <div id="pagesColumn"></div>
     </div>
+    <canvas id="rulerTop" class="hidden-ruler" height="20"></canvas>
+    <canvas id="rulerLeft" class="hidden-ruler" width="20"></canvas>
+    <canvas id="rulerRight" class="hidden-ruler" width="20"></canvas>
   </section>
 
   <aside id="commentPanel" hidden>
@@ -1577,7 +1585,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.15"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.16"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1891,7 +1899,7 @@ async function openFile(file) {
     searchHits = [];
     searchIdx = -1;
     searchQuery = "";
-    $("searchResults").innerHTML = "";
+    $("searchSide").innerHTML = "";
     $("searchInput").value = "";
     formValues.clear();
     formToastShown = false;
@@ -2101,7 +2109,7 @@ function renderVisible() {
 
 function updateView() {
   document.body.style.setProperty("--gridpx", (72 / 2.54 * zoom).toFixed(2) + "px");
-  renderRuler();
+  scheduleRuler();
   layoutEntries();
   if (continuous) {
     observeEntries();
@@ -2122,6 +2130,7 @@ function goTo(pos) {
   }
   renderEntry(entries[currentPage]);
   highlightThumb(currentPage);
+  scheduleRuler();
 }
 
 function setZoom(newZoom) {
@@ -2208,14 +2217,29 @@ async function runSearch(qRaw) {
   }
   renderSearchList();
   updateSearchUi();
-  if (searchHits.length > 0) gotoSearchHit(0);
-  else toast("Keine Treffer für „" + qRaw.trim() + "”.");
+  if (searchHits.length > 0) {
+    setThumbsPanel(true, "search");
+    gotoSearchHit(0);
+  } else {
+    toast("Keine Treffer für „" + qRaw.trim() + "”.");
+    if (q.length >= 2) setThumbsPanel(true, "search");
+  }
 }
 
 function renderSearchList() {
-  const box = $("searchResults");
+  const box = $("searchSide");
   if (!box) return;
   box.innerHTML = "";
+  if (searchHits.length === 0) {
+    const note = document.createElement("div");
+    note.className = "group-note";
+    note.style.padding = "8px";
+    note.textContent = searchQuery
+      ? "Keine Treffer für „" + searchQuery.replace(/^./, (c) => c.toUpperCase()) + "”."
+      : "Bitte oben im Start-Reiter einen Suchbegriff eingeben. Die Treffer erscheinen dann hier.";
+    box.appendChild(note);
+    return;
+  }
   searchHits.slice(0, 60).forEach((h, n) => {
     const b = document.createElement("button");
     b.type = "button";
@@ -4206,7 +4230,7 @@ function closeDoc() {
   searchQuery = "";
   formValues.clear();
   formToastShown = false;
-  $("searchResults").innerHTML = "";
+  $("searchSide").innerHTML = "";
   $("searchInput").value = "";
   fileName = "dokument";
   $("docInfo").textContent = "";
@@ -4267,8 +4291,8 @@ function showOptions() {
     dlg.addEventListener("click", (e) => {
       if (e.target === dlg || e.target.closest("[data-close]")) dlg.hidden = true;
     });
-    $("optLight").addEventListener("click", () => setTheme("light"));
-    $("optDark").addEventListener("click", () => setTheme("dark"));
+    dlg.querySelector("#optLight").addEventListener("click", () => setTheme("light"));
+    dlg.querySelector("#optDark").addEventListener("click", () => setTheme("dark"));
     document.body.appendChild(dlg);
   }
   const t = document.body.classList.contains("dark") ? "dark" : "light";
@@ -4412,6 +4436,7 @@ function updateUi() {
   ["btnView100", "btnViewFit", "btnToggleBookmarkPane", "btnToggleOutline"].forEach((id) => { $(id).disabled = !hasDoc; });
   $("stabOutline").disabled = !hasDoc;
   $("stabBookmarks").disabled = !hasDoc;
+  $("stabSearch").disabled = !hasDoc;
   $("pagePos").textContent = hasDoc ? `Seite ${currentPage + 1} von ${pageOrder.length}` : "";
   $("zoomLabel").textContent = Math.round(zoom * 100) + "%";
   $("hint").textContent = selAnno
@@ -4545,7 +4570,6 @@ let showGrid = false;
 $("btnRulers").addEventListener("click", () => {
   showRulers = !showRulers;
   $("btnRulers").classList.toggle("active", showRulers);
-  $("rulerBar").classList.toggle("hidden-ruler", !showRulers);
   renderRuler();
 });
 $("btnGrid").addEventListener("click", () => {
@@ -4553,34 +4577,136 @@ $("btnGrid").addEventListener("click", () => {
   $("btnGrid").classList.toggle("active", showGrid);
   document.body.classList.toggle("show-grid", showGrid);
 });
-/* Lineal (Zentimeterinteilung) über der aktuellen Seite zeichnen */
-function renderRuler() {
-  const bar = $("rulerBar");
-  if (!showRulers || !doc || !entries[currentPage] || !entries[currentPage].viewport) return;
-  const cw = entries[currentPage].canvas.style.width;
-  const cssW = parseFloat(cw) || 600;
-  const dpr = window.devicePixelRatio || 1;
-  bar.width = Math.round(cssW * dpr);
-  bar.height = Math.round(20 * dpr);
-  bar.style.width = cssW + "px";
-  bar.style.height = "20px";
-  const cx = bar.getContext("2d");
-  cx.clearRect(0, 0, bar.width, bar.height);
-  cx.scale(dpr, dpr);
-  const pxPerCm = 72 / 2.54 * zoom;
-  cx.strokeStyle = "#9aa4b2";
-  cx.fillStyle = "#5b6470";
-  cx.font = "9px Helvetica, sans-serif";
-  cx.lineWidth = 1;
-  for (let cm = 0; cm * pxPerCm <= cssW; cm++) {
-    const x = Math.round(cm * pxPerCm) + 0.5;
-    cx.beginPath();
-    cx.moveTo(x, 10);
-    cx.lineTo(x, 20);
-    cx.stroke();
-    if (cm % 1 === 0) cx.fillText(String(cm), x + 2, 9);
-  }
+/* Lineale: oben über allen sichtbaren Seiten der aktuellen Ansicht, links und
+   (nur in der Doppelseitenansicht) rechts; die Skala beginnt am Blattrand. */
+function scheduleRuler() {
+  if (scheduleRuler._pending) return;
+  scheduleRuler._pending = true;
+  requestAnimationFrame(() => { scheduleRuler._pending = false; renderRuler(); });
 }
+function rulerTargets() {
+  const e = entries[currentPage];
+  if (!e) return [];
+  const list = [e];
+  if (twoPage) {
+    const partner = currentPage % 2 === 0 ? currentPage + 1 : currentPage - 1;
+    if (partner >= 0 && partner < entries.length && entries[partner]) list.push(entries[partner]);
+  }
+  return list;
+}
+function rulerCmPerPx(entry) {
+  /* Pixel je Zentimeter je Achse; berücksichtigt Drehung der Seite */
+  const cssW = parseFloat(entry.canvas.style.width) || 600;
+  const cssH = parseFloat(entry.canvas.style.height) || 800;
+  let wPt = 595, hPt = 842;
+  try {
+    const vb = entry.viewport.viewBox || [0, 0, 612, 792];
+    wPt = vb[2] - vb[0];
+    hPt = vb[3] - vb[1];
+  } catch (err) { /* Fallback bleibt bestehen */ }
+  const rot = ((((entry.viewport.rotation || 0) % 360) + 360) % 360);
+  const swapped = rot === 90 || rot === 270;
+  const dispW = swapped ? hPt : wPt;
+  const dispH = swapped ? wPt : hPt;
+  return {
+    x: cssW / (Math.max(1, dispW) / 72 * 2.54),
+    y: cssH / (Math.max(1, dispH) / 72 * 2.54)
+  };
+}
+function renderRuler() {
+  const top = $("rulerTop"), left = $("rulerLeft"), right = $("rulerRight");
+  const active = showRulers && !!doc && entries.length > 0 && !!entries[currentPage];
+  document.body.classList.toggle("show-rulers", !!active);
+  const targets = active ? rulerTargets() : [];
+  const rightOn = !!(active && twoPage && targets.length > 1);
+  top.classList.toggle("hidden-ruler", !active);
+  left.classList.toggle("hidden-ruler", !active);
+  right.classList.toggle("hidden-ruler", !rightOn);
+  if (!active || !entries[currentPage].viewport) return;
+  const viewer = $("viewer");
+  const vr = viewer.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const vw = vr.width, vh = vr.height;
+  /* Leisten am Ansichtsbereich verankern (fest am Fenster, damit sie beim Blättern stehen bleiben) */
+  top.style.left = vr.left + "px";
+  top.style.top = vr.top + "px";
+  top.style.width = vw + "px";
+  left.style.left = vr.left + "px";
+  left.style.top = vr.top + "px";
+  left.style.height = vh + "px";
+  right.style.left = (vr.right - 20) + "px";
+  right.style.top = vr.top + "px";
+  right.style.height = vh + "px";
+  top.width = Math.round(vw * dpr); top.height = Math.round(20 * dpr);
+  top.style.height = "20px";
+  left.width = Math.round(20 * dpr); left.height = Math.round(vh * dpr);
+  left.style.width = "20px";
+  right.width = Math.round(20 * dpr); right.height = Math.round(vh * dpr);
+  right.style.width = "20px";
+  const ordered = targets.slice().sort((a, b) => {
+    const ra = a.wrap.getBoundingClientRect(), rb = b.wrap.getBoundingClientRect();
+    return ra.left - rb.left;
+  });
+  /* Oberes Lineal: je Seite eine eigene Skala ab der Blattlinkskante */
+  const cxT = top.getContext("2d");
+  cxT.clearRect(0, 0, top.width, top.height);
+  cxT.scale(dpr, dpr);
+  cxT.strokeStyle = "#9aa4b2";
+  cxT.fillStyle = "#5b6470";
+  cxT.font = "9px Helvetica, sans-serif";
+  cxT.lineWidth = 1;
+  for (const e of ordered) {
+    const r = e.wrap.getBoundingClientRect();
+    const x0 = r.left - vr.left;
+    const cmPx = rulerCmPerPx(e).x;
+    for (let cm = 0; ; cm += 0.5) {
+      const x = Math.round(x0 + cm * cmPx) + 0.5;
+      if (x > x0 + r.width + 0.5) break;
+      if (x < -1 || x > vw) continue;
+      const full = cm % 1 === 0;
+      cxT.beginPath();
+      cxT.moveTo(x, full ? 9 : 14);
+      cxT.lineTo(x, 20);
+      cxT.stroke();
+      if (full && cm >= 1) cxT.fillText(String(cm), x + 2, 8);
+    }
+  }
+  /* Senkrechte Lineale: Skala beginnt an der Blattoberkante */
+  const drawVertical = (cv, entry, side) => {
+    const cx = cv.getContext("2d");
+    cx.clearRect(0, 0, cv.width, cv.height);
+    cx.scale(dpr, dpr);
+    const r = entry.wrap.getBoundingClientRect();
+    const y0 = r.top - vr.top;
+    const cmPx = rulerCmPerPx(entry).y;
+    cx.strokeStyle = "#9aa4b2";
+    cx.fillStyle = "#5b6470";
+    cx.font = "9px Helvetica, sans-serif";
+    cx.lineWidth = 1;
+    for (let cm = 0; ; cm += 0.5) {
+      const y = Math.round(y0 + cm * cmPx) + 0.5;
+      if (y > y0 + r.height + 0.5) break;
+      if (y < -1 || y > vh) continue;
+      const full = cm % 1 === 0;
+      const len = full ? 9 : 5;
+      cx.beginPath();
+      if (side === "left") { cx.moveTo(20 - len, y); cx.lineTo(20, y); }
+      else { cx.moveTo(0, y); cx.lineTo(len, y); }
+      cx.stroke();
+      if (full && cm >= 1) {
+        cx.save();
+        cx.translate(side === "left" ? 11 : 9, y - 2);
+        cx.rotate(-Math.PI / 2);
+        cx.fillText(String(cm), 0, 0);
+        cx.restore();
+      }
+    }
+  };
+  drawVertical(left, ordered[0], "left");
+  if (rightOn) drawVertical(right, ordered[ordered.length - 1], "right");
+}
+$("viewer").addEventListener("scroll", scheduleRuler);
+window.addEventListener("resize", scheduleRuler);
 
 $("chkSecure").addEventListener("change", (e) => {
   secureMode = e.target.checked;
@@ -4743,6 +4869,7 @@ function setCommentPanel(open) {
   const lbl = $("btnCommentListLabel");
   if (lbl) lbl.textContent = open ? "Liste ausblenden" : "Liste anzeigen";
   if (open) refreshComments();
+  scheduleRuler();
 }
 
 function setSideMode(mode) {
@@ -4750,9 +4877,11 @@ function setSideMode(mode) {
   $("stabPages").classList.toggle("active", mode === "pages");
   $("stabOutline").classList.toggle("active", mode === "outline");
   $("stabBookmarks").classList.toggle("active", mode === "bookmarks");
+  $("stabSearch").classList.toggle("active", mode === "search");
   $("thumbs").hidden = mode !== "pages";
   $("outlineList").hidden = mode !== "outline";
   $("bookmarkList").hidden = mode !== "bookmarks";
+  $("searchSide").hidden = mode !== "search";
   $("btnAddBookmarkSide").hidden = mode !== "bookmarks";
 }
 
@@ -4763,12 +4892,14 @@ function setThumbsPanel(open, mode) {
   $("btnToggleBookmarkPane").classList.toggle("active", open && sideMode === "bookmarks");
   $("btnToggleOutline").classList.toggle("active", open && sideMode === "outline");
   if (open && mode) setSideMode(mode);
+  scheduleRuler();
 }
 
 $("toggleComments").addEventListener("click", () => setCommentPanel(false));
 $("stabPages").addEventListener("click", () => { setThumbsPanel(true, "pages"); });
 $("stabOutline").addEventListener("click", () => { setThumbsPanel(true, "outline"); });
 $("stabBookmarks").addEventListener("click", () => { setThumbsPanel(true, "bookmarks"); });
+$("stabSearch").addEventListener("click", () => { setThumbsPanel(true, "search"); });
 $("btnToggleThumbsPane").addEventListener("click", () => setThumbsPanel(!sidePanelOpen || sideMode !== "pages", "pages"));
 $("btnToggleCommentPane").addEventListener("click", () => setCommentPanel(!commentPanelOpen));
 $("btnToggleBookmarkPane").addEventListener("click", () => setThumbsPanel(!sidePanelOpen || sideMode !== "bookmarks", "bookmarks"));
@@ -5395,6 +5526,7 @@ window.addEventListener("keydown", (e) => {
     panel.style.width = v + "px";
     panel.style.minWidth = v + "px";
     try { localStorage.setItem("paperinoSideW", String(v)); } catch (e) { /* Speicher nicht verfügbar */ }
+    scheduleRuler();
   };
   try {
     const saved = localStorage.getItem("paperinoSideW");
@@ -5460,6 +5592,8 @@ function runSelfTests() {
   test("Darstellung Hell und Dunkel schaltbar", () => { assert(typeof setTheme === "function" && typeof applyTheme === "function" && typeof showOptions === "function", "Theme-Funktionen fehlen"); });
   test("Formularwerte als Map verwaltet", () => { assert(formValues instanceof Map, "formValues muss eine Map sein"); });
   test("Signieren: Einfügen und Liste vorhanden", () => { assert(typeof insertSignature === "function" && typeof renderSignList === "function" && typeof loadSignatures === "function", "Signierfunktionen fehlen"); assert($("btnSignInsert") && $("signInput") && $("signList"), "Signier-Elemente fehlen"); });
+  test("Lineale über, links und rechts der Seiten vorhanden", () => { for (const id of ["rulerTop", "rulerLeft", "rulerRight"]) assert($(id), "Lineal fehlt: " + id); assert(typeof scheduleRuler === "function" && typeof rulerCmPerPx === "function", "Linealfunktionen fehlen"); const cm = rulerCmPerPx({ canvas: { style: { width: "595px", height: "842px" } }, viewport: { viewBox: [0, 0, 595, 842], rotation: 0 } }); assert(Math.abs(cm.x - 72 / 2.54) < 0.2 && Math.abs(cm.y - 72 / 2.54) < 0.2, "Zentimeterrechnung stimmt nicht"); });
+  test("Suchtreffer liegen in der Seitenleiste", () => { assert($("stabSearch") && $("searchSide"), "Suche-Seitenleiste fehlt"); assert(!$("searchResults"), "Alte Trefferliste darf nicht mehr bestehen"); });
   const failed = results.filter((r) => !r.ok);
   console.log("Selbsttests: " + (results.length - failed.length) + "/" + results.length + " bestanden", results);
   const box = document.createElement("div");

@@ -2,14 +2,14 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.15**
+> Aktuelle Version: **Alpha 0.16**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
 ## Funktionen
 
 - PDFs öffnen, anzeigen und navigieren (Zoom, Seitenbreite, 100-Prozent-Ansicht, Ein- und Doppelseitenansicht, fortlaufender Bildlauf, Tastaturkürzel, Miniaturansichten)
-- Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
+- Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht; die Lineale liegen fest am Ansichtsbereich, und die Skala beginnt am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite
 - Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
 - Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
@@ -27,7 +27,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Formen einfügen: Rechteck, Ellipse, Dreieck, Raute, Stern, Linie und Pfeil; Formenauswahl, Konturfarbe, Strichstärke, Strichart, Füllung (inklusive Transparenz) und Pfeilspitzen lassen sich im Formformat-Reiter auch vor dem Zeichnen als Voreinstellung festlegen (wird gemerkt); der Reiter öffnet sich beim Aktivieren eines Formwerkzeugs
 - Kommentieren: Kommentare an markiertem Text oder an einer Stelle; die Kommentarleiste erscheint automatisch beim ersten Kommentar, ist standardmäßig ausgeblendet und lässt sich über das Kreuz schließen und über die Ansicht wieder öffnen; beim Speichern werden Kommentare als echte PDF-Notizen abgelegt
 - Lesezeichen pro Dokument anlegbar (lokal im Browser gespeichert)
-- Suche im Dokument: Suchfeld im Start-Reiter mit Trefferliste, Weiter- und Zurückspringen (Eingabetaste, F3 und Umschalt+F3) und Hervorhebung der Treffer im Seitentext
+- Suche im Dokument: Suchfeld im Start-Reiter; die Trefferliste erscheint in einem eigenen Seitenleisten-Reiter „Suchen” mit Seitenangabe und Textauszug; Weiter- und Zurückspringen über Eingabetaste, F3 und Umschalt+F3; Hervorhebung der Treffer im Seitentext
 - Ausfüllbare Formularfelder (AcroForm): Textfelder, Kontrollkästchen, Optionsfelder und Auswahllisten lassen sich direkt im Dokument ausfüllen; die Werte werden beim Speichern fest in die Datei geschrieben
 - Reiter Signieren: Signatur als PNG- oder JPEG-Bild einfügen, verschieben und in der Größe ändern; bis zu sechs Signaturen werden im Browser gemerkt und lassen sich per Klick erneut einfügen; beim Speichern wird die Signatur als Bild eingebettet
 - Anonymisieren: fremde Kommentare und Markierungen, die bereits in der Datei enthalten sind, je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage; dieser Schritt lässt sich nicht rückgängig machen, Formularfelder und Verknüpfungen bleiben erhalten)
@@ -72,6 +72,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.13 | Werkzeugmenüs am Knopf: Stift (Deckkraft, Stärke, Farbe), Textmarker (Deckkraft, Größe, Farbe, Häkchen „Linie begradigen“ — freihändige Striche werden nach dem Loslassen zu geraden Linien ausgerichtet) und Markieren/Durchstreichen/Unterstreichen (Farbe je Werkzeug, vor dem Markieren wählbar), Auswahlwerkzeug vorangestellt in eigener Gruppe „Standard“ (Stift und Textmarker öffnen keinen Formformat-Reiter mehr), sechs zusätzliche freie Schriftarten (Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo, mit allen Schnitten eingebettet) |
 | Alpha 0.14 | Korrektur des Ladefehlers aus Alpha 0.13 (ein Initialisierungsfehler blockierte die Werkzeugmenüs und damit die gesamte Oberfläche), Rückgängig und Wiederholen mehrfach hintereinander (Strg+Z/Strg+Y, Knöpfe in der Ecke), Dateimenü mit Öffnen, Speichern, Speichern unter, Drucken, Schließen, Optionen (Platzhalter) und Lizenzhinweis, Extrahieren und Ausschneiden wahlweise als PDF, JPEG oder PNG |
 | Alpha 0.15 | Suche im Dokument (Suchfeld im Start-Reiter, Trefferliste, Weiter- und Zurückspringen mit F3, Hervorhebung der Treffer), AcroForm-Formularfelder ausfüllen (Werte werden beim Speichern fest in die Datei geschrieben), Komprimieren im Dateimenü (Seiten werden als JPEG-Bilder neu aufgebaut), fremde Kommentare und Markierungen je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage, nicht rückgängig machbar, Formularfelder bleiben erhalten), Reiter Signieren (Signaturbilder als PNG/JPEG, werden im Browser gemerkt und beim Speichern als Bild eingebettet), Darstellung Hell oder Dunkel in den Optionen (wird gemerkt) |
+| Alpha 0.16 | Korrektur der Lineale: die Skalen liegen nun fest am Ansichtsbereich und beginnen am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite; Suchtreffer erscheinen in einem eigenen Seitenleisten-Reiter „Suchen”; Korrektur des Optionsfensters (die Hell-/Dunkel-Auswahl ließ sich zuvor nicht öffnen) |
 
 ## Hinweise und Grenzen
 
