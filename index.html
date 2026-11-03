@@ -18,6 +18,44 @@
     --ok: #16a34a;
     font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   }
+  /* ---------- Dunkle Darstellung ---------- */
+  body.dark {
+    --bg: #14161f;
+    --panel: #1e2230;
+    --ink: #e6e9f2;
+    --muted: #9aa3b5;
+    --line: #3a4258;
+    --accent: #d487ae;
+    --accent-ink: #140810;
+    --danger: #ef6a6a;
+    --ok: #4ade80;
+  }
+  body.dark #ribbon { background: #191d2b; border-bottom-color: #2c334a; }
+  body.dark .tabs { border-bottom-color: #2c334a; }
+  body.dark .tab.active { background: var(--panel); border-color: #2c334a; color: #f2c7d8; }
+  body.dark .rb-btn:hover:not(:disabled) { background: #342030; color: #f2c7d8; }
+  body.dark .rb-btn.active { background: #342030; color: #f2c7d8; border-color: #8a5570; }
+  body.dark .rb-tgl:hover:not(:disabled) { background: #342030; }
+  body.dark .rb-tgl.active { background: #342030; border-color: #8a5570; color: #f2c7d8; box-shadow: inset 0 0 0 1px #8a5570; }
+  body.dark .qat button.qat-save { background: #f2c7d8; color: #4A0028; }
+  body.dark .qat button.qat-save:hover:not(:disabled) { background: #eab3c9; }
+  body.dark .color-more-btn { background: #2a3047; border-color: var(--line); color: var(--ink); }
+  body.dark .color-more-btn:hover { background: #342030; }
+  body.dark .file-pop button.fp-item:hover:not(:disabled) { background: #342030; }
+  body.dark .ul-pop .ul-row:hover { background: #342030; }
+  body.dark .ul-pop .ul-row.active { background: #342030; }
+  body.dark .outline-item:hover { background: #342030; }
+  body.dark .side-tab:hover, body.dark .side-tab.active { color: #f2c7d8; }
+  body.dark #rulerBar { background: #191d2b; }
+  body.dark .side-title .t-btn:hover { color: #f2c7d8; border-color: #8a5570; }
+  body.dark .license-card button { background: #342030; color: #f2c7d8; border-color: var(--line); }
+  body.dark .license-card a { color: #f2c7d8; }
+  body.dark .inline-edit { background: rgba(30, 34, 48, 0.96); color: var(--ink); }
+  body.dark .inline-edit textarea { background: transparent; color: var(--ink); }
+  body.dark .search-res { border-color: #2c334a; }
+  body.dark .search-res:hover { background: #342030; }
+  body.dark .search-res.active { background: #342030; border-color: #8a5570; }
+  body.dark .sign-thumb { background: #242a3c; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body {
@@ -435,6 +473,8 @@
   }
   .license-card h3 { margin: 0 0 10px; font-size: 16px; }
   .license-card p { margin: 6px 0; }
+  .opt-row { display: flex; gap: 8px; margin: 6px 0; }
+  .opt-row .rb-btn.active { outline: 2px solid #d1477f; }
   .license-card a { color: #6F003C; }
   .license-card button {
     margin-top: 12px;
@@ -745,6 +785,93 @@
     transform-origin: 0% 0%;
   }
   .textLayer ::selection { background: rgba(111, 0, 60, 0.25); }
+  .textLayer span.search-hit { background: rgba(255, 213, 79, 0.55); border-radius: 2px; }
+  .textLayer span.search-hit.active { background: rgba(255, 145, 0, 0.7); }
+
+  /* ---------- Suche ---------- */
+  #searchInput {
+    flex: 1;
+    min-width: 130px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font: inherit;
+    font-size: 12px;
+    background: var(--panel);
+    color: var(--ink);
+  }
+  #searchResults { margin-top: 6px; max-height: 180px; overflow: auto; width: 100%; }
+  .search-res {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    border-radius: 6px;
+    padding: 5px 8px;
+    margin-bottom: 4px;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .search-res:hover { background: #f5e3eb; }
+  .search-res.active { background: #edd3e0; border-color: #be8ca7; font-weight: 600; }
+  .search-res .sr-page { color: var(--muted); font-size: 10.5px; }
+
+  /* ---------- Formularfelder (AcroForm) ---------- */
+  .form-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+  }
+  .form-layer input[type="text"],
+  .form-layer select {
+    position: absolute;
+    pointer-events: auto;
+    font: inherit;
+    font-size: 12px;
+    border: 1px solid rgba(111, 0, 60, 0.55);
+    background: rgba(255, 255, 255, 0.85);
+    color: #0f172a;
+    border-radius: 3px;
+    padding: 1px 4px;
+    outline: none;
+    margin: 0;
+  }
+  .form-layer input[type="checkbox"],
+  .form-layer input[type="radio"] {
+    position: absolute;
+    pointer-events: auto;
+    width: 14px;
+    height: 14px;
+    accent-color: #6F003C;
+    margin: 0;
+  }
+
+  /* ---------- Signieren ---------- */
+  .sign-thumb {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #ffffff;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    max-width: 96px;
+  }
+  .sign-thumb img { max-width: 86px; max-height: 40px; object-fit: contain; }
+  .sign-thumb .sign-del {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 0 2px;
+  }
 
   /* ---------- Direkteingabe im Dokument (Textfeld/Kommentar) ---------- */
   .inline-edit {
@@ -847,7 +974,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.14</span>
+  <span class="version" id="appVersion">Alpha 0.15</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -874,12 +1001,30 @@
     <button class="tab" data-tab="paneAnon">Anonymisieren</button>
     <button class="tab" data-tab="paneEdit">Lektorieren</button>
     <button class="tab" data-tab="paneComment">Kommentieren</button>
+    <button class="tab" data-tab="paneSign">Signieren</button>
     <button class="tab contextual hidden" id="tabTextfeld" data-tab="paneTextfeld" title="Öffnet sich automatisch, wenn ein Textfeld ausgewählt ist">Textfeld</button>
     <button class="tab contextual hidden" id="tabFormformat" data-tab="paneFormformat" title="Öffnet sich automatisch, wenn eine Form oder Markierung ausgewählt ist">Formformat</button>
   </div>
   <div class="ribbon-body">
 
     <div class="pane" id="paneStart">
+      <div class="group">
+        <div class="group-buttons">
+          <input type="search" id="searchInput" placeholder="Im Dokument suchen …" disabled title="Suchbegriff eingeben und Eingabetaste drücken" />
+          <button id="btnSearchPrev" class="rb-btn small" title="Vorheriger Treffer (Umschalt+F3)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+            <span>Zurück</span>
+          </button>
+          <button id="btnSearchNext" class="rb-btn small" title="Nächster Treffer (F3)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+            <span>Weiter</span>
+          </button>
+          <span id="searchInfo" class="group-note"></span>
+        </div>
+        <div id="searchResults"></div>
+        <div class="group-label">Suchen</div>
+      </div>
+
       <div class="group">
         <div class="group-buttons">
           <button id="btnZoomOut" class="rb-btn small" title="Verkleinern (-)" disabled>
@@ -1072,6 +1217,20 @@
         </div>
         <div class="group-label">Inhalt entfernen</div>
       </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <button id="btnStripAnnosPage" class="rb-btn" title="Alle Kommentare, Markierungen und Stempel, die im Dokument bereits vorhanden sind, von der aktuellen Seite entfernen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
+            <span>Auf dieser Seite entfernen</span>
+          </button>
+          <button id="btnStripAnnosDoc" class="rb-btn" title="Alle Kommentare, Markierungen und Stempel, die im Dokument bereits vorhanden sind, im gesamten Dokument entfernen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>
+            <span>Im ganzen Dokument entfernen</span>
+          </button>
+        </div>
+        <div class="group-label">Fremde Kommentare und Markierungen</div>
+      </div>
     </div>
 
     <div class="pane" id="paneEdit" hidden>
@@ -1160,6 +1319,33 @@
       <div class="group">
         <div class="group-buttons">
           <span class="group-note">Kommentare werden beim Speichern als echte PDF-Notizen abgelegt und erscheinen anschließend auch in Adobe Acrobat und anderen PDF-Programmen.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
+      </div>
+    </div>
+
+    <div class="pane" id="paneSign" hidden>
+      <div class="group">
+        <div class="group-buttons">
+          <input type="file" id="signInput" accept="image/png,image/jpeg" hidden />
+          <button id="btnSignInsert" class="rb-btn" title="Signatur als PNG- oder JPEG-Bild wählen und auf die aktuelle Seite einfügen; anschließend verschieben und in der Größe anpassen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V9z"/><path d="M14 3v6h6"/><path d="M9 17c1.5-4 4.5-6 6-6-1 2-2 4-1 5.5.7 1 2 .5 2.5-.5"/></svg>
+            <span>Signatur einfügen</span>
+          </button>
+        </div>
+        <div class="group-label">Signatur</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons" id="signList">
+          <span class="group-note">Noch keine gespeicherte Signatur. Eingefügte Signaturen werden hier gemerkt und lassen sich per Klick erneut einfügen.</span>
+        </div>
+        <div class="group-label">Gespeicherte Signaturen</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
+          <span class="group-note">Unterstützte Formate: PNG und JPEG. Die Signatur wird als Bildanmerkung eingefügt, lässt sich verschieben, in der Größe anpassen und löschen; beim Speichern wird sie in die PDF-Datei eingebettet.</span>
         </div>
         <div class="group-label">Hinweis</div>
       </div>
@@ -1391,7 +1577,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.14"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.15"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1476,6 +1662,120 @@ const PT_TO_PX = 96 / 72;        // PDF-Punkt in CSS-Pixel
 /* Ein-Schritt-Rueckgaengig-Stapel */
 const undoStack = [];
 const redoStack = [];
+
+/* Suche im Dokument */
+const textCache = new Map();      // origIndex -> zusammengesetzter Text
+let searchHits = [];              // Treffer: { orig, snippet }
+let searchIdx = -1;                // aktuell gewählter Treffer
+let searchQuery = "";
+
+/* Formularfelder (AcroForm): Werte der überlagerten Eingabefelder */
+const formValues = new Map();     // Feldname -> { kind, value }
+let formToastShown = false;       // Hinweis auf Formularfelder pro Dokument nur einmal
+
+/* Bildanmerkungen (Signaturen): geladene Bilder */
+const imgCache = new Map();       // dataUrl -> HTMLImageElement
+function ensureImg(dataUrl) {
+  if (!imgCache.has(dataUrl)) {
+    const im = new Image();
+    im.onload = () => { for (const e of entries) renderOverlayFor(e); };
+    im.src = dataUrl;
+    imgCache.set(dataUrl, im);
+  }
+  return imgCache.get(dataUrl);
+}
+
+/* Signieren: gespeicherte Signaturbilder und Einfügen als Bildanmerkung */
+function loadSignatures() {
+  try { return JSON.parse(localStorage.getItem("paperinoSignatures")) || []; } catch (e) { return []; }
+}
+function saveSignatures(list) {
+  try { localStorage.setItem("paperinoSignatures", JSON.stringify(list)); } catch (e) { /* Speicher nicht verfügbar */ }
+}
+function rememberSignature(dataUrl) {
+  const list = loadSignatures().filter((d) => d !== dataUrl);
+  list.unshift(dataUrl);
+  saveSignatures(list.slice(0, 6));
+  renderSignList();
+}
+function renderSignList() {
+  const box = $("signList");
+  if (!box) return;
+  box.innerHTML = "";
+  const list = loadSignatures();
+  if (list.length === 0) {
+    const note = document.createElement("span");
+    note.className = "group-note";
+    note.textContent = "Noch keine gespeicherte Signatur. Eingefügte Signaturen werden hier gemerkt und lassen sich per Klick erneut einfügen.";
+    box.appendChild(note);
+    return;
+  }
+  list.forEach((dataUrl) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "sign-thumb";
+    b.title = "Signatur auf die aktuelle Seite einfügen";
+    const im = document.createElement("img");
+    im.src = dataUrl;
+    im.alt = "Signatur";
+    b.appendChild(im);
+    const del = document.createElement("span");
+    del.className = "sign-del";
+    del.textContent = "×";
+    del.title = "Signatur aus der Liste entfernen";
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      saveSignatures(loadSignatures().filter((d) => d !== dataUrl));
+      renderSignList();
+    });
+    b.appendChild(del);
+    b.addEventListener("click", () => insertSignature(dataUrl));
+    box.appendChild(b);
+  });
+}
+function insertSignature(dataUrl) {
+  if (!doc || pageOrder.length === 0) { toast("Bitte zuerst ein Dokument öffnen.", true); return; }
+  const im = ensureImg(dataUrl);
+  const finish = () => {
+    if (!im.naturalWidth) { toast("Signaturbild konnte nicht geladen werden.", true); return; }
+    const orig = pageOrder[currentPage];
+    doc.getPage(orig + 1).then((page) => {
+      const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
+      const vp = page.getViewport({ scale: 1, rotation: rot });
+      const w = Math.min(160, vp.width * 0.35);
+      const h = w * (im.naturalHeight / im.naturalWidth);
+      const x1 = (vp.width - w) / 2;
+      const topY = vp.height - vp.height * 0.12;
+      const a = { type: "image", x1, y1: topY - h, x2: x1 + w, y2: topY, dataUrl };
+      pageAnnos(orig).push(a);
+      pushUndo({ kind: "annoAdd", orig, anno: a });
+      setTool("select");
+      selectAnno(a, orig);
+      const e = entries.find((en) => en.orig === orig);
+      if (e) renderOverlayFor(e);
+      updateUi();
+      toast("Signatur eingefügt. Sie können sie verschieben, in der Größe ändern und löschen.");
+    });
+  };
+  if (im.complete && im.naturalWidth) finish();
+  else im.addEventListener("load", finish, { once: true });
+}
+
+/* Darstellung: Hell oder Dunkel (wird gemerkt) */
+function applyTheme(t) {
+  document.body.classList.toggle("dark", t === "dark");
+}
+(function initTheme() {
+  let t = "light";
+  try { t = localStorage.getItem("paperinoTheme") || "light"; } catch (e) { /* Speicher nicht verfügbar */ }
+  applyTheme(t);
+})();
+function setTheme(t) {
+  applyTheme(t);
+  try { localStorage.setItem("paperinoTheme", t); } catch (e) { /* Speicher nicht verfügbar */ }
+  const b1 = $("optLight"), b2 = $("optDark");
+  if (b1 && b2) { b1.classList.toggle("active", t !== "dark"); b2.classList.toggle("active", t === "dark"); }
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -1587,6 +1887,14 @@ async function openFile(file) {
     currentPage = 0;
     zoom = 1.0;
     thumbCache.clear();
+    textCache.clear();
+    searchHits = [];
+    searchIdx = -1;
+    searchQuery = "";
+    $("searchResults").innerHTML = "";
+    $("searchInput").value = "";
+    formValues.clear();
+    formToastShown = false;
     $("docInfo").textContent = `${fileName}.pdf – ${doc.numPages} Seite(n)`;
     $("dropzone").hidden = true;
     $("scrollWrap").hidden = false;
@@ -1632,9 +1940,11 @@ function buildEntries() {
     textLayer.style.cursor = tool === "select" ? "default" : (CURSORS[tool] || "crosshair");
     const gridLayer = document.createElement("div");
     gridLayer.className = "grid-layer";
-    wrap.append(canvas, overlay, textLayer, gridLayer);
+    const formLayer = document.createElement("div");
+    formLayer.className = "form-layer";
+    wrap.append(canvas, overlay, textLayer, formLayer, gridLayer);
     column.appendChild(wrap);
-    entries.push({ orig, pos, wrap, canvas, overlay, textLayer, viewport: null, rendered: false });
+    entries.push({ orig, pos, wrap, canvas, overlay, textLayer, formLayer, viewport: null, rendered: false });
   }
 }
 
@@ -1688,10 +1998,80 @@ async function renderEntry(entry, force = false) {
     const tc = await page.getTextContent();
     if (entry.textLayer.childElementCount > 0) entry.textLayer.innerHTML = "";
     pdfjsLib.renderTextLayer({ textContentSource: tc, container: entry.textLayer, viewport: tv });
+    if (searchQuery) setTimeout(() => { if (searchQuery) highlightPage(orig); }, 400);
   } catch (e) {
     /* Textebene ist optional: bei Fehlern weitermachen */
   }
   entry.rendered = true;
+  await buildFormOverlay(entry, page);
+}
+
+/* Formularfelder (AcroForm) als bedienbare Eingaben einblenden */
+async function buildFormOverlay(entry, page) {
+  if (!entry.formLayer) return;
+  entry.formLayer.innerHTML = "";
+  let widgets = [];
+  try {
+    widgets = (await page.getAnnotations()).filter((a) => a.subtype === "Widget" && a.fieldName);
+  } catch (e) { return; }
+  if (widgets.length === 0) return;
+  if (!formToastShown) {
+    formToastShown = true;
+    toast("Das Dokument enthält ausfüllbare Formularfelder. Eingetragene Werte werden beim Speichern fest in die Datei geschrieben.");
+  }
+  const rot = (((page.rotate % 360) + 360) + (rotDelta[entry.orig] || 0)) % 360;
+  const tv = page.getViewport({ scale: zoom, rotation: rot });
+  for (const w of widgets) {
+    let el = null;
+    const saved = formValues.get(w.fieldName);
+    if (w.readOnly) continue;
+    if (w.fieldType === "Tx") {
+      el = document.createElement("input");
+      el.type = "text";
+      el.value = saved ? String(saved.value ?? "") : String(w.fieldValue ?? "");
+      el.addEventListener("change", () => {
+        formValues.set(w.fieldName, { kind: "text", value: el.value });
+        toast("Formularfeld „" + w.fieldName + "” übernommen. Der Wert wird beim Speichern fest in die Datei geschrieben.");
+      });
+    } else if (w.fieldType === "Btn" && (w.checkBox || w.radioButton)) {
+      el = document.createElement("input");
+      if (w.checkBox) {
+        el.type = "checkbox";
+        el.checked = saved ? !!saved.value : String(w.fieldValue ?? "") === String(w.buttonValue ?? "On") || w.fieldValue === true;
+        el.addEventListener("change", () => { formValues.set(w.fieldName, { kind: "check", value: el.checked }); });
+      } else {
+        el.type = "radio";
+        el.name = "pradio_" + w.fieldName;
+        el.value = String(w.buttonValue ?? "");
+        el.checked = !!saved && String(saved.value) === String(w.buttonValue ?? "");
+        el.addEventListener("change", () => { formValues.set(w.fieldName, { kind: "radio", value: String(w.buttonValue ?? "") }); });
+      }
+    } else if (w.fieldType === "Ch") {
+      el = document.createElement("select");
+      const opts = Array.isArray(w.options) ? w.options : [];
+      for (const o of opts) {
+        const op = document.createElement("option");
+        op.value = String(o.value ?? o.exportValue ?? o);
+        op.textContent = String(o.label ?? o.exportValue ?? o.value ?? o);
+        el.appendChild(op);
+      }
+      el.value = saved ? String(saved.value ?? "") : String(Array.isArray(w.fieldValue) ? w.fieldValue[0] : w.fieldValue ?? "");
+      el.addEventListener("change", () => { formValues.set(w.fieldName, { kind: "choice", value: el.value }); });
+    }
+    if (!el) continue;
+    const x1 = Math.min(w.rect[0], w.rect[2]), y1 = Math.min(w.rect[1], w.rect[3]);
+    const x2 = Math.max(w.rect[0], w.rect[2]), y2 = Math.max(w.rect[1], w.rect[3]);
+    const p1 = tv.convertToViewportPoint(x1, y2), p2 = tv.convertToViewportPoint(x2, y1);
+    el.style.left = Math.min(p1[0], p2[0]) + "px";
+    el.style.top = Math.min(p1[1], p2[1]) + "px";
+    el.style.width = Math.abs(p2[0] - p1[0]) + "px";
+    el.style.height = Math.abs(p2[1] - p1[1]) + "px";
+    ["pointerdown", "mousedown", "dblclick", "click"].forEach((ev) => {
+      el.addEventListener(ev, (e) => e.stopPropagation());
+    });
+    el.title = w.fieldName;
+    entry.formLayer.appendChild(el);
+  }
 }
 
 function invalidateEntries() {
@@ -1787,6 +2167,97 @@ function straightened(points) {
   if (ang <= tol || ang >= 180 - tol) return [[p1[0], p1[1]], [p2[0], p1[1]]];
   if (Math.abs(ang - 90) <= tol) return [[p1[0], p1[1]], [p1[0], p2[1]]];
   return [[p1[0], p1[1]], [p2[0], p2[1]]];
+}
+
+/* =========================================================
+   Suche im Dokument
+   ========================================================= */
+async function pageText(orig) {
+  if (textCache.has(orig)) return textCache.get(orig);
+  try {
+    const page = await doc.getPage(orig + 1);
+    const tc = await page.getTextContent();
+    let s = "";
+    for (const it of tc.items) s += it.str + (it.hasEOL ? "\n" : " ");
+    textCache.set(orig, s);
+  } catch (e) { textCache.set(orig, ""); }
+  return textCache.get(orig);
+}
+
+function snippetOf(text, i, len) {
+  const a = Math.max(0, i - 26);
+  const b = Math.min(text.length, i + len + 26);
+  return (a > 0 ? "…" : "") + text.slice(a, b).replace(/\s+/g, " ").trim() + (b < text.length ? "…" : "");
+}
+
+async function runSearch(qRaw) {
+  const q = (qRaw || "").trim().toLowerCase();
+  searchQuery = q;
+  searchHits = [];
+  searchIdx = -1;
+  if (!doc || q.length < 2) { renderSearchList(); updateSearchUi(); return; }
+  for (const orig of pageOrder) {
+    const text = (await pageText(orig)).toLowerCase();
+    let from = 0;
+    while (searchHits.length < 500) {
+      const i = text.indexOf(q, from);
+      if (i === -1) break;
+      searchHits.push({ orig, snippet: snippetOf(text, i, q.length) });
+      from = i + q.length;
+    }
+  }
+  renderSearchList();
+  updateSearchUi();
+  if (searchHits.length > 0) gotoSearchHit(0);
+  else toast("Keine Treffer für „" + qRaw.trim() + "”.");
+}
+
+function renderSearchList() {
+  const box = $("searchResults");
+  if (!box) return;
+  box.innerHTML = "";
+  searchHits.slice(0, 60).forEach((h, n) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "search-res" + (n === searchIdx ? " active" : "");
+    const pg = document.createElement("div");
+    pg.className = "sr-page";
+    const pos = pageOrder.indexOf(h.orig);
+    pg.textContent = "Seite " + (pos + 1);
+    b.appendChild(pg);
+    b.appendChild(document.createTextNode(h.snippet));
+    b.addEventListener("click", () => gotoSearchHit(n));
+    box.appendChild(b);
+  });
+}
+
+function updateSearchUi() {
+  $("searchInput").disabled = !doc;
+  $("btnSearchPrev").disabled = searchHits.length === 0;
+  $("btnSearchNext").disabled = searchHits.length === 0;
+  $("searchInfo").textContent = searchHits.length === 0 ? (searchQuery ? "Keine Treffer." : "") : (searchIdx >= 0 ? `${searchIdx + 1}/${searchHits.length}` : `${searchHits.length} Treffer`);
+}
+
+function gotoSearchHit(n) {
+  if (searchHits.length === 0) return;
+  searchIdx = ((n % searchHits.length) + searchHits.length) % searchHits.length;
+  const h = searchHits[searchIdx];
+  const pos = pageOrder.indexOf(h.orig);
+  if (pos === -1) return;
+  if (pos !== currentPage) goTo(pos);
+  highlightPage(h.orig);
+  renderSearchList();
+  updateSearchUi();
+}
+
+function highlightPage(orig) {
+  for (const e of entries) {
+    if (e.orig !== orig || !e.textLayer) continue;
+    e.textLayer.querySelectorAll("span").forEach((sp) => {
+      sp.classList.remove("search-hit");
+      if (searchQuery && sp.textContent.toLowerCase().includes(searchQuery)) sp.classList.add("search-hit");
+    });
+  }
 }
 
 /* ---------- Koordinatenumrechnung ---------- */
@@ -1970,6 +2441,21 @@ function drawTextDeco(ctx, a, scale, lines, fs, lift, map) {
 
 function drawAnno(ctx, a, viewport) {
   const scale = viewport.scale;
+  if (a.type === "image") {
+    const im = imgCache.get(a.dataUrl);
+    if (!im || !im.complete || !im.naturalWidth) return;
+    const c1 = viewport.convertToViewportPoint(a.x1, a.y1);
+    const c2 = viewport.convertToViewportPoint(a.x1, a.y2);
+    const c3 = viewport.convertToViewportPoint(a.x2, a.y1);
+    const c4 = viewport.convertToViewportPoint(a.x2, a.y2);
+    const xs = [c1[0], c2[0], c3[0], c4[0]];
+    const ys = [c1[1], c2[1], c3[1], c4[1]];
+    const minX = Math.min.apply(null, xs), minY = Math.min.apply(null, ys);
+    const w = Math.max.apply(null, xs) - minX;
+    const h = Math.max.apply(null, ys) - minY;
+    ctx.drawImage(im, minX, minY, w, h);
+    return;
+  }
   if (a.type === "draw" || a.type === "marker") {
     ctx.strokeStyle = a.color;
     ctx.lineWidth = a.width * (a.type === "marker" ? 4 : 1) * scale;
@@ -2319,7 +2805,7 @@ function layoutLatex(a) {
 
 function snapshotAnno(a) {
   const s = {};
-  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "fillOp", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot"]) {
+  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text", "fill", "fillOp", "bold", "italic", "latex", "font", "underline", "strike", "script", "box", "ocolor", "owidth", "dash", "head", "headFill", "rot", "dataUrl"]) {
     if (k in a) s[k] = a[k] && typeof a[k] === "object" ? JSON.parse(JSON.stringify(a[k])) : a[k];
   }
   if (a.points) s.points = a.points.map((p) => p.slice());
@@ -3238,7 +3724,18 @@ function rotPathAnchor(bx, by, w, h, deg) {
 
 async function burnAnnotations(out, page, list, fonts) {
   for (const a of list) {
-    if (a.type === "draw" || a.type === "marker") {
+    if (a.type === "image") {
+      const im = imgCache.get(a.dataUrl);
+      if (!im || !im.complete || !im.naturalWidth) continue;
+      const isJpg = a.dataUrl.startsWith("data:image/jpeg");
+      const emb = isJpg ? await out.embedJpg(a.dataUrl) : await out.embedPng(a.dataUrl);
+      page.drawImage(emb, {
+        x: Math.min(a.x1, a.x2),
+        y: Math.min(a.y1, a.y2),
+        width: Math.abs(a.x2 - a.x1),
+        height: Math.abs(a.y2 - a.y1)
+      });
+    } else if (a.type === "draw" || a.type === "marker") {
       for (let i = 0; i + 1 < a.points.length; i++) {
         page.drawLine({
           start: { x: a.points[i][0], y: a.points[i][1] },
@@ -3468,8 +3965,25 @@ function addPdfComments(out, page, comments) {
 }
 
 /* Neue PDF-Datei aus einer Liste orig. Seitenindizes aufbauen */
-async function buildPdf(indices, name, successMsg) {
+async function buildPdfBytes(indices) {
   const src = await PDFLib.PDFDocument.load(pdfBytes);
+  /* Ausgefüllte Formularfelder in die Quelle schreiben und fest einbrennen */
+  if (formValues.size > 0) {
+    try {
+      const form = src.getForm();
+      for (const [name, v] of formValues) {
+        try {
+          if (v.kind === "text") form.getTextField(name)?.setText(String(v.value ?? ""));
+          else if (v.kind === "check") { const cb = form.getCheckBox(name); if (cb) { if (v.value) cb.check(); else cb.uncheck(); } }
+          else if (v.kind === "radio") form.getRadioGroup(name)?.select(String(v.value));
+          else if (v.kind === "choice") form.getDropdown(name)?.select(String(v.value));
+        } catch (e) { /* Feld nicht gefunden oder Typ abweichend: überspringen */ }
+      }
+      form.flatten();
+    } catch (e) {
+      toast("Formularfelder konnten nicht übernommen werden: " + (e.message || e), true);
+    }
+  }
   const out = await PDFLib.PDFDocument.create();
   const mkFamily = async (reg, bold, italic, boldItalic) => ({
     regular: await out.embedFont(PDFLib.StandardFonts[reg]),
@@ -3576,6 +4090,99 @@ async function printPdf() {
   }
 }
 
+/* Komprimieren: alle Seiten als JPEG-Bilder neu aufbauen (deutlich kleinere Datei) */
+async function compressPdf() {
+  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
+  toast("Komprimierung läuft, bitte warten …");
+  try {
+    const out = await PDFLib.PDFDocument.create();
+    for (const orig of pageOrder) {
+      const page = await doc.getPage(orig + 1);
+      const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
+      const base = page.getViewport({ scale: 1, rotation: rot });
+      const viewport = page.getViewport({ scale: 1.6, rotation: rot });
+      const c = document.createElement("canvas");
+      c.width = viewport.width;
+      c.height = viewport.height;
+      const cx = c.getContext("2d");
+      cx.fillStyle = "#ffffff";
+      cx.fillRect(0, 0, c.width, c.height);
+      await page.render({ canvasContext: cx, viewport }).promise;
+      const list = annos.get(orig) || [];
+      const visual = list.filter((a) => a.type !== "comment");
+      for (const a of visual) drawAnno(cx, a, viewport);
+      const jpg = await out.embedJpg(c.toDataURL("image/jpeg", 0.72));
+      const p = out.addPage([base.width, base.height]);
+      p.drawImage(jpg, { x: 0, y: 0, width: base.width, height: base.height });
+      const comments = list.filter((a) => a.type === "comment");
+      if (comments.length) addPdfComments(out, p, comments);
+    }
+    const bytes = await out.save();
+    const before = (pdfBytes.byteLength / 1048576).toFixed(2);
+    const after = (bytes.byteLength / 1048576).toFixed(2);
+    downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${fileName}_komprimiert.pdf`);
+    toast(`Komprimiert: ${before} MB auf ${after} MB. Der Download wurde gestartet.`);
+  } catch (err) {
+    toast("Komprimieren fehlgeschlagen: " + (err.message || err), true);
+  }
+}
+
+/* Fremde Kommentare und Markierungen aus der Datei entfernen (nicht rückgängig machbar) */
+const STRIP_SUBTYPES = ["Text", "FreeText", "Line", "Square", "Circle", "Polygon", "PolyLine", "Highlight", "Underline", "Squiggly", "StrikeOut", "Stamp", "Ink", "Popup", "Redact", "FileAttachment"];
+async function stripForeignAnnotations(scope) {
+  if (!doc || pageOrder.length === 0 || !requirePdfLib()) return;
+  const scopeLabel = scope === "page" ? "der aktuellen Seite" : "des gesamten Dokuments";
+  if (!window.confirm("Alle Kommentare und Markierungen, die bereits in der Datei enthalten sind (" + scopeLabel + "), werden endgültig entfernt. Dieser Schritt lässt sich nicht rückgängig machen. Fortfahren?")) return;
+  try {
+    const pd = await PDFLib.PDFDocument.load(pdfBytes);
+    const origs = scope === "page" ? [pageOrder[currentPage]] : Array.from(new Set(pageOrder));
+    let removed = 0;
+    for (const orig of origs) {
+      const pg = pd.getPage(orig);
+      let arr = null;
+      try { arr = pg.node.Annots(); } catch (e) { arr = null; }
+      if (!arr) continue;
+      const keep = [];
+      for (let i = 0; i < arr.size(); i++) {
+        const ref = arr.get(i);
+        let sub = "";
+        try {
+          const d = pd.context.lookupMaybe(ref, PDFLib.PDFDict);
+          if (d) sub = d.get(PDFLib.PDFName.of("Subtype")).toString().replace("/", "");
+        } catch (e) { sub = ""; }
+        if (STRIP_SUBTYPES.includes(sub)) {
+          removed++;
+          try { pd.context.delete(ref); } catch (e) { /* Referenz bereits entfernt */ }
+        } else {
+          keep.push(ref);
+        }
+      }
+      if (keep.length < arr.size()) {
+        if (keep.length > 0) pg.node.set(PDFLib.PDFName.of("Annots"), pd.context.obj(keep));
+        else pg.node.delete(PDFLib.PDFName.of("Annots"));
+      }
+    }
+    if (removed === 0) { toast("Keine fremden Kommentare oder Markierungen gefunden."); return; }
+    const bytes = await pd.save();
+    pdfBytes = bytes;
+    const loaded = await pdfjsLib.getDocument({ data: new Uint8Array(bytes.slice(0)) }).promise;
+    doc = loaded;
+    textCache.clear();
+    thumbCache.clear();
+    formValues.clear();
+    formToastShown = false;
+    for (const e of entries) e.rendered = false;
+    buildEntries();
+    updateView();
+    rebuildThumbs();
+    refreshComments();
+    updateUi();
+    toast(`${removed} fremde Anmerkung(en) entfernt. Dieser Schritt ist nicht rückgängig machbar.`);
+  } catch (err) {
+    toast("Entfernen fehlgeschlagen: " + (err.message || err), true);
+  }
+}
+
 /* Dokument schließen und zur Startseite zurückkehren */
 function closeDoc() {
   if (!doc) return;
@@ -3593,6 +4200,14 @@ function closeDoc() {
   undoStack.length = 0;
   redoStack.length = 0;
   thumbCache.clear();
+  textCache.clear();
+  searchHits = [];
+  searchIdx = -1;
+  searchQuery = "";
+  formValues.clear();
+  formToastShown = false;
+  $("searchResults").innerHTML = "";
+  $("searchInput").value = "";
   fileName = "dokument";
   $("docInfo").textContent = "";
   $("dropzone").hidden = false;
@@ -3628,6 +4243,37 @@ function showLicense() {
     });
     document.body.appendChild(dlg);
   }
+  dlg.hidden = false;
+}
+
+/* Optionen: Darstellung Hell oder Dunkel */
+function showOptions() {
+  let dlg = $("optionsDlg");
+  if (!dlg) {
+    dlg = document.createElement("div");
+    dlg.id = "optionsDlg";
+    dlg.className = "license-dlg";
+    dlg.innerHTML =
+      '<div class="license-card">' +
+      '<h3>Optionen</h3>' +
+      '<p>Darstellung:</p>' +
+      '<div class="opt-row">' +
+      '<button type="button" id="optLight" class="rb-btn">Hell</button>' +
+      '<button type="button" id="optDark" class="rb-btn">Dunkel</button>' +
+      "</div>" +
+      '<p>Weitere Optionen folgen in späteren Versionen.</p>' +
+      '<button type="button" data-close>Schließen</button>' +
+      "</div>";
+    dlg.addEventListener("click", (e) => {
+      if (e.target === dlg || e.target.closest("[data-close]")) dlg.hidden = true;
+    });
+    $("optLight").addEventListener("click", () => setTheme("light"));
+    $("optDark").addEventListener("click", () => setTheme("dark"));
+    document.body.appendChild(dlg);
+  }
+  const t = document.body.classList.contains("dark") ? "dark" : "light";
+  $("optLight").classList.toggle("active", t !== "dark");
+  $("optDark").classList.toggle("active", t === "dark");
   dlg.hidden = false;
 }
 
@@ -3744,7 +4390,10 @@ function updateUi() {
   $("btnZoomIn").disabled = !hasDoc;
   $("btnZoomOut").disabled = !hasDoc;
   $("btnFitWidth").disabled = !hasDoc;
-  ["mnuSave", "mnuSaveAs", "mnuPrint", "mnuClose"].forEach((id) => { $(id).disabled = !hasDoc; });
+  ["mnuSave", "mnuSaveAs", "mnuCompress", "mnuPrint", "mnuClose"].forEach((id) => { $(id).disabled = !hasDoc; });
+  $("btnStripAnnosPage").disabled = !hasDoc;
+  $("btnStripAnnosDoc").disabled = !hasDoc;
+  $("btnSignInsert").disabled = !hasDoc;
   $("btnExtractPage").disabled = !hasDoc;
   $("btnUndo").disabled = undoStack.length === 0;
   $("btnRedo").disabled = redoStack.length === 0;
@@ -3768,6 +4417,7 @@ function updateUi() {
   $("hint").textContent = selAnno
     ? "Element ausgewählt: ziehen verschiebt, runde Griffe ändern die Größe, Balken an den Seiten, Drehgriff oben dreht, Entf löscht, Doppelklick bearbeitet den Text."
     : (selCount > 0 ? `${selCount} Seite(n) ausgewählt.` : "");
+  updateSearchUi();
 }
 
 /* =========================================================
@@ -3806,11 +4456,12 @@ const fileMenu = (function buildFileMenu() {
   pop.appendChild(mkItem("mnuOpen", "Öffnen …", "Strg+O", () => $("fileInput").click()));
   pop.appendChild(mkItem("mnuSave", "Speichern", "Strg+S", savePdf));
   pop.appendChild(mkItem("mnuSaveAs", "Speichern unter …", "Strg+Umschalt+S", savePdfAs));
+  pop.appendChild(mkItem("mnuCompress", "Komprimieren …", null, compressPdf));
   pop.appendChild(mkItem("mnuPrint", "Drucken …", "Strg+P", printPdf));
   pop.appendChild(mkSep());
   pop.appendChild(mkItem("mnuClose", "Dokument schließen", null, closeDoc));
   pop.appendChild(mkSep());
-  pop.appendChild(mkItem("mnuOptions", "Optionen", null, () => toast("Die Optionen sind noch nicht verfügbar und folgen in einer späteren Version.")));
+  pop.appendChild(mkItem("mnuOptions", "Optionen", null, showOptions));
   pop.appendChild(mkItem("mnuLicense", "Lizenz und Urheberrecht", null, showLicense));
   document.body.appendChild(pop);
   function showFileMenu() {
@@ -4666,12 +5317,62 @@ window.addEventListener("drop", (e) => {
   if (file) openFile(file);
 });
 
+/* ---------- Suche ---------- */
+$("searchInput").addEventListener("change", () => runSearch($("searchInput").value));
+$("searchInput").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  const v = $("searchInput").value;
+  if (v.trim().toLowerCase() !== searchQuery) runSearch(v);
+  else if (searchHits.length > 0) gotoSearchHit(searchIdx + 1);
+});
+$("btnSearchNext").addEventListener("click", () => gotoSearchHit(searchIdx + 1));
+$("btnSearchPrev").addEventListener("click", () => gotoSearchHit(searchIdx - 1));
+
+/* ---------- Signieren ---------- */
+$("btnSignInsert").addEventListener("click", () => $("signInput").click());
+$("signInput").addEventListener("change", () => {
+  const file = $("signInput").files && $("signInput").files[0];
+  $("signInput").value = "";
+  if (!file) return;
+  if (!file.type.match(/^image\/(png|jpeg)$/)) { toast("Bitte eine PNG- oder JPEG-Datei wählen.", true); return; }
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const max = 600;
+      let finalUrl = rd.result;
+      let w = im.naturalWidth, h = im.naturalHeight;
+      if (w > max || h > max) {
+        const f = Math.min(max / w, max / h);
+        w = Math.round(w * f); h = Math.round(h * f);
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        c.getContext("2d").drawImage(im, 0, 0, w, h);
+        finalUrl = c.toDataURL("image/png");
+      }
+      rememberSignature(finalUrl);
+      insertSignature(finalUrl);
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(file);
+});
+
+/* ---------- Fremde Anmerkungen entfernen ---------- */
+$("btnStripAnnosPage").addEventListener("click", () => stripForeignAnnotations("page"));
+$("btnStripAnnosDoc").addEventListener("click", () => stripForeignAnnotations("doc"));
+
+/* Signaturliste beim Start anzeigen */
+renderSignList();
+
 /* Tastatur */
 window.addEventListener("keydown", (e) => {
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
   if (e.key === "Escape") { setTool("select"); deselectAnno(); hideFileMenu(); return; }
   if (e.key === "Delete" || e.key === "Backspace") { if (selAnno) { e.preventDefault(); deleteSelectedAnno(); return; } }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") { e.preventDefault(); $("fileInput").click(); return; }
+  if (e.key === "F3") { e.preventDefault(); if (doc && searchHits.length > 0) gotoSearchHit(e.shiftKey ? searchIdx - 1 : searchIdx + 1); return; }
   if (!doc) return;
   if (e.key === "ArrowLeft") goTo(currentPage - 1);
   if (e.key === "ArrowRight") goTo(currentPage + 1);
@@ -4748,11 +5449,17 @@ function runSelfTests() {
   test("Begradigen richtet senkrechte Striche aus", () => { const s = straightened([[10, 20], [10.5, 40], [10, 60]]); assert(s.length === 2 && s[0][0] === s[1][0], "Strich nicht senkrecht"); });
   test("Jede Schriftart im Auswahlmenü und eingebettet", () => { for (const k of Object.keys(FONT_STACKS)) { if (["helvetica", "times", "courier"].includes(k)) continue; assert(document.querySelector('#annoFontFamily option[value="' + k + '"]'), "Menüeintrag fehlt: " + k); assert(k in EMBED_FONT_FILES, "Einzubettende Schrift fehlt: " + k); } });
   test("Wiederholen: Spiegelaktion und Rückspiegel stimmen", () => { const a1 = mirrorAction({ kind: "annoAdd", orig: 0, anno: { type: "draw" } }); assert(a1 && a1.kind === "annoRemove", "Spiegel von annoAdd"); const a2 = mirrorAction(a1); assert(a2 && a2.kind === "annoAdd", "Rückspiegel von annoRemove"); const r1 = mirrorAction({ kind: "rot", orig: 3, prev: 90 }); assert(r1 && r1.kind === "rot" && r1.orig === 3, "Spiegel von rot"); });
-  test("Dateimenü führt alle Einträge", () => { for (const id of ["mnuOpen", "mnuSave", "mnuSaveAs", "mnuPrint", "mnuClose", "mnuOptions", "mnuLicense"]) assert($(id), "Menüeintrag fehlt: " + id); });
+  test("Dateimenü führt alle Einträge", () => { for (const id of ["mnuOpen", "mnuSave", "mnuSaveAs", "mnuCompress", "mnuPrint", "mnuClose", "mnuOptions", "mnuLicense"]) assert($(id), "Menüeintrag fehlt: " + id); });
   test("Extrahieren bietet PDF, JPEG und PNG", () => { for (const v of ["pdf", "jpg", "png"]) assert(document.querySelector('#extractFormat option[value="' + v + '"]'), "Format fehlt: " + v); });
   test("Formformat-Reiter führt alle Formwerkzeuge", () => { for (const t of SHAPE_TOOLS) assert(document.querySelector('#paneFormformat [data-tool="' + t + '"]'), "Formknopf fehlt: " + t); });
   test("Textbegrenzung ohne Box plausibel", () => { const bb = annoBBox({ type: "text", x: 10, y: 20, size: 12, text: "Hallo" }); assert(bb.x2 > bb.x1 && bb.y2 > bb.y1 && bb.x1 === 10, "Box unplausibel"); });
   test("Einzubettende Schriften vollständig definiert", () => { for (const k of Object.keys(EMBED_FONT_FILES)) { const f = EMBED_FONT_FILES[k]; for (const s of ["regular", "bold", "italic", "boldItalic"]) assert(typeof f[s] === "string" && f[s].startsWith("https://"), k + "." + s + " fehlt"); } });
+  test("Bildanmerkung liefert korrekte Box und ist nicht drehbar", () => { const bb = annoBBox({ type: "image", x1: 10, y1: 20, x2: 110, y2: 70, dataUrl: "data:image/png;base64,x" }); assert(bb.x1 === 10 && bb.y1 === 20 && bb.x2 === 110 && bb.y2 === 70, "Box falsch"); assert(!ROTATABLE.includes("image"), "Bild darf nicht drehbar sein"); const s = snapshotAnno({ type: "image", x1: 1, y1: 2, x2: 3, y2: 4, dataUrl: "data:image/png;base64,x" }); assert(s.dataUrl === "data:image/png;base64,x", "dataUrl fehlt im Snapshot"); });
+  test("Suche und Textextraktion vorhanden", () => { assert(typeof runSearch === "function" && typeof pageText === "function" && typeof gotoSearchHit === "function", "Suchfunktionen fehlen"); assert(typeof highlightPage === "function", "Hervorhebung fehlt"); });
+  test("Entfernen erfasst Anmerkungsarten, aber keine Formularfelder", () => { assert(STRIP_SUBTYPES.includes("Text") && STRIP_SUBTYPES.includes("Highlight"), "Anmerkungsart fehlt"); assert(!STRIP_SUBTYPES.includes("Widget"), "Formularfelder dürfen nicht entfernt werden"); });
+  test("Darstellung Hell und Dunkel schaltbar", () => { assert(typeof setTheme === "function" && typeof applyTheme === "function" && typeof showOptions === "function", "Theme-Funktionen fehlen"); });
+  test("Formularwerte als Map verwaltet", () => { assert(formValues instanceof Map, "formValues muss eine Map sein"); });
+  test("Signieren: Einfügen und Liste vorhanden", () => { assert(typeof insertSignature === "function" && typeof renderSignList === "function" && typeof loadSignatures === "function", "Signierfunktionen fehlen"); assert($("btnSignInsert") && $("signInput") && $("signList"), "Signier-Elemente fehlen"); });
   const failed = results.filter((r) => !r.ok);
   console.log("Selbsttests: " + (results.length - failed.length) + "/" + results.length + " bestanden", results);
   const box = document.createElement("div");
