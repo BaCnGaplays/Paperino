@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.17**
+> Aktuelle Version: **Alpha 0.18**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -14,9 +14,9 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen; Extrahieren und Ausschneiden wahlweise als PDF-Datei, JPEG oder PNG (Anmerkungen werden mit exportiert, Schwärzungen sind im Bild tatsächlich abgedeckt)
 - Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif, Fira Sans, Ubuntu, IBM Plex Serif, Crimson Text, Space Mono, Arvo) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen; die freien Schriften werden beim Speichern in die Datei eingebettet
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
-- Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
+- Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, die unmittelbar beim Verschieben wirkt, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
-- LaTeX-Formeln über eine Formel-Schaltfläche (Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben, Symbole), beim Speichern als eingebettetes Bild abgelegt
+- LaTeX-Formeln über eine Formel-Schaltfläche mit Funktionszeichen ƒ (Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben, Symbole), beim Speichern als eingebettetes Bild abgelegt
 - Pfeile mit einstellbaren Pfeilspitzen: ohne, linke, rechte oder beide Spitzen, offen oder gefüllt
 - Strichstärken in Punkten (0,25 bis 6 Pt) und Stricharten: Unilinie, runder Punkt, viereckiger Punkt, gestrichelt, Strichpunktmuster, langer Strich
 - Formen und Textfelder drehen: runde Eckgriffe, Seitenbalken zum einseitigen Ziehen, Drehgriff oben, Verschieben in Punkt-Schritten über Richtungspfeile
@@ -33,6 +33,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Anonymisieren: fremde Kommentare und Markierungen, die bereits in der Datei enthalten sind, je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage; dieser Schritt lässt sich nicht rückgängig machen, Formularfelder und Verknüpfungen bleiben erhalten)
 - Komprimieren: alle Seiten werden als JPEG-Bilder neu aufgebaut, wodurch die Dateigröße in der Regel deutlich sinkt; die Größenabweichung wird angezeigt
 - Statusleiste unten mit Bibliothekenstatus und Seitenanzeige
+- Anpassungsfähiges Menüband: bei schmalen Fenstern klappen einzelne Bereiche zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; per Doppelklick auf eine Registerkarte lässt sich das Menüband ganz ein- und ausklappen; waagerechte Bildlaufleisten im Menüband entstehen dadurch nicht
 - Dateimenü mit Öffnen, Speichern, Speichern unter, Komprimieren, Drucken, Schließen, Optionen (Darstellung Hell oder Dunkel, wird gemerkt) und Lizenz- und Urheberrechtshinweis; in der Ecke liegen nur Rückgängig und Wiederholen
 - Rückgängig und Wiederholen für alle Aktionen, mehrfach hintereinander (Strg+Z und Strg+Y sowie Knöpfe)
 - Speichern und Speichern unter (freier Dateiname), Drucken der bearbeiteten Datei über den Druckdialog des Browsers
@@ -74,6 +75,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.15 | Suche im Dokument (Suchfeld im Start-Reiter, Trefferliste, Weiter- und Zurückspringen mit F3, Hervorhebung der Treffer), AcroForm-Formularfelder ausfüllen (Werte werden beim Speichern fest in die Datei geschrieben), Komprimieren im Dateimenü (Seiten werden als JPEG-Bilder neu aufgebaut), fremde Kommentare und Markierungen je Seite oder dokumentweit entfernen (mit Sicherheitsabfrage, nicht rückgängig machbar, Formularfelder bleiben erhalten), Reiter Signieren (Signaturbilder als PNG/JPEG, werden im Browser gemerkt und beim Speichern als Bild eingebettet), Darstellung Hell oder Dunkel in den Optionen (wird gemerkt) |
 | Alpha 0.16 | Korrektur der Lineale: die Skalen liegen nun fest am Ansichtsbereich und beginnen am Blattrand der jeweiligen Seite (oben und links, in der Doppelseitenansicht oben über beide Seiten und zusätzlich rechts), unabhängig von Zoomstufe und Fensterbreite; Suchtreffer erscheinen in einem eigenen Seitenleisten-Reiter „Suchen”; Korrektur des Optionsfensters (die Hell-/Dunkel-Auswahl ließ sich zuvor nicht öffnen) |
 | Alpha 0.17 | Seitenleiste als Auswahlleiste: die Ansichten Seiten, Inhaltsverzeichnis, Lesezeichen und Suchergebnisse werden über Pfeile links und rechts der mittigen Bezeichnung durchgeschaltet; Kommentarleiste in der Breite frei ziehbar (wird gemerkt); Ansichtsbereich bereinigt (die Umschalter für Lesezeichenleiste, Inhaltsverzeichnis und Lesezeichen hinzufügen entfallen, da die Seitenleiste diese Auswahl übernimmt) |
+| Alpha 0.18 | Menüband passt sich der Fensterbreite an: Bereiche klappen bei Platzmangel zu ihrer Bezeichnung zusammen und öffnen sich per Klick als Fenster; Doppelklick auf eine Registerkarte klappt das Menüband ganz ein und wieder aus; waagerechte Bildlaufleisten im Menüband entfallen; Formel-Schaltfläche mit Funktionszeichen ƒ; Farbwahlmenü verbreitert, Transparenz wirkt unmittelbar beim Verschieben |
 
 ## Hinweise und Grenzen
 

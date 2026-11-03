@@ -120,7 +120,6 @@
     gap: 2px;
     padding: 6px 10px 0;
     border-bottom: 1px solid #d4d4d8;
-    overflow-x: auto;
   }
   .tab {
     border: 1px solid transparent;
@@ -144,8 +143,8 @@
     font-weight: 600;
   }
   .tab.hidden { display: none; }
-  .ribbon-body { padding: 8px 12px 4px; display: flex; overflow-x: auto; }
-  .pane { display: flex; align-items: stretch; flex-wrap: nowrap; }
+  .ribbon-body { padding: 8px 12px 4px; display: flex; overflow: visible; position: relative; }
+  .pane { display: flex; align-items: stretch; flex-wrap: nowrap; flex: 1 1 auto; min-width: 0; position: relative; }
   .pane[hidden] { display: none; }
   .group {
     display: flex;
@@ -154,10 +153,43 @@
     padding: 2px 14px 4px;
     border-right: 1px solid var(--line);
     flex-shrink: 0;
+    position: relative;
   }
   .group:last-child { border-right: none; }
   .group-buttons { display: flex; align-items: center; gap: 2px; flex: 1; }
   .group-label { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+  /* Bereiche bei Platzmangel einklappen: nur die Bezeichnung bleibt, Klick öffnet ein Fenster */
+  .group.collapsed { cursor: pointer; padding: 4px 10px; }
+  .group.collapsed .group-buttons { display: none; }
+  .group.collapsed .group-label { color: #6F003C; font-weight: 600; white-space: nowrap; margin-top: 0; }
+  .group.collapsed::before {
+    content: "▸";
+    position: absolute;
+    top: 2px;
+    right: 1px;
+    font-size: 8px;
+    color: var(--muted);
+  }
+  .group.collapsed.open::before { content: "▾"; }
+  .group.collapsed.open .group-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 80;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    gap: 4px;
+    min-width: 170px;
+    max-width: 330px;
+  }
+  /* Menüband per Doppelklick auf eine Registerkarte ganz einklappen */
+  body.ribbon-min .ribbon-body { display: none; }
+  body.ribbon-min.ribbon-temp .ribbon-body { display: flex; }
   .rb-btn {
     display: flex;
     flex-direction: column;
@@ -239,6 +271,7 @@
   .rb-tgl .fmt-bold { font-weight: 700; }
   .rb-tgl .fmt-italic { font-style: italic; }
   .rb-tgl .fmt-u { text-decoration: underline; }
+  .rb-tgl .fmt-fx { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 700; font-size: 15px; line-height: 1.1; }
   .rb-tgl .fmt-strike { text-decoration: line-through; }
   .rb-tgl .fmt-sup { vertical-align: super; font-size: smaller; }
   .rb-tgl .fmt-sub { vertical-align: sub; font-size: smaller; }
@@ -604,6 +637,7 @@
     display: grid;
     grid-template-columns: repeat(6, 24px);
     gap: 5px;
+    min-width: 232px;
   }
   .color-pop button.swatch {
     width: 24px;
@@ -1005,7 +1039,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.17</span>
+  <span class="version" id="appVersion">Alpha 0.18</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1417,7 +1451,7 @@
           <button class="rb-tgl" id="btnStrike" title="Durchgestrichen" disabled><span class="fmt-strike">ab</span></button>
           <button class="rb-tgl" id="btnSup" title="Hochstellen (hochgestellte Zeichen)" disabled>x<span class="fmt-sup">2</span></button>
           <button class="rb-tgl" id="btnSub" title="Tiefstellen (tiefgestellte Zeichen)" disabled>x<span class="fmt-sub">2</span></button>
-          <button class="rb-tgl" id="btnLatex" title="Formel einfügen: LaTeX-Quelltext rendern, z. B. \frac{a}{b}, x^2 oder \sqrt{x}; unterstützt Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben (\alpha, \pi …) und Symbole (\times, \leq, \infty …)" disabled>x</button>
+          <button class="rb-tgl" id="btnLatex" title="Formel einfügen: LaTeX-Quelltext rendern, z. B. \frac{a}{b}, x^2 oder \sqrt{x}; unterstützt Brüche, Wurzeln, Hoch- und Tiefstellen, griechische Buchstaben (\alpha, \pi …) und Symbole (\times, \leq, \infty …)" disabled><span class="fmt-fx">ƒ</span></button>
         </div>
         <div class="group-label">Format</div>
       </div>
@@ -1603,7 +1637,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.17"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.18"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -5073,8 +5107,69 @@ document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => {
     activateTab(tab.dataset.tab);
     if (!tab.classList.contains("contextual")) lastBaseTab = tab.dataset.tab;
+    if (ribbonMinimized) document.body.classList.add("ribbon-temp");
+  });
+  tab.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    ribbonMinimized = !ribbonMinimized;
+    document.body.classList.toggle("ribbon-min", ribbonMinimized);
+    if (!ribbonMinimized) document.body.classList.remove("ribbon-temp");
+    scheduleRuler();
+    toast(ribbonMinimized
+      ? "Menüband eingeklappt: Doppelklick auf eine Registerkarte klappt es wieder aus."
+      : "Menüband ausgeklappt.");
   });
 });
+
+/* Menüband passt sich der Fensterbreite an: Bereiche werden eingeklappt,
+   ein Klick auf die Bezeichnung öffnet den Bereich als Fenster. */
+let ribbonMinimized = false;
+function closeGroupPops() {
+  document.querySelectorAll(".group.collapsed.open").forEach((g) => g.classList.remove("open"));
+}
+function ribbonFit() {
+  if (document.body.classList.contains("ribbon-min") && !document.body.classList.contains("ribbon-temp")) return;
+  const pane = document.querySelector(".pane:not([hidden])");
+  if (!pane) return;
+  closeGroupPops();
+  const groups = Array.from(pane.querySelectorAll(".group"));
+  /* Automatisch eingeklappte Bereiche von links wieder auspacken, solange es passt */
+  for (const g of groups) {
+    if (g.dataset.auto === "1") {
+      g.classList.remove("collapsed");
+      if (pane.scrollWidth > pane.clientWidth + 1) { g.classList.add("collapsed"); break; }
+      g.dataset.auto = "0";
+    }
+  }
+  /* Bei Platzmangel von rechts her einklappen */
+  let guard = 0;
+  while (pane.scrollWidth > pane.clientWidth + 1 && guard < 40) {
+    const cand = groups.slice().reverse().find((g) => !g.classList.contains("collapsed"));
+    if (!cand) break;
+    cand.classList.add("collapsed");
+    cand.dataset.auto = "1";
+    guard++;
+  }
+}
+document.querySelectorAll(".pane .group").forEach((g) => {
+  g.addEventListener("click", (e) => {
+    if (!g.classList.contains("collapsed")) return;
+    if (g.classList.contains("open") && e.target.closest(".group-buttons")) return;
+    e.stopPropagation();
+    const wasOpen = g.classList.contains("open");
+    closeGroupPops();
+    if (!wasOpen) g.classList.add("open");
+  });
+});
+document.addEventListener("click", (e) => {
+  const inRibbon = !!e.target.closest("#ribbon");
+  if (!inRibbon && !e.target.closest(".color-pop") && !e.target.closest(".ul-pop") && !e.target.closest(".file-pop")) closeGroupPops();
+  if (document.body.classList.contains("ribbon-min") && document.body.classList.contains("ribbon-temp") && !inRibbon) {
+    document.body.classList.remove("ribbon-temp");
+  }
+});
+window.addEventListener("resize", ribbonFit);
+ribbonFit();
 
 /* Kontextreiter: Textfeld bzw. Formformat erscheinen bei Auswahl */
 let lastBaseTab = "paneStart";
@@ -5086,6 +5181,7 @@ function activateTab(paneId) {
   document.querySelectorAll(".pane").forEach((p) => {
     p.hidden = p.id !== paneId;
   });
+  ribbonFit();
 }
 
 function updateContextTabs() {
@@ -5282,8 +5378,10 @@ function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
       opIn.value = String(Math.round((curOp == null ? 1 : curOp) * 100));
       const opVal = document.createElement("span");
       opVal.textContent = opIn.value + " %";
-      opIn.addEventListener("input", () => { opVal.textContent = opIn.value + " %"; });
-      opIn.addEventListener("change", () => { apply(() => opts.setOp(parseFloat(opIn.value) / 100)); });
+      opIn.addEventListener("input", () => {
+        opVal.textContent = opIn.value + " %";
+        apply(() => opts.setOp(parseFloat(opIn.value) / 100));
+      });
       opRow.append(opLbl, opIn, opVal);
       cust.appendChild(opRow);
     }
@@ -5313,7 +5411,8 @@ function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
     pop.appendChild(cust);
     document.body.appendChild(pop);
     const r = btn.getBoundingClientRect();
-    pop.style.left = Math.min(r.left, window.innerWidth - 220) + "px";
+    const pw = pop.offsetWidth || 232;
+    pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - pw - 8)) + "px";
     pop.style.top = (r.bottom + 4) + "px";
   });
   document.addEventListener("click", (e) => {
@@ -5647,6 +5746,7 @@ function runSelfTests() {
   test("Signieren: Einfügen und Liste vorhanden", () => { assert(typeof insertSignature === "function" && typeof renderSignList === "function" && typeof loadSignatures === "function", "Signierfunktionen fehlen"); assert($("btnSignInsert") && $("signInput") && $("signList"), "Signier-Elemente fehlen"); });
   test("Lineale über, links und rechts der Seiten vorhanden", () => { for (const id of ["rulerTop", "rulerLeft", "rulerRight"]) assert($(id), "Lineal fehlt: " + id); assert(typeof scheduleRuler === "function" && typeof rulerCmPerPx === "function", "Linealfunktionen fehlen"); const cm = rulerCmPerPx({ canvas: { style: { width: "595px", height: "842px" } }, viewport: { viewBox: [0, 0, 595, 842], rotation: 0 } }); assert(Math.abs(cm.x - 72 / 2.54) < 0.2 && Math.abs(cm.y - 72 / 2.54) < 0.2, "Zentimeterrechnung stimmt nicht"); });
   test("Suchtreffer liegen in der Seitenleiste mit Pfeil-Auswahl", () => { assert($("sidePrev") && $("sideNext") && $("sideModeLabel") && $("searchSide"), "Seitenleisten-Auswahl fehlt"); assert(typeof cycleSideMode === "function", "Umschalten fehlt"); assert(!document.getElementById("stabPages") && !document.getElementById("stabSearch"), "Alte Reiter dürfen nicht mehr bestehen"); assert(SIDE_MODES.length === 4 && SIDE_MODES[1].label === "Inhaltsverzeichnis" && SIDE_MODES[3].label === "Suchergebnisse", "Ansichtennamen unvollständig"); });
+  test("Menüband passt sich der Breite an und ist per Doppelklick einklappbar", () => { assert(typeof ribbonFit === "function" && typeof closeGroupPops === "function", "Menübandfunktionen fehlen"); assert(document.querySelector("#btnLatex .fmt-fx"), "Formelzeichen fehlt"); assert(typeof ribbonMinimized === "boolean", "Einklappzustand fehlt"); });
   const failed = results.filter((r) => !r.ok);
   console.log("Selbsttests: " + (results.length - failed.length) + "/" + results.length + " bestanden", results);
   const box = document.createElement("div");
