@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.9**
+> Aktuelle Version: **Alpha 0.10**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -12,7 +12,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
 - Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar und in der Breite frei ziehbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt)
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif) und Schriftgröße als klassisches Dropdown (8 bis 72 Punkt); alle Textformatierungen lassen sich auch vor dem Einfügen als Voreinstellung festlegen
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, Strichpunkt, wellig), im Menü als Linienmuster dargestellt, Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und direkt sichtbarer eigener Farbwahl (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
@@ -58,6 +58,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.7 | Korrektur der ein- und ausblendbaren Leisten (Seitenleiste und Kommentarleiste lassen sich nun tatsächlich schließen, Kommentarleiste standardmäßig ausgeblendet), Farbwahlmenü neu aufgebaut (Standardfarben-Kacheln, „Keine Füllung“/„Keine Kontur“ als Kachel, „Weitere Farben“ als eigener Bereich mit Transparenz bei Füllung und Strichstärkenwahl bei Konturen), Formatleiste zweizeilig mit Piktogrammen und Schriftproben, Schriftgröße als Dropdown mit frei eingebbarem Wert, Schreibweise-Umwandlung und Größenwippen entfernt, Hinweise auf Tooltips umgestellt |
 | Alpha 0.8 | Korrektur eines Skriptfehlers aus Alpha 0.7 (eine fehlende Klammer blockierte die gesamte Anwendung), zusätzliche eingebettete Schriftarten Lato, PT Sans und PT Serif (mit Fett-, Kursiv- und Fettkursiv-Schnitten, werden beim Speichern in die Datei eingebettet; Fallback auf Helvetica ohne Netzverbindung) |
 | Alpha 0.9 | Unterstreichungs- und Durchstreichungslinien haften nun auch bei gedrehten Textfeldern am Text (Kernkorrektur der Drehung), Unterstreichungsarten-Menü im Word-Stil mit Linienmustern und „Ohne“-Eintrag, Schriftgröße als klassisches Dropdown, eigene Farbwahl direkt im Farbwahlmenü (kein Zwischenschritt mehr), Lektorieren-Bereich einheitlich wie das Textfeld-Format gestaltet, Seitenleiste in der Breite ziehbar (150 bis 460 Pixel, wird gemerkt), Selbsttests über den Adresszusatz ?test abrufbar |
+| Alpha 0.10 | Korrektur des Darstellungsfehlers beim Zoomen und Drehen (gleichzeitige Darstellungsvorgänge für dieselbe Seite wurden race-artig abgebrochen und hinterließen eine leere oder entstellte Seite; laufende Darstellungen werden nun zuverlässig abgebrochen und neu aufgebaut), Schriftart, Schriftgröße und sämtliche Textformatierungen lassen sich vor dem Einfügen im Textfeld-Reiter als Voreinstellung festlegen (werden gemerkt und auf neue Textfelder angewendet), der Textfeld-Reiter öffnet sich automatisch beim Aktivieren des Textwerkzeugs |
 
 ## Hinweise und Grenzen
 

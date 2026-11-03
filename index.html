@@ -748,7 +748,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.9</span>
+  <span class="version" id="appVersion">Alpha 0.10</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1269,7 +1269,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.9"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.10"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -1290,6 +1290,20 @@ let entryObserver = null;       // Sichtbarkeitsbeobachter fuer Seitenlauf
 let tool = "select";            // Aktives Werkzeug
 let annos = new Map();          // origIndex -> Array von Anmerkungen
 let annoColor = "#dc2626";      // Aktuelle Farbe
+/* Voreinstellungen für neue Textfelder: im Textfeld-Reiter auch vor dem Einfügen wählbar */
+let textDefaults = { size: 12, font: "helvetica", color: "#dc2626", bold: false, italic: false, underline: null, strike: false, script: null, fill: null, fillOp: null, ocolor: null, owidth: null };
+try {
+  const rawTd = localStorage.getItem("paperinoTextDefaults");
+  if (rawTd) textDefaults = { ...textDefaults, ...JSON.parse(rawTd) };
+} catch (e) { /* Speicher nicht verfügbar */ }
+function saveTextDefaults() {
+  try { localStorage.setItem("paperinoTextDefaults", JSON.stringify(textDefaults)); } catch (e) { /* Speicher nicht verfügbar */ }
+}
+/* Formatierung anwenden: auf die Auswahl oder, falls nichts ausgewählt ist, auf die Voreinstellung */
+function applyTextFormat(fn, el) {
+  if (selAnno) { if (el) ctxUndoOnce(el); ctxApply(fn); }
+  else { fn(textDefaults); saveTextDefaults(); refreshContextPane(); }
+}
 let penWidth = 2;               // Strichstärke in Punkten
 let liveAnno = null;            // Anmerkung in Entstehung
 let liveEntry = null;           // Seiteneintrag der laufenden Anmerkung
@@ -1473,6 +1487,11 @@ async function renderEntry(entry, force = false) {
   if (!doc || (entry.rendered && !force)) return;
   const orig = entry.orig;
   const page = await doc.getPage(orig + 1);
+  /* Laufende Darstellung derselben Seite abbrechen (Race bei Zoom/Drehung) */
+  if (entry.renderTask) {
+    try { entry.renderTask.cancel(); } catch (e) { /* bereits beendet */ }
+    entry.renderTask = null;
+  }
   const rot = (((page.rotate % 360) + 360) + (rotDelta[orig] || 0)) % 360;
   const dpr = window.devicePixelRatio || 1;
   const viewport = page.getViewport({ scale: zoom * dpr, rotation: rot });
@@ -1485,7 +1504,19 @@ async function renderEntry(entry, force = false) {
   entry.overlay.style.width = entry.canvas.style.width;
   entry.overlay.style.height = entry.canvas.style.height;
   entry.viewport = viewport;
-  await page.render({ canvasContext: entry.canvas.getContext("2d"), viewport }).promise;
+  const task = page.render({ canvasContext: entry.canvas.getContext("2d"), viewport });
+  entry.renderTask = task;
+  try {
+    await task.promise;
+  } catch (err) {
+    /* Abgebrochen: eine neuere Darstellung ist bereits unterwegs */
+    if (err && (err.name === "RenderingCancelledException" || /cancel/i.test(String(err.message || "")))) return;
+    /* Anderer Fehler: Seite erneut freigeben, damit ein neuer Versuch möglich ist */
+    console.error("Seite konnte nicht dargestellt werden:", err);
+    entry.renderTask = null;
+    return;
+  }
+  entry.renderTask = null;
   renderOverlayFor(entry);
   // Textebene fuer textgebundene Werkzeuge (CSS-Pixel-Massstab)
   try {
@@ -1576,6 +1607,7 @@ function setTool(t) {
     e.textLayer.style.cursor = t === "select" ? "default" : (CURSORS[t] || "crosshair");
   }
   closeShapeMenu();
+  updateContextTabs();
 }
 
 function pageAnnos(orig) {
@@ -2652,7 +2684,7 @@ pagesColumn.addEventListener("pointerdown", (e) => {
   e.preventDefault();
   const p = pdfPointFromEvent(e, entry);
   if (tool === "text") {
-    const a = { type: "text", x: p[0], y: p[1], text: "", size: 12, color: annoColor, font: "helvetica", bold: false, italic: false, underline: null, strike: false, script: null };
+    const a = { type: "text", x: p[0], y: p[1], text: "", size: textDefaults.size, color: textDefaults.color, font: textDefaults.font, bold: textDefaults.bold, italic: textDefaults.italic, underline: textDefaults.underline, strike: textDefaults.strike, script: textDefaults.script, fill: textDefaults.fill, fillOp: textDefaults.fillOp, ocolor: textDefaults.ocolor, owidth: textDefaults.owidth };
     setTool("select");
     openTextEditor(entry, a, true);
     return;
@@ -3754,6 +3786,12 @@ function updateContextTabs() {
     tText.classList.add("hidden");
     refreshContextPane();
     activateTab("paneFormformat");
+  } else if (tool === "text") {
+    /* Textwerkzeug aktiv: Voreinstellungen im Textfeld-Reiter zugänglich */
+    tText.classList.remove("hidden");
+    tForm.classList.add("hidden");
+    refreshContextPane();
+    activateTab("paneTextfeld");
   } else {
     tText.classList.add("hidden");
     tForm.classList.add("hidden");
@@ -3796,12 +3834,29 @@ function refreshContextPane() {
       $("btnArrowFill").classList.toggle("active", !!a.headFill);
       $("annoRot").value = rotOf(a);
     }
+  } else {
+    /* Nichts ausgewählt: Voreinstellungen für neue Textfelder anzeigen */
+    setFontSizeSelect(textDefaults.size);
+    $("annoFontFamily").value = textDefaults.font || "helvetica";
+    $("btnBold").classList.toggle("active", !!textDefaults.bold);
+    $("btnItalic").classList.toggle("active", !!textDefaults.italic);
+    $("btnUnderline").classList.toggle("active", !!textDefaults.underline);
+    setUnderlineMini(textDefaults.underline || "simple");
+    $("btnStrike").classList.toggle("active", !!textDefaults.strike);
+    $("btnSup").classList.toggle("active", textDefaults.script === "sup");
+    $("btnSub").classList.toggle("active", textDefaults.script === "sub");
+    $("btnLatex").classList.remove("active");
+    $("txtColorDot").style.background = textDefaults.color;
+    $("txtFillDot").style.background = textDefaults.fill || "#ffffff";
+    $("txtOutlineDot").style.background = textDefaults.ocolor || "#ffffff";
   }
-  /* Textfeld-Reiter */
-  $("annoFontFamily").disabled = !isText;
-  $("annoFontSize").disabled = !isText;
-  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor", "btnEditText"].forEach((id) => { $(id).disabled = !isText; });
-  ["btnTextFill", "btnTextOutline"].forEach((id) => { $(id).disabled = !isText; });
+  /* Textfeld-Reiter: bedienbar bei Textauswahl oder (für Voreinstellungen) ohne Auswahl */
+  const showTextUi = isText || !a;
+  $("annoFontFamily").disabled = !showTextUi;
+  $("annoFontSize").disabled = !showTextUi;
+  ["btnBold", "btnItalic", "btnUnderline", "annoUnderlineStyle", "btnStrike", "btnSup", "btnSub", "btnLatex", "btnTextColor"].forEach((id) => { $(id).disabled = !showTextUi; });
+  $("btnEditText").disabled = !isText;
+  ["btnTextFill", "btnTextOutline"].forEach((id) => { $(id).disabled = !showTextUi; });
   /* Formformat-Reiter */
   $("btnShapeColor").disabled = !isForm || isRedact;
   $("annoShapeWidth").disabled = !isForm || isRedact;
@@ -3846,7 +3901,7 @@ function buildColorMenu(btnId, dotId, getCur, setColor, opts) {
   const btn = $(btnId);
   let pop = null;
   const close = () => { if (pop) { pop.remove(); pop = null; } };
-  const apply = (fn) => { ctxUndoOnce(btn); ctxApply(fn); };
+  const apply = (fn) => { if (selAnno) { ctxUndoOnce(btn); ctxApply(fn); } else { fn(); saveTextDefaults(); refreshContextPane(); } };
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (pop) { close(); return; }
@@ -3951,9 +4006,9 @@ function setFontSizeSelect(sz) {
   sel.value = v;
 }
 armOnFocus($("annoFontSize"));
-$("annoFontSize").addEventListener("change", () => { ctxUndoOnce($("annoFontSize")); ctxApply((a) => { a.size = Math.max(4, Math.min(96, parseFloat($("annoFontSize").value) || 12)); }); });
+$("annoFontSize").addEventListener("change", () => { applyTextFormat((a) => { a.size = Math.max(4, Math.min(96, parseFloat($("annoFontSize").value) || 12)); }, $("annoFontSize")); });
 armOnFocus($("annoFontFamily"));
-$("annoFontFamily").addEventListener("change", () => { ctxUndoOnce($("annoFontFamily")); ctxApply((a) => { a.font = $("annoFontFamily").value; }); });
+$("annoFontFamily").addEventListener("change", () => { applyTextFormat((a) => { a.font = $("annoFontFamily").value; }, $("annoFontFamily")); });
 /* Unterstreichungsarten im Word-Stil als Linienmuster anbieten */
 const UL_STYLES = [
   { value: "simple", name: "Einfach" },
@@ -3984,8 +4039,7 @@ function setUnderlineMini(style) {
       row.className = "ul-row" + (selAnno && selAnno.underline && s.value === cur ? " active" : "");
       row.innerHTML = '<span class="ul-name">' + s.name + '</span><span class="ul-sample"><span class="ul-bar ' + s.value + '"></span></span>';
       row.addEventListener("click", () => {
-        ctxUndoOnce(btn);
-        ctxApply((a) => { a.underline = s.value; });
+        applyTextFormat((a) => { a.underline = s.value; }, btn);
         setUnderlineMini(s.value);
         close();
       });
@@ -3996,8 +4050,7 @@ function setUnderlineMini(style) {
     off.className = "ul-row ul-off";
     off.innerHTML = '<span class="ul-name">Ohne</span>';
     off.addEventListener("click", () => {
-      ctxUndoOnce(btn);
-      ctxApply((a) => { a.underline = null; });
+      applyTextFormat((a) => { a.underline = null; }, btn);
       setUnderlineMini("simple");
       close();
     });
@@ -4009,9 +4062,13 @@ function setUnderlineMini(style) {
   });
   document.addEventListener("click", (e) => { if (pop && !pop.contains(e.target) && e.target !== btn) close(); });
 })();
+const TEXT_TOGGLE_IDS = ["btnBold", "btnItalic", "btnUnderline", "btnStrike", "btnSup", "btnSub", "btnLatex"];
 function bindToggle(id, apply) {
   $(id).addEventListener("click", () => {
-    if (!selAnno) return;
+    if (!selAnno) {
+      if (TEXT_TOGGLE_IDS.includes(id)) { apply(textDefaults); saveTextDefaults(); refreshContextPane(); }
+      return;
+    }
     pushUndo({ kind: "annoTransform", orig: selOrig, anno: selAnno, before: snapshotAnno(selAnno) });
     ctxApply(apply);
   });
@@ -4023,9 +4080,9 @@ bindToggle("btnStrike", (a) => { a.strike = !a.strike; });
 bindToggle("btnSup", (a) => { a.script = a.script === "sup" ? null : "sup"; });
 bindToggle("btnSub", (a) => { a.script = a.script === "sub" ? null : "sub"; });
 bindToggle("btnLatex", (a) => { a.latex = !a.latex; });
-buildColorMenu("btnTextColor", "txtColorDot", () => (selAnno ? selAnno.color : "#000000"), (c) => { selAnno.color = c; });
-buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno && selAnno.fillOp != null ? selAnno.fillOp : 1), setOp: (v) => { selAnno.fillOp = v; } });
-buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno && selAnno.ocolor ? selAnno.ocolor : "#000000"), (c) => { selAnno.ocolor = c; }, { noneLabel: "Keine Kontur", withWidth: true, getWidth: () => (selAnno ? selAnno.owidth || 1 : 1), setWidth: (v) => { selAnno.owidth = v; } });
+buildColorMenu("btnTextColor", "txtColorDot", () => (selAnno ? selAnno.color : textDefaults.color), (c) => { if (selAnno) selAnno.color = c; else textDefaults.color = c; });
+buildColorMenu("btnTextFill", "txtFillDot", () => (selAnno ? (selAnno.fill || "#ffffff") : (textDefaults.fill || "#ffffff")), (c) => { if (selAnno) selAnno.fill = c; else textDefaults.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => ((selAnno ? selAnno.fillOp : textDefaults.fillOp) != null ? (selAnno ? selAnno.fillOp : textDefaults.fillOp) : 1), setOp: (v) => { if (selAnno) selAnno.fillOp = v; else textDefaults.fillOp = v; } });
+buildColorMenu("btnTextOutline", "txtOutlineDot", () => (selAnno ? (selAnno.ocolor || "#000000") : (textDefaults.ocolor || "#000000")), (c) => { if (selAnno) selAnno.ocolor = c; else textDefaults.ocolor = c; }, { noneLabel: "Keine Kontur", withWidth: true, getWidth: () => ((selAnno ? selAnno.owidth : textDefaults.owidth) || 1), setWidth: (v) => { if (selAnno) selAnno.owidth = v; else textDefaults.owidth = v; } });
 buildColorMenu("btnShapeColor", "shpColorDot", () => (selAnno ? selAnno.color : "#000000"), (c) => { selAnno.color = c; });
 buildColorMenu("btnShapeFill", "shpFillDot", () => (selAnno && selAnno.fill ? selAnno.fill : "#ffffff"), (c) => { selAnno.fill = c; }, { noneLabel: "Keine Füllung", withOpacity: true, getOp: () => (selAnno && selAnno.fillOp != null ? selAnno.fillOp : 1), setOp: (v) => { selAnno.fillOp = v; } });
 armOnFocus($("annoShapeWidth"));
@@ -4148,6 +4205,8 @@ function runSelfTests() {
   test("rotRectAnchor ohne Drehung unverändert", () => { const p = rotRectAnchor(3, 4, 10, 5, 0); assert(approx(p[0], 3) && approx(p[1], 4)); });
   test("rotRectAnchor bei 90 Grad erwartbar", () => { const p = rotRectAnchor(0, 0, 10, 4, 90); assert(approx(p[0], 7) && approx(p[1], -3), "erwartet (7, -3), erhalten (" + p[0] + ", " + p[1] + ")"); });
   test("Schriftstapel für alle Schriftarten vorhanden", () => { for (const k of ["helvetica", "times", "courier", "lato", "ptsans", "ptserif"]) assert(FONT_STACKS[k], "Stapel fehlt: " + k); });
+  test("Voreinstellungen für Textfelder vollständig", () => { for (const k of ["size", "font", "color", "bold", "italic", "underline", "strike", "script", "fill", "fillOp", "ocolor", "owidth"]) assert(k in textDefaults, "Feld fehlt: " + k); });
+  test("Textbegrenzung ohne Box plausibel", () => { const bb = annoBBox({ type: "text", x: 10, y: 20, size: 12, text: "Hallo" }); assert(bb.x2 > bb.x1 && bb.y2 > bb.y1 && bb.x1 === 10, "Box unplausibel"); });
   test("Einzubettende Schriften vollständig definiert", () => { for (const k of Object.keys(EMBED_FONT_FILES)) { const f = EMBED_FONT_FILES[k]; for (const s of ["regular", "bold", "italic", "boldItalic"]) assert(typeof f[s] === "string" && f[s].startsWith("https://"), k + "." + s + " fehlt"); } });
   const failed = results.filter((r) => !r.ok);
   console.log("Selbsttests: " + (results.length - failed.length) + "/" + results.length + " bestanden", results);
