@@ -335,7 +335,6 @@
     touch-action: none;
     pointer-events: none;
   }
-  .overlay-canvas.tool-active { pointer-events: auto; cursor: crosshair; }
   .textLayer {
     position: absolute;
     inset: 0;
@@ -352,6 +351,28 @@
     transform-origin: 0% 0%;
   }
   .textLayer ::selection { background: rgba(2, 132, 199, 0.3); }
+
+  /* ---------- Direkteingabe im Dokument (Textfeld/Kommentar) ---------- */
+  .inline-edit {
+    position: absolute;
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px dashed #2563eb;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: Helvetica, Arial, sans-serif;
+    color: #0f172a;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  }
+  .inline-edit.comment-pop {
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
   #dropzone {
     margin: auto;
     text-align: center;
@@ -432,7 +453,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.2</span>
+  <span class="version" id="appVersion">Alpha 0.3</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -578,9 +599,13 @@
     <div class="pane" id="paneAnon" hidden>
       <div class="group">
         <div class="group-buttons">
-          <button id="toolRedact" class="rb-btn" data-tool="redact" title="Bereiche schwärzen: schwarzes Rechteck mit der Maus aufziehen">
+          <button id="toolRedact" class="rb-btn" data-tool="redact" title="Bereich schwärzen: schwarzes Rechteck mit der Maus aufziehen; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg>
             <span>Schwärzen</span>
+          </button>
+          <button id="toolRedactText" class="rb-btn" data-tool="redactText" title="Text schwärzen: Werkzeug aktivieren und den gewünschten Text auf der Seite markieren; das Werkzeug schaltet danach zurück">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 10h9"/><path d="M4 18h16"/><rect x="14" y="13.5" width="6" height="4" fill="currentColor" stroke="none"/></svg>
+            <span>Text schwärzen</span>
           </button>
         </div>
         <div class="group-label">Schwärzen</div>
@@ -611,27 +636,27 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 1.5L11 20z"/></svg>
             <span>Auswahl</span>
           </button>
-          <button id="toolText" class="rb-btn" data-tool="text" title="Text einfügen: auf die Seite klicken und Text eingeben">
+          <button id="toolText" class="rb-btn" data-tool="text" title="Text einfügen: auf die Seite klicken und direkt im Dokument schreiben; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14"/><path d="M12 5v14"/></svg>
             <span>Text</span>
           </button>
-          <button id="toolHighlight" class="rb-btn" data-tool="highlight" title="Textgebundene Markierung: Werkzeug aktiv lassen und Text auf der Seite markieren">
+          <button id="toolHighlight" class="rb-btn" data-tool="highlight" title="Textgebundene Markierung: Text auf der Seite markieren; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M4 21h16"/></svg>
             <span>Markieren</span>
           </button>
-          <button id="toolStrike" class="rb-btn" data-tool="strike" title="Textgebundenes Durchstreichen: Werkzeug aktiv lassen und Text markieren">
+          <button id="toolStrike" class="rb-btn" data-tool="strike" title="Textgebundenes Durchstreichen: Text auf der Seite markieren; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7h8"/><path d="M12 7v10"/><path d="M4 12h16"/></svg>
             <span>Durchstreichen</span>
           </button>
-          <button id="toolUnderline" class="rb-btn" data-tool="underline" title="Textgebundenes Unterstreichen: Werkzeug aktiv lassen und Text markieren">
+          <button id="toolUnderline" class="rb-btn" data-tool="underline" title="Textgebundenes Unterstreichen: Text auf der Seite markieren; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M5 20h14"/></svg>
             <span>Unterstreichen</span>
           </button>
-          <button id="toolDraw" class="rb-btn" data-tool="draw" title="Stift: freihändig zeichnen, gedrückt halten und ziehen">
+          <button id="toolDraw" class="rb-btn" data-tool="draw" title="Stift: eine freihändige Linie zeichnen; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4L8 20l-5 1 1-5z"/></svg>
             <span>Stift</span>
           </button>
-          <button id="toolMarker" class="rb-btn" data-tool="marker" title="Textmarker: freihändige, halbtransparente Markierung ziehen">
+          <button id="toolMarker" class="rb-btn" data-tool="marker" title="Textmarker: eine halbtransparente Markierung zeichnen; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 4-4 4 4-4 4z"/><path d="M12 15v3"/><path d="M4 21h16"/></svg>
             <span>Textmarker</span>
           </button>
@@ -669,6 +694,13 @@
 
       <div class="group">
         <div class="group-buttons">
+          <span class="group-note">Jedes Werkzeug erstellt genau ein Element und schaltet danach auf Auswahl zurück. Erstellte Elemente lassen sich anklicken, verschieben und in der Größe ändern; Doppelklick bearbeitet Textfelder und Kommentare.</span>
+        </div>
+        <div class="group-label">Hinweis</div>
+      </div>
+
+      <div class="group">
+        <div class="group-buttons">
           <button id="btnAnnoClear" class="rb-btn" title="Alle Anmerkungen auf der aktuellen Seite löschen (rückgängig machbar)" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg>
             <span>Seite leeren</span>
@@ -681,7 +713,7 @@
     <div class="pane" id="paneComment" hidden>
       <div class="group">
         <div class="group-buttons">
-          <button id="toolComment" class="rb-btn" data-tool="comment" title="Kommentar hinzufügen: Text auf der Seite markieren und klicken, oder nur klicken für Kommentar an einer Stelle">
+          <button id="toolComment" class="rb-btn" data-tool="comment" title="Kommentar: Text markieren oder Stelle anklicken und direkt im Dokument schreiben; das Werkzeug schaltet danach zurück">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span>Kommentar</span>
           </button>
@@ -760,7 +792,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.2"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.3"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -785,6 +817,11 @@ let penWidth = 2;               // Strichstärke in Punkten
 let liveAnno = null;            // Anmerkung in Entstehung
 let liveEntry = null;           // Seiteneintrag der laufenden Anmerkung
 let redactHintShown = false;
+let selAnno = null;             // aktuell ausgewaehltes Element
+let selOrig = -1;                // Seite (origIndex) des ausgewaehlten Elements
+let dragInfo = null;             // laufendes Verschieben oder Groesseraendern
+let editBox = null;             // offene Direkteingabe (Textfeld/Kommentar)
+const PT_TO_PX = 96 / 72;        // PDF-Punkt in CSS-Pixel
 
 /* Ein-Schritt-Rueckgaengig-Stapel */
 const undoStack = [];
@@ -891,6 +928,9 @@ async function openFile(file) {
     rotDelta = {};
     undoStack.length = 0;
     annos = new Map();
+    selAnno = null;
+    selOrig = -1;
+    editBox = null;
     selected.clear();
     currentPage = 0;
     zoom = 1.0;
@@ -933,12 +973,10 @@ function buildEntries() {
     const textLayer = document.createElement("div");
     textLayer.className = "textLayer";
     textLayer.dataset.pos = pos;
-    textLayer.style.cursor = tool === "comment" ? "crosshair" : "text";
+    textLayer.style.cursor = tool === "select" ? "default" : (CURSORS[tool] || "crosshair");
     wrap.append(canvas, overlay, textLayer);
     column.appendChild(wrap);
     entries.push({ orig, pos, wrap, canvas, overlay, textLayer, viewport: null, rendered: false });
-    overlay.classList.toggle("tool-active", DRAW_TOOLS.includes(tool));
-    overlay.style.cursor = CURSORS[tool] || "default";
   }
 }
 
@@ -1038,10 +1076,9 @@ function setZoom(newZoom) {
 /* =========================================================
    Werkzeuge und Anmerkungen
    ========================================================= */
-const DRAW_TOOLS = ["text", "draw", "marker", "rect", "ellipse", "triangle", "diamond", "star", "line", "arrow", "redact"];
-const TEXT_TOOLS = ["highlight", "strike", "underline"];
+const TEXT_TOOLS = ["highlight", "strike", "underline", "redactText"];
 const SHAPE_TOOLS = ["rect", "ellipse", "triangle", "diamond", "star", "line", "arrow"];
-const CURSORS = { select: "default", text: "text", comment: "crosshair" };
+const CURSORS = { select: "default", text: "crosshair", comment: "crosshair", highlight: "text", strike: "text", underline: "text", redactText: "text" };
 
 function setTool(t) {
   tool = t;
@@ -1050,9 +1087,7 @@ function setTool(t) {
   });
   $("btnShapes").classList.toggle("active", SHAPE_TOOLS.includes(t));
   for (const e of entries) {
-    e.overlay.classList.toggle("tool-active", DRAW_TOOLS.includes(t));
-    e.overlay.style.cursor = CURSORS[t] || "crosshair";
-    e.textLayer.style.cursor = t === "comment" ? "crosshair" : "text";
+    e.textLayer.style.cursor = t === "select" ? "default" : (CURSORS[t] || "crosshair");
   }
   closeShapeMenu();
 }
@@ -1060,14 +1095,6 @@ function setTool(t) {
 function pageAnnos(orig) {
   if (!annos.has(orig)) annos.set(orig, []);
   return annos.get(orig);
-}
-
-function annoAdd(entry, a) {
-  pageAnnos(entry.orig).push(a);
-  pushUndo({ kind: "annoAdd", orig: entry.orig, anno: a });
-  renderOverlayFor(entry);
-  updateUi();
-  if (a.type === "comment") refreshComments();
 }
 
 /* ---------- Koordinatenumrechnung ---------- */
@@ -1139,7 +1166,7 @@ function drawAnno(ctx, a, viewport) {
   } else if (a.type === "text") {
     const lines = a.text.split("\n");
     ctx.fillStyle = a.color;
-    ctx.font = `${a.size * scale}px Helvetica, sans-serif`;
+    ctx.font = `${a.size * PT_TO_PX * scale}px Helvetica, sans-serif`;
     ctx.textBaseline = "alphabetic";
     lines.forEach((t, i) => {
       const q = viewport.convertToViewportPoint(a.x, a.y - i * a.size * 1.2);
@@ -1247,12 +1274,329 @@ function renderOverlayFor(entry) {
   // Kommentar-Nummern pro Seite vergeben
   let n = 0;
   for (const a of list) if (a.type === "comment") a.num = ++n;
-  for (const a of list) drawAnno(ctx, a, entry.viewport);
+  for (const a of list) {
+    if (a._editing && a.type === "text") continue;
+    drawAnno(ctx, a, entry.viewport);
+  }
   if (liveAnno && liveEntry === entry) drawAnno(ctx, liveAnno, entry.viewport);
+  if (selAnno && selOrig === entry.orig && !selAnno._editing) drawSelection(ctx, selAnno, entry.viewport);
 }
 
 function refreshEntryByOrig(orig) {
   for (const e of entries) if (e.orig === orig) renderOverlayFor(e);
+}
+
+/* =========================================================
+   Auswahl: Elemente anklicken, verschieben, Groesse aendern
+   ========================================================= */
+const measureCtx = document.createElement("canvas").getContext("2d");
+
+function snapshotAnno(a) {
+  const s = {};
+  for (const k of ["type", "color", "width", "x", "y", "x1", "y1", "x2", "y2", "size", "text"]) {
+    if (k in a) s[k] = a[k];
+  }
+  if (a.points) s.points = a.points.map((p) => p.slice());
+  return s;
+}
+
+function annoBBox(a) {
+  if (a.type === "draw" || a.type === "marker") {
+    let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+    for (const p of a.points) {
+      x1 = Math.min(x1, p[0]); x2 = Math.max(x2, p[0]);
+      y1 = Math.min(y1, p[1]); y2 = Math.max(y2, p[1]);
+    }
+    if (!a.points.length) return { x1: 0, y1: 0, x2: 0, y2: 0 };
+    return { x1, y1, x2, y2 };
+  }
+  if (a.type === "line" || a.type === "arrow") {
+    return { x1: Math.min(a.x1, a.x2), y1: Math.min(a.y1, a.y2), x2: Math.max(a.x1, a.x2), y2: Math.max(a.y1, a.y2) };
+  }
+  if (a.type === "comment") {
+    return { x1: a.x - 9, y1: a.y - 9, x2: a.x + 9, y2: a.y + 9 };
+  }
+  if (a.type === "text") {
+    const lines = a.text.split("\n");
+    measureCtx.font = `${a.size * PT_TO_PX}px Helvetica, sans-serif`;
+    let w = 10;
+    for (const t of lines) w = Math.max(w, measureCtx.measureText(t).width / PT_TO_PX);
+    return {
+      x1: a.x,
+      y1: a.y - (lines.length - 1) * a.size * 1.2 - a.size * 0.25,
+      x2: a.x + w,
+      y2: a.y + a.size * 0.8
+    };
+  }
+  return { x1: Math.min(a.x1, a.x2), y1: Math.min(a.y1, a.y2), x2: Math.max(a.x1, a.x2), y2: Math.max(a.y1, a.y2) };
+}
+
+function annoHandles(a) {
+  if (a.type === "line" || a.type === "arrow") {
+    return [{ id: "p1", x: a.x1, y: a.y1 }, { id: "p2", x: a.x2, y: a.y2 }];
+  }
+  if (a.type === "comment") return [];
+  const b = annoBBox(a);
+  return [
+    { id: "nw", x: b.x1, y: b.y2 },
+    { id: "ne", x: b.x2, y: b.y2 },
+    { id: "sw", x: b.x1, y: b.y1 },
+    { id: "se", x: b.x2, y: b.y1 }
+  ];
+}
+
+function distToSeg(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const l2 = dx * dx + dy * dy;
+  let t = l2 ? ((px - x1) * dx + (py - y1) * dy) / l2 : 0;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+function annoHit(a, x, y, tol) {
+  if (a._editing) return false;
+  if (a.type === "draw" || a.type === "marker") {
+    const t = tol + a.width * (a.type === "marker" ? 2 : 0.5);
+    for (let i = 0; i + 1 < a.points.length; i++) {
+      if (distToSeg(x, y, a.points[i][0], a.points[i][1], a.points[i + 1][0], a.points[i + 1][1]) <= t) return true;
+    }
+    return false;
+  }
+  if (a.type === "line" || a.type === "arrow") {
+    return distToSeg(x, y, a.x1, a.y1, a.x2, a.y2) <= tol + a.width * 0.5;
+  }
+  if (a.type === "comment") {
+    return Math.hypot(x - a.x, y - a.y) <= tol + 9;
+  }
+  const b = annoBBox(a);
+  return x >= b.x1 - tol && x <= b.x2 + tol && y >= b.y1 - tol && y <= b.y2 + tol;
+}
+
+function drawSelection(ctx, a, viewport) {
+  const b = annoBBox(a);
+  const p1 = viewport.convertToViewportPoint(b.x1, b.y2);
+  const p2 = viewport.convertToViewportPoint(b.x2, b.y1);
+  const x = Math.min(p1[0], p2[0]);
+  const y = Math.min(p1[1], p2[1]);
+  const w = Math.abs(p2[0] - p1[0]);
+  const h = Math.abs(p2[1] - p1[1]);
+  ctx.save();
+  ctx.strokeStyle = "#2563eb";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 3]);
+  ctx.strokeRect(x, y, w, h);
+  ctx.setLineDash([]);
+  for (const hd of annoHandles(a)) {
+    const q = viewport.convertToViewportPoint(hd.x, hd.y);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(q[0] - 4.5, q[1] - 4.5, 9, 9);
+    ctx.strokeRect(q[0] - 4.5, q[1] - 4.5, 9, 9);
+  }
+  ctx.restore();
+}
+
+function selectAnno(a, orig) {
+  selAnno = a;
+  selOrig = orig;
+  refreshEntryByOrig(orig);
+  updateUi();
+}
+
+function deselectAnno() {
+  if (!selAnno) return;
+  const o = selOrig;
+  selAnno = null;
+  selOrig = -1;
+  refreshEntryByOrig(o);
+  updateUi();
+}
+
+function overlayPointFromEvent(e, entry) {
+  const r = entry.overlay.getBoundingClientRect();
+  return [
+    (e.clientX - r.left) * entry.overlay.width / r.width,
+    (e.clientY - r.top) * entry.overlay.height / r.height
+  ];
+}
+
+function selectPointerDown(e, entry) {
+  const p = pdfPointFromEvent(e, entry);
+  const tol = 6 / entry.viewport.scale;
+  if (selAnno && selOrig === entry.orig && !selAnno._editing) {
+    const ov = overlayPointFromEvent(e, entry);
+    for (const h of annoHandles(selAnno)) {
+      const q = entry.viewport.convertToViewportPoint(h.x, h.y);
+      if (Math.abs(q[0] - ov[0]) <= 8 && Math.abs(q[1] - ov[1]) <= 8) {
+        dragInfo = { anno: selAnno, orig: entry.orig, entry, mode: "resize", handle: h.id, startX: p[0], startY: p[1], before: snapshotAnno(selAnno) };
+        entry.wrap.setPointerCapture(e.pointerId);
+        e.preventDefault();
+        return;
+      }
+    }
+  }
+  const list = pageAnnos(entry.orig);
+  for (let i = list.length - 1; i >= 0; i--) {
+    const a = list[i];
+    if (annoHit(a, p[0], p[1], tol)) {
+      selectAnno(a, entry.orig);
+      dragInfo = { anno: a, orig: entry.orig, entry, mode: "move", startX: p[0], startY: p[1], before: snapshotAnno(a) };
+      entry.wrap.setPointerCapture(e.pointerId);
+      e.preventDefault();
+      return;
+    }
+  }
+  deselectAnno();
+}
+
+function translateAnnoFrom(a, before, dx, dy) {
+  if (before.points) {
+    a.points = before.points.map((pt) => [pt[0] + dx, pt[1] + dy]);
+    return;
+  }
+  if (before.type === "text" || before.type === "comment") {
+    a.x = before.x + dx;
+    a.y = before.y + dy;
+    return;
+  }
+  a.x1 = before.x1 + dx; a.y1 = before.y1 + dy;
+  a.x2 = before.x2 + dx; a.y2 = before.y2 + dy;
+}
+
+function setAnnoBox(a, before, b0, box) {
+  const bw = Math.max(1e-6, b0.x2 - b0.x1);
+  const bh = Math.max(1e-6, b0.y2 - b0.y1);
+  if (before.points) {
+    const sx = (box.x2 - box.x1) / bw;
+    const sy = (box.y2 - box.y1) / bh;
+    a.points = before.points.map((pt) => [
+      box.x1 + (pt[0] - b0.x1) * sx,
+      box.y1 + (pt[1] - b0.y1) * sy
+    ]);
+  } else if (before.type === "text") {
+    const f = Math.max(0.15, Math.min(12, (box.x2 - box.x1) / bw));
+    a.size = Math.max(4, before.size * f);
+    a.x = box.x1;
+    a.y = box.y2 - 0.8 * a.size;
+  } else if (before.type === "comment") {
+    /* Kommentare lassen sich nur verschieben */
+  } else {
+    a.x1 = box.x1; a.y1 = box.y1; a.x2 = box.x2; a.y2 = box.y2;
+  }
+}
+
+function applyDrag(p) {
+  const d = dragInfo;
+  const a = d.anno;
+  if (d.mode === "move") {
+    translateAnnoFrom(a, d.before, p[0] - d.startX, p[1] - d.startY);
+    return;
+  }
+  if (d.handle === "p1") {
+    a.x1 = p[0]; a.y1 = p[1]; a.x2 = d.before.x2; a.y2 = d.before.y2;
+    return;
+  }
+  if (d.handle === "p2") {
+    a.x2 = p[0]; a.y2 = p[1]; a.x1 = d.before.x1; a.y1 = d.before.y1;
+    return;
+  }
+  const b0 = annoBBox(d.before);
+  let nx1 = b0.x1, ny1 = b0.y1, nx2 = b0.x2, ny2 = b0.y2;
+  if (d.handle.indexOf("w") > -1) nx1 = Math.min(p[0], nx2 - 2);
+  if (d.handle.indexOf("e") > -1) nx2 = Math.max(p[0], nx1 + 2);
+  if (d.handle.indexOf("s") > -1) ny1 = Math.min(p[1], ny2 - 2);
+  if (d.handle.indexOf("n") > -1) ny2 = Math.max(p[1], ny1 + 2);
+  setAnnoBox(a, d.before, b0, { x1: nx1, y1: ny1, x2: nx2, y2: ny2 });
+}
+
+function transformChanged(a, before) {
+  const now = snapshotAnno(a);
+  for (const k of Object.keys(before)) {
+    if (k === "points") {
+      if (JSON.stringify(before.points) !== JSON.stringify(now.points)) return true;
+    } else if (before[k] !== now[k]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/* ---------- Direkteingabe im Dokument ---------- */
+function openTextEditor(entry, anno, isNew = false) {
+  closeTextEditor(false);
+  const dpr = window.devicePixelRatio || 1;
+  const q = entry.viewport.convertToViewportPoint(anno.x, anno.y);
+  const ta = document.createElement("textarea");
+  ta.className = "inline-edit" + (anno.type === "comment" ? " comment-pop" : "");
+  ta.spellcheck = false;
+  if (anno.type === "text") {
+    ta.style.left = (q[0] / dpr) + "px";
+    ta.style.top = (q[1] / dpr - anno.size * PT_TO_PX * zoom * 0.8) + "px";
+    ta.style.fontSize = (anno.size * PT_TO_PX * zoom) + "px";
+    ta.style.lineHeight = "1.2";
+    ta.style.color = anno.color;
+    ta.style.width = "180px";
+  } else {
+    ta.style.left = (q[0] / dpr + 14) + "px";
+    ta.style.top = Math.max(2, q[1] / dpr - 12) + "px";
+    ta.style.width = "190px";
+  }
+  ta.value = anno.text || "";
+  anno._editing = true;
+  entry.wrap.appendChild(ta);
+  editBox = { entry, anno, textarea: ta, before: snapshotAnno(anno), isNew: !!isNew };
+  const autoSize = () => {
+    ta.style.height = "auto";
+    ta.style.height = (ta.scrollHeight + 2) + "px";
+  };
+  ta.addEventListener("input", autoSize);
+  autoSize();
+  ta.addEventListener("keydown", (e) => {
+    e.stopPropagation();
+    if (e.key === "Escape") { e.preventDefault(); closeTextEditor(false); }
+    else if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); ta.blur(); }
+  });
+  ta.addEventListener("blur", () => closeTextEditor(true));
+  renderOverlayFor(entry);
+  ta.focus();
+  ta.select();
+}
+
+function closeTextEditor(commit = true) {
+  if (!editBox) return;
+  const box = editBox;
+  editBox = null;
+  const { entry, anno, textarea, before, isNew } = box;
+  anno._editing = false;
+  textarea.remove();
+  const val = textarea.value;
+  if (commit && val.trim() !== "") {
+    anno.text = val;
+    if (isNew) {
+      pageAnnos(entry.orig).push(anno);
+      pushUndo({ kind: "annoAdd", orig: entry.orig, anno: anno });
+      selectAnno(anno, entry.orig);
+    } else if (anno.text !== before.text) {
+      pushUndo({ kind: "annoTransform", orig: entry.orig, anno: anno, before: before });
+    }
+    if (anno.type === "comment") refreshComments();
+  }
+  renderOverlayFor(entry);
+  updateUi();
+}
+
+function deleteSelectedAnno() {
+  if (!selAnno) return;
+  const a = selAnno;
+  const orig = selOrig;
+  deselectAnno();
+  const l = pageAnnos(orig);
+  const i = l.indexOf(a);
+  if (i > -1) l.splice(i, 1);
+  pushUndo({ kind: "annoRemove", orig, anno: a });
+  refreshEntryByOrig(orig);
+  if (a.type === "comment") refreshComments();
+  updateUi();
+  toast("Element gelöscht. Mit Strg+Z wiederherstellbar.");
 }
 
 /* ---------- Ein-Schritt-Rueckgaengig ---------- */
@@ -1265,6 +1609,8 @@ function pushUndo(action) {
 async function undoOne() {
   const a = undoStack.pop();
   if (!a) { updateUi(); return; }
+  deselectAnno();
+  closeTextEditor(false);
   if (a.kind === "order") {
     pageOrder = a.prev;
     currentPage = Math.min(currentPage, pageOrder.length - 1);
@@ -1283,7 +1629,12 @@ async function undoOne() {
     pageAnnos(a.orig).push(a.anno);
     refreshEntryByOrig(a.orig);
     refreshComments();
-    toast("Kommentar wiederhergestellt.");
+    toast("Element wiederhergestellt.");
+  } else if (a.kind === "annoTransform") {
+    Object.assign(a.anno, a.before);
+    refreshEntryByOrig(a.orig);
+    if (a.anno.type === "comment") refreshComments();
+    toast("Änderung zurückgenommen.");
   } else if (a.kind === "annosAdd") {
     const l = pageAnnos(a.orig);
     for (const x of a.annos) {
@@ -1334,9 +1685,11 @@ document.addEventListener("mouseup", () => {
   if (!TEXT_TOOLS.includes(tool)) return;
   const anchor = selectionAnchor();
   if (!anchor) return;
+  const type = tool === "redactText" ? "redact" : tool;
+  const color = type === "redact" ? "#000000" : annoColor;
   const added = [];
   for (const c of anchor.rects) {
-    const a = { type: tool, color: annoColor, width: penWidth, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2 };
+    const a = { type, color, width: penWidth, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2 };
     pageAnnos(anchor.entry.orig).push(a);
     added.push(a);
   }
@@ -1344,18 +1697,18 @@ document.addEventListener("mouseup", () => {
   window.getSelection().removeAllRanges();
   renderOverlayFor(anchor.entry);
   updateUi();
+  setTool("select");
 });
 
-/* Kommentarwerkzeug: Text markieren oder Stelle anklicken */
+/* Kommentarwerkzeug: Text markieren oder Stelle anklicken, direkt im Dokument schreiben */
 document.addEventListener("mouseup", (e) => {
   if (!doc || tool !== "comment") return;
   const anchor = selectionAnchor();
-  let entry, px, py, promptText;
+  let entry, px, py;
   if (anchor) {
     entry = anchor.entry;
     px = anchor.bounds.x2;
     py = anchor.bounds.y2;
-    promptText = "Kommentar zur Textmarkierung:";
   } else {
     const wrap = e.target && e.target.closest ? e.target.closest(".page-entry") : null;
     if (!wrap) return;
@@ -1364,30 +1717,28 @@ document.addEventListener("mouseup", (e) => {
     const p = pdfPointFromEvent(e, entry);
     px = p[0];
     py = p[1];
-    promptText = "Kommentar an dieser Stelle:";
   }
-  const text = prompt(promptText);
-  if (text === null || text.trim() === "") return;
-  annoAdd(entry, { type: "comment", x: px, y: py, text: text });
+  const a = { type: "comment", x: px, y: py, text: "" };
+  setTool("select");
+  openTextEditor(entry, a, true);
 });
 
 /* ---------- Zeichnen (Overlay-Eingabe) ---------- */
 const pagesColumn = $("pagesColumn");
 pagesColumn.addEventListener("pointerdown", (e) => {
-  if (!doc || tool === "select" || tool === "comment" || TEXT_TOOLS.includes(tool)) return;
+  if (!doc || e.button !== 0) return;
   const wrap = e.target.closest(".page-entry");
   if (!wrap) return;
-  const pos = parseInt(wrap.dataset.pos, 10);
-  const entry = entries[pos];
-  if (!entry.viewport) return;
+  const entry = entries[parseInt(wrap.dataset.pos, 10)];
+  if (!entry || !entry.viewport) return;
+  if (tool === "select") { selectPointerDown(e, entry); return; }
+  if (tool === "comment" || TEXT_TOOLS.includes(tool)) return; // Textauswahl bleibt moeglich
   e.preventDefault();
-  entry.overlay.setPointerCapture(e.pointerId);
-  const p = entry.viewport ? pdfPointFromEvent(e, entry) : null;
-  if (!p) return;
+  const p = pdfPointFromEvent(e, entry);
   if (tool === "text") {
-    const input = prompt("Bitte geben Sie den einzufügenden Text ein:");
-    if (input === null || input.trim() === "") return;
-    annoAdd(entry, { type: "text", x: p[0], y: p[1], text: input, size: 12, color: annoColor });
+    const a = { type: "text", x: p[0], y: p[1], text: "", size: 12, color: annoColor };
+    setTool("select");
+    openTextEditor(entry, a, true);
     return;
   }
   if (tool === "draw" || tool === "marker") {
@@ -1396,9 +1747,15 @@ pagesColumn.addEventListener("pointerdown", (e) => {
     liveAnno = { type: tool, color: annoColor, width: penWidth, x1: p[0], y1: p[1], x2: p[0], y2: p[1] };
   }
   liveEntry = entry;
+  entry.wrap.setPointerCapture(e.pointerId);
 });
 
 document.addEventListener("pointermove", (e) => {
+  if (dragInfo && dragInfo.entry && dragInfo.entry.viewport) {
+    applyDrag(pdfPointFromEvent(e, dragInfo.entry));
+    renderOverlayFor(dragInfo.entry);
+    return;
+  }
   if (!liveAnno || !liveEntry || !liveEntry.viewport) return;
   const p = pdfPointFromEvent(e, liveEntry);
   if (liveAnno.points) liveAnno.points.push(p);
@@ -1407,6 +1764,15 @@ document.addEventListener("pointermove", (e) => {
 });
 
 document.addEventListener("pointerup", () => {
+  if (dragInfo) {
+    const d = dragInfo;
+    dragInfo = null;
+    if (transformChanged(d.anno, d.before)) {
+      pushUndo({ kind: "annoTransform", orig: d.orig, anno: d.anno, before: d.before });
+    }
+    renderOverlayFor(d.entry);
+    return;
+  }
   if (!liveAnno || !liveEntry) return;
   const entry = liveEntry;
   const a = liveAnno;
@@ -1424,8 +1790,30 @@ document.addEventListener("pointerup", () => {
   }
   pageAnnos(entry.orig).push(a);
   pushUndo({ kind: "annoAdd", orig: entry.orig, anno: a });
+  selectAnno(a, entry.orig);
+  setTool("select");
   renderOverlayFor(entry);
   updateUi();
+});
+
+/* Doppelklick: Textfelder und Kommentare direkt im Dokument bearbeiten */
+pagesColumn.addEventListener("dblclick", (e) => {
+  if (!doc || tool !== "select") return;
+  const wrap = e.target.closest(".page-entry");
+  if (!wrap) return;
+  const entry = entries[parseInt(wrap.dataset.pos, 10)];
+  if (!entry || !entry.viewport) return;
+  const p = pdfPointFromEvent(e, entry);
+  const tol = 6 / entry.viewport.scale;
+  const list = pageAnnos(entry.orig);
+  for (let i = list.length - 1; i >= 0; i--) {
+    const a = list[i];
+    if ((a.type === "text" || a.type === "comment") && annoHit(a, p[0], p[1], tol)) {
+      selectAnno(a, entry.orig);
+      openTextEditor(entry, a, false);
+      return;
+    }
+  }
 });
 
 /* ---------- Kommentarliste ---------- */
@@ -1462,6 +1850,7 @@ function refreshComments() {
       item.addEventListener("click", (e) => {
         if (e.target === del) return;
         goTo(pos);
+        selectAnno(a, orig);
       });
       box.appendChild(item);
     });
@@ -1910,7 +2299,9 @@ function updateUi() {
   $("btnAnnoClear").disabled = annoCount === 0;
   $("btnCommentList").disabled = !hasDoc;
   $("zoomLabel").textContent = Math.round(zoom * 100) + "%";
-  $("hint").textContent = selCount > 0 ? `${selCount} Seite(n) ausgewählt.` : "";
+  $("hint").textContent = selAnno
+    ? "Element ausgewählt: ziehen verschiebt, Griffe ändern die Größe, Entf löscht, Doppelklick bearbeitet den Text."
+    : (selCount > 0 ? `${selCount} Seite(n) ausgewählt.` : "");
 }
 
 /* =========================================================
@@ -1977,6 +2368,7 @@ $("btnAnnoClear").addEventListener("click", () => {
   if (!confirm("Alle Anmerkungen auf dieser Seite entfernen?")) return;
   pushUndo({ kind: "annosClear", orig, prev: pageAnnos(orig).slice() });
   annos.set(orig, []);
+  deselectAnno();
   refreshEntryByOrig(orig);
   refreshComments();
   updateUi();
@@ -2058,7 +2450,8 @@ window.addEventListener("drop", (e) => {
 /* Tastatur */
 window.addEventListener("keydown", (e) => {
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
-  if (e.key === "Escape") { setTool("select"); return; }
+  if (e.key === "Escape") { setTool("select"); deselectAnno(); return; }
+  if ((e.key === "Delete" || e.key === "Backspace") && selAnno) { e.preventDefault(); deleteSelectedAnno(); return; }
   if (!doc) return;
   if (e.key === "ArrowLeft") goTo(currentPage - 1);
   if (e.key === "ArrowRight") goTo(currentPage + 1);
