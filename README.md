@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.7**
+> Aktuelle Version: **Alpha 0.8**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -12,7 +12,7 @@ Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die A
 - Ansichtshilfen: Lineale mit Zentimeterinteilung und Gitternetzlinien, ein- und ausblendbar über den Reiter Ansicht
 - Seitenleiste mit drei Ansichten: Seiten, Inhaltsverzeichnis des Dokuments (Navigation zu den Verzeichnismarken) und Lesezeichen; Leiste vollständig ein- und ausblendbar
 - Seiten löschen, extrahieren, ausschneiden, per Drag-and-Drop umsortieren und drehen
-- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New) und Schriftgröße als Dropdown mit frei eingebbarem Wert (8 bis 72 Punkt)
+- Textfelder mit Schriftartwahl (Helvetica, Times New Roman, Courier New, Lato, PT Sans, PT Serif) und Schriftgröße als Dropdown mit frei eingebbarem Wert (8 bis 72 Punkt)
 - Textformatierung wie in einer Textverarbeitung: Fett, Kursiv, Unterstrichen mit Unterstreichungsarten (einfach, doppelt, gepunktet, gestrichelt, wellig), Durchgestrichen, Hoch- und Tiefstellen; Piktogramm-Schaltflächen mit Schriftproben, zweizeilig angeordnet
 - Farbwahlmenü mit Standardfarben-Kacheln, Optionen „Keine Füllung“ und „Keine Kontur“, und einem eigenen Bereich „Weitere Farben“ (RGB, HSL und Hex über die Farbauswahl des Browsers), bei Füllungen zusätzlich mit Transparenzregel, bei Konturen mit Strichstärkenwahl
 - Textfelder mit Fülleffekt (inklusive Transparenz) und Formkontur; die Größe des Textfelds ändert den Bereich, nicht die Schriftgröße
@@ -56,6 +56,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.5 | Kontextreiter „Textfeld“ (Schriftgröße, Farbe, Fett, Kursiv, LaTeX-Formeln) und „Formformat“ (Kontur, Strichstärke, Füllung), ein- und ausklappbare Fenster für Seiten und Kommentare, Lesezeichen, Statusleiste unten, Korrektur der Textdarstellung bei Drehung und Zoom, präzisere Textauswahl |
 | Alpha 0.6 | Textfeldformatierung im Stil einer Textverarbeitung (Schriftarten, Unterstreichungsarten, Durchstreichen, Hoch- und Tiefstellen, Groß-/Kleinschreibung, Farbwahlmenü), Formeln über Schaltfläche, Textfelder mit Fülleffekt und Kontur, Größenänderung ohne Schriftskalierung, Pfeilspitzen, Strichstärken in Punkt und Stricharten, Drehgriff und Seitenbalken, korrigierte Darstellung von Anmerkungen bei Zoom und hohen Auflösungen, Kommentarleiste automatisch, Seitenleiste mit Inhaltsverzeichnis, Ansichtsbuttons, Lineale und Gitternetz |
 | Alpha 0.7 | Korrektur der ein- und ausblendbaren Leisten (Seitenleiste und Kommentarleiste lassen sich nun tatsächlich schließen, Kommentarleiste standardmäßig ausgeblendet), Farbwahlmenü neu aufgebaut (Standardfarben-Kacheln, „Keine Füllung“/„Keine Kontur“ als Kachel, „Weitere Farben“ als eigener Bereich mit Transparenz bei Füllung und Strichstärkenwahl bei Konturen), Formatleiste zweizeilig mit Piktogrammen und Schriftproben, Schriftgröße als Dropdown mit frei eingebbarem Wert, Schreibweise-Umwandlung und Größenwippen entfernt, Hinweise auf Tooltips umgestellt |
+| Alpha 0.8 | Korrektur eines Skriptfehlers aus Alpha 0.7 (eine fehlende Klammer blockierte die gesamte Anwendung), zusätzliche eingebettete Schriftarten Lato, PT Sans und PT Serif (mit Fett-, Kursiv- und Fettkursiv-Schnitten, werden beim Speichern in die Datei eingebettet; Fallback auf Helvetica ohne Netzverbindung) |
 
 ## Hinweise und Grenzen
 
