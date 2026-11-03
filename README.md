@@ -2,7 +2,7 @@
 
 **Paperino** ist ein freier, browserbasierter PDF-Editor, der vollständig ohne Server auskommt. Geöffnete Dokumente verlassen den Browser zu keinem Zeitpunkt.
 
-> Aktuelle Version: **Alpha 0.10**
+> Aktuelle Version: **Alpha 0.11**
 
 Live-Version: **<https://bacngaplays.github.io/Paperino/>** (GitHub Pages; die Adresse verwendet die exakte Schreibweise des Repository-Namens, also mit großem P)
 
@@ -59,6 +59,7 @@ Paperino befindet sich im Alpha-Stadium. Jede neue Veröffentlichung (Push) erh�
 | Alpha 0.8 | Korrektur eines Skriptfehlers aus Alpha 0.7 (eine fehlende Klammer blockierte die gesamte Anwendung), zusätzliche eingebettete Schriftarten Lato, PT Sans und PT Serif (mit Fett-, Kursiv- und Fettkursiv-Schnitten, werden beim Speichern in die Datei eingebettet; Fallback auf Helvetica ohne Netzverbindung) |
 | Alpha 0.9 | Unterstreichungs- und Durchstreichungslinien haften nun auch bei gedrehten Textfeldern am Text (Kernkorrektur der Drehung), Unterstreichungsarten-Menü im Word-Stil mit Linienmustern und „Ohne“-Eintrag, Schriftgröße als klassisches Dropdown, eigene Farbwahl direkt im Farbwahlmenü (kein Zwischenschritt mehr), Lektorieren-Bereich einheitlich wie das Textfeld-Format gestaltet, Seitenleiste in der Breite ziehbar (150 bis 460 Pixel, wird gemerkt), Selbsttests über den Adresszusatz ?test abrufbar |
 | Alpha 0.10 | Korrektur des Darstellungsfehlers beim Zoomen und Drehen (gleichzeitige Darstellungsvorgänge für dieselbe Seite wurden race-artig abgebrochen und hinterließen eine leere oder entstellte Seite; laufende Darstellungen werden nun zuverlässig abgebrochen und neu aufgebaut), Schriftart, Schriftgröße und sämtliche Textformatierungen lassen sich vor dem Einfügen im Textfeld-Reiter als Voreinstellung festlegen (werden gemerkt und auf neue Textfelder angewendet), der Textfeld-Reiter öffnet sich automatisch beim Aktivieren des Textwerkzeugs |
+| Alpha 0.11 | Auswahlrahmen und Textdeckung bei Web-Schriftarten korrigiert: die gewählte Schriftart wird beim Wechsel sofort geladen und nach dem Laden werden alle Anmerkungen neu gezeichnet, damit Begrenzungsrahmen und Text immer übereinstimmen (Ursache für Text, der außerhalb seines Rahmens erschien) |
 
 ## Hinweise und Grenzen
 

@@ -748,7 +748,7 @@
 
 <div id="titlebar">
   <span class="brand">Paperino</span>
-  <span class="version" id="appVersion">Alpha 0.10</span>
+  <span class="version" id="appVersion">Alpha 0.11</span>
   <span id="docInfo"></span>
   <div class="qat">
     <input type="file" id="fileInput" accept="application/pdf" hidden />
@@ -1269,7 +1269,7 @@
    ========================================================= */
 
 /* ---------- globale Zustandsvariablen ---------- */
-const APP_VERSION = "Alpha 0.10"; // Wird bei jeder neuen Veröffentlichung erhoeht
+const APP_VERSION = "Alpha 0.11"; // Wird bei jeder neuen Veröffentlichung erhoeht
 let pdfjsLib = null;            // PDF.js-Bibliothek
 let hasPdfLib = false;          // pdf-lib verfügbar?
 let fileName = "dokument";      // Basisname der geladenen Datei
@@ -4008,7 +4008,12 @@ function setFontSizeSelect(sz) {
 armOnFocus($("annoFontSize"));
 $("annoFontSize").addEventListener("change", () => { applyTextFormat((a) => { a.size = Math.max(4, Math.min(96, parseFloat($("annoFontSize").value) || 12)); }, $("annoFontSize")); });
 armOnFocus($("annoFontFamily"));
-$("annoFontFamily").addEventListener("change", () => { applyTextFormat((a) => { a.font = $("annoFontFamily").value; }, $("annoFontFamily")); });
+$("annoFontFamily").addEventListener("change", () => {
+  applyTextFormat((a) => { a.font = $("annoFontFamily").value; }, $("annoFontFamily"));
+  /* Gewählte Web-Schriftart sofort laden, damit Messung und Darstellung übereinstimmen */
+  const fam = (FONT_STACKS[$("annoFontFamily").value] || "").split(",")[0].replace(/['"]/g, "").trim();
+  if (fam && document.fonts && document.fonts.load) document.fonts.load("12px " + fam).catch(() => {});
+});
 /* Unterstreichungsarten im Word-Stil als Linienmuster anbieten */
 const UL_STYLES = [
   { value: "simple", name: "Einfach" },
@@ -4220,6 +4225,12 @@ function runSelfTests() {
 /* ---------- Start ---------- */
 $("appVersion").textContent = APP_VERSION;
 loadLibraries();
+/* Web-Schriftart nachgeladen: Anmerkungen neu zeichnen, damit Auswahlrahmen und Text übereinstimmen */
+if (document.fonts && document.fonts.addEventListener) {
+  document.fonts.addEventListener("loadingdone", () => {
+    for (const e of entries) if (e.viewport) renderOverlayFor(e);
+  });
+}
 if (/[?&]test/.test(location.search)) setTimeout(runSelfTests, 2500);
 </script>
 </body>
